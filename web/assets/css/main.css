@@ -2,6 +2,7 @@
 @media (min-width: 576px) {
     .container--w60 {
         width: 100%;
+        max-width: 500px;
     }
 }
 
@@ -14,7 +15,9 @@
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-
+    .container--w60 {
+        width: 40%;
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
@@ -60,4 +63,42 @@ body {
 .button--main:active {
     background-color: #9900FF;
     color: #ffffff;
+}
+
+.form-control--custom {
+    border-color: #9900FF !important;
+    border-width: 2px !important;
+    height: 40px !important;
+    border-radius: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
+    transition: border-bottom-color .5s;
+}
+
+.form-control--custom:hover {
+    border-color: #33CCCC !important;
+}
+
+.form-control--custom:focus {
+    box-shadow: none !important;
+    border-color: #FF33FF !important;
+}
+
+.form-control--custom.is-valid, .was-validated .form-control--custom:valid {
+    border-color: #28a745 !important;
+}
+
+.form-control--custom.is-valid:focus, .was-validated .form-control--custom:valid:focus {
+    border-color: #28a745 !important;
+    box-shadow: none !important;
+}
+
+.form-control--custom.is-invalid, .was-validated .form-control--custom:invalid {
+    border-color: #dc3545 !important;
+}
+
+.form-control--custom.is-invalid:focus, .was-validated .form-control--custom:invalid:focus {
+    border-color: #dc3545 !important;
+    box-shadow: none !important;
 }

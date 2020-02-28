@@ -14,8 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <%--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">--%>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="shortcut icon" href="favicon.ico">
 
@@ -61,19 +59,19 @@
 
             <div class="form-group">
                 <label for="inputUserName">Name</label>
-                <input type="text" class="form-control" id="inputUserName" placeholder="Name" required>
+                <input type="text" class="form-control form-control--custom" id="inputUserName" placeholder="Name" required>
             </div>
             <div class="form-group">
                 <label for="inputEmail">Email</label>
-                <input type="email" class="form-control" id="inputEmail" placeholder="Email" required>
+                <input type="email" class="form-control form-control--custom" id="inputEmail" placeholder="Email" required>
             </div>
             <div class="form-group">
                 <label for="inputPassword">Password</label>
-                <input type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+                <input type="password" class="form-control form-control--custom" id="inputPassword" placeholder="Password" required>
             </div>
             <div class="form-group">
                 <label for="inputCity">City</label>
-                <select id="inputCity" class="form-control" required>
+                <select id="inputCity" class="form-control form-control--custom" required>
                     <option selected>Choose...</option>
                     <% for (int i = 0; i < FakeData.CITIES.length; i++) { %>
                     <option value=""><%=FakeData.CITIES[i] %>
@@ -83,7 +81,7 @@
             </div>
             <div class="form-group">
                 <label for="inputGym">Gym</label>
-                <select id="inputGym" class="form-control" required>
+                <select id="inputGym" class="form-control form-control--custom" required>
                     <option selected>Choose...</option>
                     <% for (int i = 0; i < FakeData.GYMS.length; i++) { %>
                     <option value=""><%=FakeData.GYMS[i] %>
@@ -129,8 +127,9 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+<%--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>--%>
+<script src="assets/js/bootstrap.min.js"></script>
 </body>
 </html>
