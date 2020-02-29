@@ -22,12 +22,12 @@ public class Servlet extends HttpServlet {
         String secondName = req.getParameter("secondName");
         int salary = Integer.parseInt(req.getParameter("salary"));*/
 
-        /*int id = 10;
+        int id = 10;
         String lastName = "Last";
         String secondName = "Second";
         int salary = 1900;
 
-        String insertStatement = "INSERT INTO EMPLOYEES " +
+        String insertStatement = "INSERT INTO SYSTEM.EMPLOYEES " +
                 "(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, SALARY) " +
                 "VALUES " +
                 "(?, ?, ?, ?)";
@@ -41,25 +41,6 @@ public class Servlet extends HttpServlet {
             ps.setString(3, secondName);
             ps.setInt(4, salary);
 
-            connection.close();
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }*/
-
-        String selectTableSQL = "SELECT * from SYSTEM.EMPLOYEES";
-
-        Statement statement = null;
-
-        try {
-            Connection connection = getOracleConnection();
-
-            statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery(selectTableSQL);
-
-            while (rs.next()) {
-                System.out.println(rs.getString(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
-            }
             connection.close();
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
