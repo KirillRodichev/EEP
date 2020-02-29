@@ -55,19 +55,19 @@
 
 <section class="container container--spaced container--w60" id="form">
     <h2 class="container__header">Login / SignUp Form</h2>
-    <form class="needs-validation" action="" method="post" novalidate>
+    <form class="needs-validation" action="login" method="post" novalidate>
 
             <div class="form-group">
                 <label for="inputUserName">Name</label>
-                <input type="text" class="form-control form-control--custom" id="inputUserName" placeholder="Name" required>
+                <input name="lastName" type="text" class="form-control form-control--custom" id="inputUserName" placeholder="Name" required>
             </div>
             <div class="form-group">
                 <label for="inputEmail">Email</label>
-                <input type="email" class="form-control form-control--custom" id="inputEmail" placeholder="Email" required>
+                <input name="secondName" type="email" class="form-control form-control--custom" id="inputEmail" placeholder="Email" required>
             </div>
             <div class="form-group">
                 <label for="inputPassword">Password</label>
-                <input type="password" class="form-control form-control--custom" id="inputPassword" placeholder="Password" required>
+                <input name="salary" type="password" class="form-control form-control--custom" id="inputPassword" placeholder="Password" required>
             </div>
             <div class="form-group">
                 <label for="inputCity">City</label>
@@ -97,7 +97,7 @@
                 </label>
             </div>
         </div>
-        <button type="submit" class="button--main">Sign in</button>
+        <button value="login" type="submit" class="button--main">Sign in</button>
     </form>
 </section>
 

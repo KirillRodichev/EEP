@@ -7,29 +7,25 @@ import static OracleConnection.OracleConnection.getOracleConnection;
 
 public class TestConnection {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 
-
-        String selectTableSQL = " SELECT * from NEW_TABLE";
+        String selectTableSQL = "SELECT * from SYSTEM.EMPLOYEES";
 
         Statement statement = null;
 
         try {
-
             Connection connection = getOracleConnection();
 
             statement = connection.createStatement();
 
-            // get data from DB
             ResultSet rs = statement.executeQuery(selectTableSQL);
 
-            // fetch data
             while (rs.next()) {
-                String field = rs.getString("ONE");
-                System.out.println("field : " + field);
+                System.out.println(rs.getString(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            connection.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }
