@@ -56,22 +56,21 @@
 <section class="container container--spaced container--w60" id="form">
     <h2 class="container__header">Login / SignUp Form</h2>
     <form class="needs-validation" action="login" method="post" novalidate>
-
             <div class="form-group">
                 <label for="inputUserName">Name</label>
-                <input name="lastName" type="text" class="form-control form-control--custom" id="inputUserName" placeholder="Name" required>
+                <input name="name" type="text" class="form-control form-control--custom" id="inputUserName" placeholder="Name" required>
             </div>
             <div class="form-group">
                 <label for="inputEmail">Email</label>
-                <input name="secondName" type="email" class="form-control form-control--custom" id="inputEmail" placeholder="Email" required>
+                <input name="email" type="email" class="form-control form-control--custom" id="inputEmail" placeholder="Email" required>
             </div>
             <div class="form-group">
                 <label for="inputPassword">Password</label>
-                <input name="salary" type="password" class="form-control form-control--custom" id="inputPassword" placeholder="Password" required>
+                <input name="password" type="password" class="form-control form-control--custom" id="inputPassword" placeholder="Password" required>
             </div>
             <div class="form-group">
                 <label for="inputCity">City</label>
-                <select id="inputCity" class="form-control form-control--custom" required>
+                <select name="city" id="inputCity" class="form-control form-control--custom" required>
                     <option selected>Choose...</option>
                     <% for (int i = 0; i < FakeData.CITIES.length; i++) { %>
                     <option value=""><%=FakeData.CITIES[i] %>
@@ -81,7 +80,7 @@
             </div>
             <div class="form-group">
                 <label for="inputGym">Gym</label>
-                <select id="inputGym" class="form-control form-control--custom" required>
+                <select name="gym" id="inputGym" class="form-control form-control--custom" required>
                     <option selected>Choose...</option>
                     <% for (int i = 0; i < FakeData.GYMS.length; i++) { %>
                     <option value=""><%=FakeData.GYMS[i] %>

@@ -9,7 +9,7 @@ public class TestConnection {
 
     public static void main(String[] args) {
 
-        String selectTableSQL = "SELECT * from SYSTEM.EMPLOYEES";
+        String selectTableSQL = "SELECT * from SYSTEM.USERS";
 
         Statement statement = null;
 
