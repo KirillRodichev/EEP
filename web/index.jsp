@@ -28,78 +28,85 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar--styled">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggler"
-            aria-controls="navToggler" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navToggler">
-        <a class="navbar-brand" href="index.jsp">
-            <img class="navbar-brand__img" src="assets/img/logo.png" alt="logotype">
-        </a>
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Usage</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Get started</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav mt-2 mt-lg-0">
-            <li class="nav-item">
-                <a href="#" class="nav-link">Account</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<%@ include file="components/navigation.jsp" %>
 
-<section class="container container--spaced container--w60" id="form">
-    <h2 class="container__header">Login / SignUp Form</h2>
-    <form class="needs-validation" action="login" method="post" novalidate>
-            <div class="form-group">
-                <label for="inputUserName">Name</label>
-                <input name="name" type="text" class="form-control form-control--custom" id="inputUserName" placeholder="Name" required>
-            </div>
-            <div class="form-group">
-                <label for="inputEmail">Email</label>
-                <input name="email" type="email" class="form-control form-control--custom" id="inputEmail" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input name="password" type="password" class="form-control form-control--custom" id="inputPassword" placeholder="Password" required>
-            </div>
-            <div class="form-group">
-                <label for="inputCity">City</label>
-                <select name="city" id="inputCity" class="form-control form-control--custom" required>
-                    <option selected>Choose...</option>
-                    <% for (int i = 0; i < FakeData.CITIES.length; i++) { %>
-                    <option value=""><%=FakeData.CITIES[i] %>
-                    </option>
-                    <% } %>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="inputGym">Gym</label>
-                <select name="gym" id="inputGym" class="form-control form-control--custom" required>
-                    <option selected>Choose...</option>
-                    <% for (int i = 0; i < FakeData.GYMS.length; i++) { %>
-                    <option value=""><%=FakeData.GYMS[i] %>
-                    </option>
-                    <% } %>
-                </select>
-            </div>
-        <div class="form-group">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck" required>
-                <label class="form-check-label" for="gridCheck">
-                    Check me out
-                </label>
+<section class="login-auth" id="form"> <!-- container container--spaced -->
+    <div id="wrapper" class="login-auth-flex box-left">
+        <div class="login-auth__box-wrapper">
+            <div class="login-auth__box box-right">
+                <h2 class="container__header">SignUp Form</h2>
+                <form class="needs-validation" action="login" method="post" novalidate>
+                    <div class="form-group">
+                        <label for="signUpUserName">Name</label>
+                        <input name="name" type="text" class="form-control form-control--custom" id="signUpUserName"
+                               placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signUpEmail">Email</label>
+                        <input name="email" type="email" class="form-control form-control--custom" id="signUpEmail"
+                               placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signUpPassword">Password</label>
+                        <input name="password" type="password" class="form-control form-control--custom" id="signUpPassword"
+                               placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signUpCity">City</label>
+                        <select name="city" id="signUpCity" class="form-control form-control--custom" required>
+                            <option selected>Choose...</option>
+                            <% for (int i = 0; i < FakeData.CITIES.length; i++) { %>
+                            <option value=""><%=FakeData.CITIES[i] %>
+                            </option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="signUpGym">Gym</label>
+                        <select name="gym" id="signUpGym" class="form-control form-control--custom" required>
+                            <option selected>Choose...</option>
+                            <% for (int i = 0; i < FakeData.GYMS.length; i++) { %>
+                            <option value=""><%=FakeData.GYMS[i] %>
+                            </option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="d-flex mt-3">
+                        <button value="signUp" type="submit" class="button--primary mr-3">Sign up</button>
+                        <a role="button" id="toLogin" value="toLogin" class="button--secondary">Switch to Login</a>
+                    </div>
+                </form>
             </div>
         </div>
-        <button value="login" type="submit" class="button--main">Sign in</button>
-    </form>
+        <div class="login-auth__box-wrapper">
+            <div class="login-auth__box box-left">
+                <h2 class="container__header">Login Form</h2>
+                <form class="needs-validation" action="login" method="post" novalidate>
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input name="email" type="email" class="form-control form-control--custom" id="loginEmail"
+                               placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input name="password" type="password" class="form-control form-control--custom" id="loginPassword"
+                               placeholder="Password" required>
+                    </div>
+                    <div class="d-flex mt-3">
+                        <button value="login" type="submit" class="button--primary mr-3">Login</button>
+                        <a role="button" id="toSignUp" value="toLogin" class="button--secondary">Switch to Sign Up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
 
+<footer class="footer">
+    <div class="container">
+        <p class="footer__p m-0">Designed by <a class="link" href="https://vk.com/k_rodichev">K.Rodichev</a></p>
+    </div>
+</footer>
 
 <!-- Optional JavaScript -->
 <script>
@@ -119,6 +126,9 @@
         }, false);
     })();
 </script>
+
+<script src="assets/js/login-auth-effect.js"></script>
+
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

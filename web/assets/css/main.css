@@ -1,23 +1,35 @@
+/* Super small devices */
+@media (min-width: 300px) {
+    .login-auth__box {
+        box-shadow: none;
+        padding: 0;
+        border-radius: 0;
+    }
+    .container--w400 {
+        max-width: 400px;
+    }
+}
+
 /* Small devices (landscape phones, 576px and up)*/
 @media (min-width: 576px) {
-    .container--w60 {
-        width: 100%;
-        max-width: 400px;
+    .login-auth__box {
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        padding: 50px;
+        border-radius: 30px;
+    }
+    .container--w400 {
+        max-width: 500px;
     }
 }
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-    .container--w60 {
-        width: 60%;
-    }
+
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-    .container--w60 {
-        width: 40%;
-    }
+
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
@@ -31,11 +43,8 @@ body {
 }
 
 .navbar--styled {
-    background-color: #fafafa;
-}
-
-.container--spaced {
-    margin: 50px auto 25px auto;
+    background-color: #9900FF;
+    color: #ffffff;
 }
 
 .container__header {
@@ -46,7 +55,7 @@ body {
     height: 60px;
 }
 
-.button--main {
+.button--primary {
     padding: 10px 40px;
     background-color: #9900FF;
     font-weight: 500;
@@ -55,12 +64,32 @@ body {
     border: 2px solid #9900FF;
 }
 
-.button--main:hover {
+.button--secondary {
+    cursor: pointer;
+    padding: 10px 40px;
+    background-color: #ffffff;
+    font-weight: 500;
+    color: #9900FF !important;
+    border-radius: 5px;
+    border: 2px solid #9900FF;
+}
+
+.button--secondary:hover {
+    color: #ffffff !important;
+    background-color: #9900FF;
+}
+
+.button--secondary:active {
+    background-color: #ffffff;
+    color: #9900FF !important;
+}
+
+.button--primary:hover {
     color: #9900FF;
     background-color: rgba(0,0,0,0);
 }
 
-.button--main:active {
+.button--primary:active {
     background-color: #9900FF;
     color: #ffffff;
 }
@@ -101,4 +130,54 @@ body {
 .form-control--custom.is-invalid:focus, .was-validated .form-control--custom:invalid:focus {
     border-color: #dc3545 !important;
     box-shadow: none !important;
+}
+
+a.link {
+    color: #ffffff;
+}
+
+a.link:hover {
+    color: #33CCCC;
+    text-decoration: none;
+}
+
+.footer {
+    background-color: #9900FF;
+    padding: 30px 0;
+}
+
+.footer__p {
+    color: #dcdcdc;
+    text-align: center;
+}
+
+.login-auth {
+    position: relative;
+    padding: 50px 0;
+    overflow-x: hidden;
+}
+
+.login-auth-flex {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    position: relative;
+}
+
+.login-auth__box-wrapper {
+    position: relative;
+}
+
+.login-auth__box {
+    position: relative;
+}
+
+.box-right {
+    transform: translate(-50%);
+    transition: 1s;
+}
+
+.box-left {
+    transform: translate(50%);
+    transition: 1s;
 }
