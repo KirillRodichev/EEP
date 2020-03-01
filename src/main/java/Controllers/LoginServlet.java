@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Enumeration;
 
 import static OracleConnection.OracleConnection.getOracleConnection;
 
@@ -17,37 +18,34 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        User user = new User(
-                req.getParameter("name"),
-                req.getParameter("email"),
-                req.getParameter("password"),
-                req.getParameter("city"),
-                req.getParameter("gym")
-        );
+        String selectPassStatement = "SELECT * FROM SYSTEM.USERS WHERE EMAIL = '" + req.getParameter("email") + "'";
 
-        String insertStatement =
-                "INSERT INTO SYSTEM.USERS " +
-                "(USERID, NAME, EMAIL, PASSWORD, CITY, GYM) " +
-                "VALUES " +
-                "(?, ?, ?, ?, ?, ?)";
-
+        Statement statement = null;
+        User user = null;
         try {
             Connection connection = getOracleConnection();
+            statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(selectPassStatement);
 
-            PreparedStatement ps = connection.prepareStatement(insertStatement);
-            ps.setInt(1, User.getId());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPassword());
-            ps.setString(5, user.getCity());
-            ps.setString(6, user.getGym());
-
+            while (rs.next()) {
+                user = new User(
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6)
+                );
+            }
             connection.close();
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        resp.sendRedirect("success.jsp");
+        if (user.getPassword().equals(req.getParameter("password"))) {
+            resp.sendRedirect("success.jsp");
+        } else {
+            resp.sendRedirect("nosuccess.jsp");
+        }
     }
 
     @Override

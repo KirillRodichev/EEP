@@ -35,7 +35,7 @@
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-right">
                 <h2 class="container__header">SignUp Form</h2>
-                <form class="needs-validation" action="login" method="post" novalidate>
+                <form class="needs-validation" action="signUp" method="post" novalidate>
                     <div class="form-group">
                         <label for="signUpUserName">Name</label>
                         <input name="name" type="text" class="form-control form-control--custom" id="signUpUserName"
@@ -71,7 +71,7 @@
                             <% } %>
                         </select>
                     </div>
-                    <div class="d-flex mt-3">
+                    <div class="d-flex mt-5">
                         <button value="signUp" type="submit" class="button--primary mr-3">Sign up</button>
                         <a role="button" id="toLogin" value="toLogin" class="button--secondary">Switch to Login</a>
                     </div>
@@ -92,7 +92,7 @@
                         <input name="password" type="password" class="form-control form-control--custom" id="loginPassword"
                                placeholder="Password" required>
                     </div>
-                    <div class="d-flex mt-3">
+                    <div class="d-flex mt-5">
                         <button value="login" type="submit" class="button--primary mr-3">Login</button>
                         <a role="button" id="toSignUp" value="toLogin" class="button--secondary">Switch to Sign Up</a>
                     </div>
