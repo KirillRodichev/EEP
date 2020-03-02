@@ -1,4 +1,5 @@
-<%@ page import="model.FakeData" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%--
   Created by IntelliJ IDEA.
   User: kiril
   Date: 21.02.2020
@@ -30,7 +31,7 @@
 
 <%@ include file="components/navigation.jsp" %>
 
-<section class="login-auth" id="form"> <!-- container container--spaced -->
+<section class="login-auth" id="form">
     <div id="wrapper" class="login-auth-flex box-left">
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-right">
@@ -55,20 +56,28 @@
                         <label for="signUpCity">City</label>
                         <select name="city" id="signUpCity" class="form-control form-control--custom" required>
                             <option selected>Choose...</option>
-                            <% for (int i = 0; i < FakeData.CITIES.length; i++) { %>
-                            <option value=""><%=FakeData.CITIES[i] %>
-                            </option>
-                            <% } %>
+                            <%
+                                ArrayList<String> cities = (ArrayList<String>) request.getAttribute("cities");
+                                for (String city : cities) {
+                            %>
+                            <option value=""><%=city%></option>
+                            <%
+                                }
+                            %>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="signUpGym">Gym</label>
                         <select name="gym" id="signUpGym" class="form-control form-control--custom" required>
                             <option selected>Choose...</option>
-                            <% for (int i = 0; i < FakeData.GYMS.length; i++) { %>
-                            <option value=""><%=FakeData.GYMS[i] %>
-                            </option>
-                            <% } %>
+                            <%
+                                ArrayList<String> gyms = (ArrayList<String>) request.getAttribute("gyms");
+                                for (String gym : gyms) {
+                            %>
+                            <option value=""><%=gym%></option>
+                            <%
+                                }
+                            %>
                         </select>
                     </div>
                     <div class="d-flex mt-5">
@@ -102,11 +111,7 @@
     </div>
 </section>
 
-<footer class="footer">
-    <div class="container">
-        <p class="footer__p m-0">Designed by <a class="link" href="https://vk.com/k_rodichev">K.Rodichev</a></p>
-    </div>
-</footer>
+<%@ include file="components/footer.html" %>
 
 <!-- Optional JavaScript -->
 <script>
@@ -136,9 +141,6 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
-<%--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>--%>
 <script src="assets/js/bootstrap.min.js"></script>
 </body>
 </html>

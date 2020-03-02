@@ -12,7 +12,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navToggler">
-            <a class="navbar-brand pr-5" href="index.jsp">
+            <a class="navbar-brand pr-5" href="../login.jsp">
                 <img class="navbar-brand__img" src="assets/img/logo.png" alt="logotype">
             </a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">

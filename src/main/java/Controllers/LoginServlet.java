@@ -9,12 +9,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Enumeration;
 
 import static OracleConnection.OracleConnection.getOracleConnection;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+
+    private static final int USER_NAME_COLUMN = 2;
+    private static final int USER_EMAIL_COLUMN = 3;
+    private static final int USER_PASSWORD_COLUMN = 4;
+    private static final int USER_CITY_COLUMN = 5;
+    private static final int USER_GYM_COLUMN = 6;
+
+    private static final String PASSWORD_PARAM = "password";
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -29,11 +37,11 @@ public class LoginServlet extends HttpServlet {
 
             while (rs.next()) {
                 user = new User(
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6)
+                        rs.getString(USER_NAME_COLUMN),
+                        rs.getString(USER_EMAIL_COLUMN),
+                        rs.getString(USER_PASSWORD_COLUMN),
+                        rs.getString(USER_CITY_COLUMN),
+                        rs.getString(USER_GYM_COLUMN)
                 );
             }
             connection.close();
@@ -41,10 +49,10 @@ public class LoginServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        if (user.getPassword().equals(req.getParameter("password"))) {
-            resp.sendRedirect("success.jsp");
+        if (user.getPassword().equals(req.getParameter(PASSWORD_PARAM))) {
+            resp.sendRedirect("pages/success.jsp");
         } else {
-            resp.sendRedirect("nosuccess.jsp");
+            resp.sendRedirect("pages/nosuccess.jsp");
         }
     }
 
