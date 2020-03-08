@@ -1,4 +1,4 @@
-package OracleConnection;
+package oracleConnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +11,6 @@ public class OracleConnection {
 
         final String USER_NAME = "SYSTEM";
         final String PASSWORD = "orcl2020_!";
-
 
         Class.forName("oracle.jdbc.driver.OracleDriver");
 

@@ -1,7 +1,8 @@
-package Controllers;
+package servlets;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +15,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import static OracleConnection.OracleConnection.getOracleConnection;
+import static oracleConnection.OracleConnection.getOracleConnection;
 
+
+/*@WebServlet(
+        urlPatterns = "/retriever",
+        initParams =
+                {
+                        @WebInitParam(name = "allowedTypes", value = "png, css, js")
+                }
+)*/
 @WebServlet("/retriever")
 public class FormDataRetriever extends HttpServlet {
 

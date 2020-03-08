@@ -3,7 +3,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static OracleConnection.OracleConnection.getOracleConnection;
+import static oracleConnection.OracleConnection.getOracleConnection;
 
 public class TestConnection {
 

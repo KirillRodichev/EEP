@@ -1,10 +1,11 @@
-package Controllers;
+package servlets;
 
-import Constants.Columns;
-import Constants.Parameters;
+import constants.Columns;
+import constants.Parameters;
 import model.User;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
 
-import static OracleConnection.OracleConnection.getOracleConnection;
+import static oracleConnection.OracleConnection.getOracleConnection;
 
+/*@WebServlet(
+        urlPatterns = "/signUp",
+        initParams =
+                {
+                        @WebInitParam(name = "allowedTypes", value = "png, css, js")
+                }
+)*/
 @WebServlet("/signUp")
-public class SignUpServlet extends HttpServlet {
+public class SignUp extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

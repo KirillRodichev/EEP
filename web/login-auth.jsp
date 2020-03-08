@@ -82,7 +82,7 @@
                     </div>
                     <div class="d-flex mt-5">
                         <button value="signUp" type="submit" class="button--primary mr-3">Sign up</button>
-                        <a role="button" id="toLogin" value="toLogin" class="button--secondary">Switch to Login</a>
+                        <a role="button" id="toLogin" class="button--secondary">Switch to Login</a>
                     </div>
                 </form>
             </div>
@@ -90,7 +90,7 @@
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-left">
                 <h2 class="container__header">Login Form</h2>
-                <form class="needs-validation" action="login" method="post" novalidate>
+                <form class="needs-validation" action="test" method="post" novalidate>
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
                         <input name="email" type="email" class="form-control form-control--custom" id="loginEmail"
@@ -103,7 +103,7 @@
                     </div>
                     <div class="d-flex mt-5">
                         <button value="login" type="submit" class="button--primary mr-3">Login</button>
-                        <a role="button" id="toSignUp" value="toLogin" class="button--secondary">Switch to Sign Up</a>
+                        <a role="button" id="toSignUp" class="button--secondary">Switch to Sign Up</a>
                     </div>
                 </form>
             </div>

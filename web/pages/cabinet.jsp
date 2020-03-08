@@ -14,15 +14,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="favicon.ico">
 
     <!-- Roboto font -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap&subset=cyrillic"
           rel="stylesheet">
 
     <!-- Custom styles -->
-    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/main.css">
 
     <title>Cabinet</title>
 </head>
@@ -30,14 +30,46 @@
 
 <%@ include file="../components/navigation.jsp" %>
 
-<section class="container">
+<section class="container addit-info">
+    <h1 class="addit-info__h1">Feel additional info fields</h1>
+    <p class="addit-info__p">This information's gonna be used to provide you with a corresponding training program.</p>
+    <form class="needs-validation" novalidate>
+        <div class="custom-control custom-checkbox custom-control-inline mb-3">
+            <input type="checkbox" class="custom-control-input" id="customControlValidation1" required>
+            <label class="custom-control-label" for="customControlValidation1">Male</label>
+        </div>
+        <div class="custom-control custom-checkbox custom-control-inline mb-3">
+            <input type="checkbox" class="custom-control-input" id="customControlValidation2" required>
+            <label class="custom-control-label" for="customControlValidation2">Female</label>
+        </div>
+        <div class="invalid-feedback">Select your gender</div>
 
+        <div class="form-group">
+            <label for="weightInput">Weight</label>
+            <input name="weight" type="text" class="form-control form-control--custom" id="weightInput"
+                   placeholder="Weight" required>
+        </div>
+        <div class="form-group">
+            <label for="heightInput">Height</label>
+            <input name="height" type="text" class="form-control form-control--custom" id="heightInput"
+                   placeholder="Height" required>
+        </div>
+
+        <div class="form-group">
+            <select class="custom-select" required>
+                <option value="">Select...</option>
+                <option value="">Gain muscles</option>
+                <option value="">Loose weight</option>
+                <option value="">Keep in shape</option>
+            </select>
+            <div class="invalid-feedback">Select a training type</div>
+        </div>
+    </form>
 </section>
 
 <%@ include file="../components/footer.html" %>
 
 <!-- Optional JavaScript -->
-<script src="../assets/js/login-auth-effect.js"></script>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -46,6 +78,6 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
 </body>
 </html>
