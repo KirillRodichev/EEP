@@ -18,14 +18,6 @@ import java.util.List;
 import static oracleConnection.OracleConnection.getOracleConnection;
 
 
-/*@WebServlet(
-        urlPatterns = "/retriever",
-        initParams =
-                {
-                        @WebInitParam(name = "allowedTypes", value = "png, css, js")
-                }
-)*/
-@WebServlet("/retriever")
 public class FormDataRetriever extends HttpServlet {
 
     private static final int GYM_COLUMN_INDEX = 3;

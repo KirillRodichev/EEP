@@ -64,6 +64,37 @@
             </select>
             <div class="invalid-feedback">Select a training type</div>
         </div>
+
+        <%--<div class="form-group">
+            <label for="signUpCity">City</label>
+            <select name="city" id="signUpCity" class="form-control form-control--custom" required>
+                <option selected>Choose...</option>
+                <%
+                    ArrayList<String> cities = (ArrayList<String>) request.getAttribute("cities");
+                    for (String city : cities) {
+                %>
+                <option value=""><%=city%>
+                </option>
+                <%
+                    }
+                %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="signUpGym">Gym</label>
+            <select name="gym" id="signUpGym" class="form-control form-control--custom" required>
+                <option selected>Choose...</option>
+                <%
+                    ArrayList<String> gyms = (ArrayList<String>) request.getAttribute("gyms");
+                    for (String gym : gyms) {
+                %>
+                <option value=""><%=gym%>
+                </option>
+                <%
+                    }
+                %>
+            </select>
+        </div>--%>
     </form>
 </section>
 

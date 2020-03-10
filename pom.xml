@@ -44,12 +44,6 @@
             <artifactId>font-awesome</artifactId>
             <version>5.7.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.oracle.jdbc/ojdbc10 -->
-        <!--<dependency>
-            <groupId>com.oracle.jdbc</groupId>
-            <artifactId>ojdbc10</artifactId>
-            <version>19.3.0.0</version>
-        </dependency>-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -80,7 +74,12 @@
             <version>3.2</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 

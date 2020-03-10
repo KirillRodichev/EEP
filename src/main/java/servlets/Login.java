@@ -18,20 +18,13 @@ import java.sql.Statement;
 
 import static oracleConnection.OracleConnection.getOracleConnection;
 
-/*@WebServlet(
-        urlPatterns = "/test",
-        initParams =
-                {
-                        @WebInitParam(name = "allowedTypes", value = "png, css, js")
-                }
-)*/
-@WebServlet("/test")
-public class Test extends HttpServlet {
+@WebServlet("/login")
+public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String selectPassStatement =
-                "SELECT * FROM SYSTEM.USERS_1 WHERE USER_EMAIL = '" + req.getParameter("email") + "'";
+                "SELECT * FROM SYSTEM.USERS WHERE USER_EMAIL = '" + req.getParameter("email") + "'";
 
         Statement statement;
         User user = null;
@@ -46,8 +39,7 @@ public class Test extends HttpServlet {
                         rs.getString(Columns.USER_NAME_COLUMN),
                         rs.getString(Columns.USER_EMAIL_COLUMN),
                         rs.getString(Columns.USER_PASSWORD_COLUMN),
-                        rs.getString(Columns.USER_CITY_COLUMN),
-                        rs.getString(Columns.USER_GYM_COLUMN)
+                        rs.getString(Columns.USER_MODE_COLUMN)
                 );
             }
             connection.close();
@@ -55,8 +47,13 @@ public class Test extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        req.setAttribute("user", user);
-        RequestDispatcher rd = req.getRequestDispatcher("pages/cabinet.jsp");
+        RequestDispatcher rd;
+        if (user != null) {
+            req.setAttribute("user", user);
+            rd = req.getRequestDispatcher("pages/cabinet.jsp");
+        } else {
+            rd = req.getRequestDispatcher("pages/nosuccess.jsp");
+        }
         rd.forward(req, resp);
     }
 }

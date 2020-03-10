@@ -25,6 +25,9 @@
     <!-- Custom styles -->
     <link rel="stylesheet" href="assets/css/main.css">
 
+    <!-- FontAwesome kit -->
+    <script src="https://kit.fontawesome.com/9ec0b3417c.js" crossorigin="anonymous"></script>
+
     <title>EEP</title>
 </head>
 <body>
@@ -39,45 +42,38 @@
                 <form class="needs-validation" action="signUp" method="post" novalidate>
                     <div class="form-group">
                         <label for="signUpUserName">Name</label>
+                        <button class="button--default p-0" type="button" data-toggle="popover" title="Name tips"
+                                data-content="Some real tips will be placed here. Now it's just this."
+                        >
+                            <i class="far fa-question-circle form-group__i"></i>
+                        </button>
                         <input name="name" type="text" class="form-control form-control--custom" id="signUpUserName"
-                               placeholder="Name" required>
+                               required placeholder="Name">
+                        <div class="invalid-feedback">Name is required and must follow the tips</div>
                     </div>
                     <div class="form-group">
                         <label for="signUpEmail">Email</label>
                         <input name="email" type="email" class="form-control form-control--custom" id="signUpEmail"
-                               placeholder="Email" required>
+                               required placeholder="Email">
+                        <div class="invalid-feedback">Email is required</div>
                     </div>
                     <div class="form-group">
                         <label for="signUpPassword">Password</label>
-                        <input name="password" type="password" class="form-control form-control--custom" id="signUpPassword"
-                               placeholder="Password" required>
+                        <button class="button--default p-0" type="button" data-toggle="popover" title="Password tips"
+                                data-content="Some real tips will be placed here. Now it's just this."
+                        >
+                            <i class="far fa-question-circle form-group__i"></i>
+                        </button>
+                        <input name="password" type="password" class="form-control form-control--custom"
+                               id="signUpPassword"
+                               required placeholder="Password">
+                        <div class="invalid-feedback">Password is required and must follow the tips</div>
                     </div>
                     <div class="form-group">
-                        <label for="signUpCity">City</label>
-                        <select name="city" id="signUpCity" class="form-control form-control--custom" required>
-                            <option selected>Choose...</option>
-                            <%
-                                ArrayList<String> cities = (ArrayList<String>) request.getAttribute("cities");
-                                for (String city : cities) {
-                            %>
-                            <option value=""><%=city%></option>
-                            <%
-                                }
-                            %>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="signUpGym">Gym</label>
-                        <select name="gym" id="signUpGym" class="form-control form-control--custom" required>
-                            <option selected>Choose...</option>
-                            <%
-                                ArrayList<String> gyms = (ArrayList<String>) request.getAttribute("gyms");
-                                for (String gym : gyms) {
-                            %>
-                            <option value=""><%=gym%></option>
-                            <%
-                                }
-                            %>
+                        <label for="selectMode">User / Admin</label>
+                        <select name="mode" id="selectMode" class="form-control form-control--custom" required>
+                            <option value="" selected>User</option>
+                            <option value="" selected>Admin</option>
                         </select>
                     </div>
                     <div class="d-flex mt-5">
@@ -90,7 +86,7 @@
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-left">
                 <h2 class="container__header">Login Form</h2>
-                <form class="needs-validation" action="test" method="post" novalidate>
+                <form class="needs-validation" action="login" method="post" novalidate>
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
                         <input name="email" type="email" class="form-control form-control--custom" id="loginEmail"
@@ -98,7 +94,8 @@
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password</label>
-                        <input name="password" type="password" class="form-control form-control--custom" id="loginPassword"
+                        <input name="password" type="password" class="form-control form-control--custom"
+                               id="loginPassword"
                                placeholder="Password" required>
                     </div>
                     <div class="d-flex mt-5">
@@ -114,6 +111,8 @@
 <%@ include file="components/footer.html" %>
 
 <!-- Optional JavaScript -->
+
+<!-- Validation -->
 <script>
     (function () {
         'use strict';
@@ -142,5 +141,15 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
 <script src="assets/js/bootstrap.min.js"></script>
+
+<!-- Enable Popover -->
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            trigger: 'hover'
+        })
+    })
+</script>
+
 </body>
 </html>
