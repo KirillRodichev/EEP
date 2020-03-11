@@ -15,4 +15,9 @@ public class Columns {
     public static final int GYM_LOGO_PATH = 5;
     public static final int GYM_PHONE = 6;
     public static final int GYM_ADDRESS = 7;
+
+    public static final int EQUIPMENT_ID = 1;
+    public static final int EQUIPMENT_NAME = 2;
+    public static final int EQUIPMENT_DESCRIPTION = 3;
+    public static final int EQUIPMENT_IMG_PATH = 4;
 }

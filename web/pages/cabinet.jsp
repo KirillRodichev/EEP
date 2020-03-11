@@ -213,7 +213,10 @@
     </div>
     <%if (gym != null){%>
     <div class="equipment-btn">
-        <a href="" role="button" class="equipment-btn__btn">EQUIPMENT</a>
+        <form action="equipment" method="post">
+            <input name="id" class="d-none" type="text" value="<%=gym.getId()%>">
+            <button type="submit" class="equipment-btn__btn">EQUIPMENT</button>
+        </form>
     </div>
     <%}%>
 </section>

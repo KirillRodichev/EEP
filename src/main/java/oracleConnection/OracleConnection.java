@@ -1,8 +1,8 @@
 package oracleConnection;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import constants.Columns;
+
+import java.sql.*;
 import java.util.Properties;
 
 public class OracleConnection {
@@ -28,5 +28,11 @@ public class OracleConnection {
         }
 
         return connection;
+    }
+
+    public static ResultSet getSingleIntResultSet(String sql, Connection con, int val) throws SQLException {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(Columns.GYM_ID, val);
+        return ps.executeQuery();
     }
 }

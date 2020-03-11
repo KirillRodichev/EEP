@@ -5,6 +5,7 @@ import constants.DB;
 import constants.DispatchAttrs;
 import model.Gym;
 import model.User;
+import oracleConnection.OracleConnection;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -63,9 +64,7 @@ public class Login extends HttpServlet {
 
             int gymId = DB.EMPTY_FIELD;
             if (user != null) {
-                PreparedStatement psGymId = connection.prepareStatement(selectGymId);
-                psGymId.setInt(Columns.GYM_ID, user.getId());
-                ResultSet rsGymId = psGymId.executeQuery();
+                ResultSet rsGymId = OracleConnection.getSingleIntResultSet(selectGymId, connection, user.getId());
                 while (rsGymId.next()) {
                     gymId = rsGymId.getInt(Columns.GYM_ID);
                 }
