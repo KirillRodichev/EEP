@@ -1,6 +1,7 @@
 package servlets;
 
 import constants.Columns;
+import constants.DB;
 import constants.Parameters;
 import model.User;
 
@@ -20,6 +21,12 @@ public class SignUp extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         User user = new User(
+                /*
+                ============CHANGE ID PARAM============
+                 */
+                Integer.parseInt(req.getParameter(Parameters.USER_MODE)),
+
+
                 req.getParameter(Parameters.USER_NAME),
                 req.getParameter(Parameters.USER_EMAIL),
                 req.getParameter(Parameters.USER_PASSWORD),
@@ -36,10 +43,10 @@ public class SignUp extends HttpServlet {
             Connection connection = getOracleConnection();
 
             PreparedStatement ps = connection.prepareStatement(insertStatement);
-            ps.setString(Columns.USER_NAME_COLUMN, user.getName());
-            ps.setString(Columns.USER_EMAIL_COLUMN, user.getEmail());
-            ps.setString(Columns.USER_PASSWORD_COLUMN, user.getPassword());
-            ps.setString(Columns.USER_MODE_COLUMN, user.getMode());
+            ps.setString(Columns.USER_NAME, user.getName());
+            ps.setString(Columns.USER_EMAIL, user.getEmail());
+            ps.setString(Columns.USER_PASSWORD, user.getPassword());
+            ps.setString(Columns.USER_MODE, user.getMode());
             ps.execute();
 
             connection.close();

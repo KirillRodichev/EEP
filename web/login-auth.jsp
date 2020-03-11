@@ -47,13 +47,13 @@
                         >
                             <i class="far fa-question-circle form-group__i"></i>
                         </button>
-                        <input name="name" type="text" class="form-control form-control--custom" id="signUpUserName"
+                        <input name="name" type="text" class="form-control form-control--custom primary-border" id="signUpUserName"
                                required placeholder="Name">
                         <div class="invalid-feedback">Name is required and must follow the tips</div>
                     </div>
                     <div class="form-group">
                         <label for="signUpEmail">Email</label>
-                        <input name="email" type="email" class="form-control form-control--custom" id="signUpEmail"
+                        <input name="email" type="email" class="form-control form-control--custom primary-border" id="signUpEmail"
                                required placeholder="Email">
                         <div class="invalid-feedback">Email is required</div>
                     </div>
@@ -64,20 +64,20 @@
                         >
                             <i class="far fa-question-circle form-group__i"></i>
                         </button>
-                        <input name="password" type="password" class="form-control form-control--custom"
+                        <input name="password" type="password" class="form-control form-control--custom primary-border"
                                id="signUpPassword"
                                required placeholder="Password">
                         <div class="invalid-feedback">Password is required and must follow the tips</div>
                     </div>
                     <div class="form-group">
                         <label for="selectMode">User / Admin</label>
-                        <select name="mode" id="selectMode" class="form-control form-control--custom" required>
+                        <select name="mode" id="selectMode" class="form-control form-control--custom primary-border" required>
                             <option value="" selected>User</option>
                             <option value="" selected>Admin</option>
                         </select>
                     </div>
                     <div class="d-flex mt-5">
-                        <button value="signUp" type="submit" class="button--primary mr-3">Sign up</button>
+                        <button disabled value="signUp" type="submit" class="button--primary mr-3">Sign up</button>
                         <a role="button" id="toLogin" class="button--secondary">Switch to Login</a>
                     </div>
                 </form>
@@ -89,12 +89,12 @@
                 <form class="needs-validation" action="login" method="post" novalidate>
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
-                        <input name="email" type="email" class="form-control form-control--custom" id="loginEmail"
+                        <input name="email" type="email" class="form-control form-control--custom primary-border" id="loginEmail"
                                placeholder="Email" required>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password</label>
-                        <input name="password" type="password" class="form-control form-control--custom"
+                        <input name="password" type="password" class="form-control form-control--custom primary-border"
                                id="loginPassword"
                                placeholder="Password" required>
                     </div>

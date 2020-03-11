@@ -1,4 +1,10 @@
-<%--
+<%@ page import="model.User" %>
+<%@ page import="constants.UserModes" %>
+<%@ page import="model.Gym" %>
+<%@ page import="constants.Columns" %>
+<%@ page import="constants.Paths" %>
+<%@ page import="constants.DispatchAttrs" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: kiril
   Date: 01.03.2020
@@ -30,72 +36,186 @@
 
 <%@ include file="../components/navigation.jsp" %>
 
-<section class="container addit-info">
-    <h1 class="addit-info__h1">Feel additional info fields</h1>
-    <p class="addit-info__p">This information's gonna be used to provide you with a corresponding training program.</p>
-    <form class="needs-validation" novalidate>
-        <div class="custom-control custom-checkbox custom-control-inline mb-3">
-            <input type="checkbox" class="custom-control-input" id="customControlValidation1" required>
-            <label class="custom-control-label" for="customControlValidation1">Male</label>
-        </div>
-        <div class="custom-control custom-checkbox custom-control-inline mb-3">
-            <input type="checkbox" class="custom-control-input" id="customControlValidation2" required>
-            <label class="custom-control-label" for="customControlValidation2">Female</label>
-        </div>
-        <div class="invalid-feedback">Select your gender</div>
+<%
+    User user = (User) request.getAttribute(DispatchAttrs.USER);
+    Gym gym = (Gym) request.getAttribute(DispatchAttrs.GYMS);
+    ArrayList<String> cities = (ArrayList<String>) request.getAttribute(DispatchAttrs.CITIES);
+%>
 
-        <div class="form-group">
-            <label for="weightInput">Weight</label>
-            <input name="weight" type="text" class="form-control form-control--custom" id="weightInput"
-                   placeholder="Weight" required>
-        </div>
-        <div class="form-group">
-            <label for="heightInput">Height</label>
-            <input name="height" type="text" class="form-control form-control--custom" id="heightInput"
-                   placeholder="Height" required>
-        </div>
+<section class="container info">
 
-        <div class="form-group">
-            <select class="custom-select" required>
-                <option value="">Select...</option>
-                <option value="">Gain muscles</option>
-                <option value="">Loose weight</option>
-                <option value="">Keep in shape</option>
-            </select>
-            <div class="invalid-feedback">Select a training type</div>
+    <div class="info-wrapper rounded-border">
+        <h1 class="info__h1">
+            <%
+                if (user.getMode().equals(UserModes.ADMIN)) {
+            %>
+            Admin's
+            <%} else {%>
+            User's
+            <%}%>
+            Cabinet
+        </h1>
+        <div class="d-flex justify-content-center">
+            <p class="info-wrapper__p">
+                <%=user.getEmail()%>
+            </p>
+            <p class="info-wrapper__p">
+                <%=user.getName()%>
+            </p>
         </div>
+    </div>
+    <div class="info-gym info-wrapper">
+        <%if (gym != null) {%>
+        <h3 class="info-gym__h3">Edit information about your gym</h3>
+        <div class="d-flex justify-content-center">
+            <form class="needs-validation" novalidate>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <img class="info-gym__img" src="<%=Paths.GYM_LOGO_PATH + gym.getLogoPath()%>"
+                             alt="<%=gym.getName()%>">
+                        <div class="custom-file mb-16">
+                            <input type="file" class="custom-file-input" id="r_customFile">
+                            <label class="custom-file-label" for="r_customFile">Choose file</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex align-items-end">
+                        <div class="form-group">
+                            <label for="r_name">Current name: <%=gym.getName()%>
+                            </label>
+                            <input name="r_name" type="text" class="form-control form-control--shadowed" id="r_name"
+                                   placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="r_selectCity">Select city</label>
+                            <select name="r_city" id="r_selectCity" class="custom-select">
+                                <option value="">Select...</option>
+                                <%for (String city : cities) {%>
+                                <option value=""><%=city%>
+                                </option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <div class="form-group">
+                            <label for="r_websiteURL">Current actual link: <%=gym.getWebsiteURL()%>
+                            </label>
+                            <input name="r_websiteURL" type="text" class="form-control" id="r_websiteURL"
+                                   placeholder="Actual link">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="r_website">Current displayed link: <%=gym.getWebsite()%>
+                            </label>
+                            <input name="r_website" type="text" class="form-control" id="r_website" placeholder="Link">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="r_phone">Current phone: <%=gym.getPhone()%>
+                            </label>
+                            <input name="r_phone" type="text" class="form-control" id="r_phone" placeholder="Phone">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group">
+                            <label for="r_address">Current address: <%=gym.getAddress()%>
+                            </label>
+                            <input name="r_address" type="text" class="form-control" id="r_address"
+                                   placeholder="Address">
+                        </div>
+                    </div>
+                    <div class="col-12 button-wrapper">
+                        <button value="sendNewInfo" type="submit" class="button--info-form w-100">Send new information
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <%} else {%>
+        <h3 class="info-gym__h3">Fill the information about your gym</h3>
+        <div class="d-flex justify-content-center">
 
-        <%--<div class="form-group">
-            <label for="signUpCity">City</label>
-            <select name="city" id="signUpCity" class="form-control form-control--custom" required>
-                <option selected>Choose...</option>
-                <%
-                    ArrayList<String> cities = (ArrayList<String>) request.getAttribute("cities");
-                    for (String city : cities) {
-                %>
-                <option value=""><%=city%>
-                </option>
-                <%
-                    }
-                %>
-            </select>
+            <form class="needs-validation" novalidate>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input name="name" type="text" class="form-control form-control--shadowed" id="name"
+                                   placeholder="Name" required>
+                        </div>
+                        <div class="invalid-feedback">You need to provide your gym name</div>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex align-items-end">
+                        <div class="custom-file mb-16">
+                            <input type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                    </div>
+                    <div class="com-12 col-md-4">
+                        <div class="form-group">
+                            <label for="selectCity">Select City</label>
+                            <select name="city" id="selectCity" class="custom-select" required>
+                                <option value="">Select...</option>
+                                <%for (String city : cities) {%>
+                                <option value=""><%=city%>
+                                </option>
+                                <%}%>
+                            </select>
+                            <div class="invalid-feedback">Select city</div>
+                        </div>
+                    </div>
+                    <div class="com-12 col-md-4">
+                        <div class="form-group">
+                            <label for="website">Displayed website link</label>
+                            <input name="website" type="text" class="form-control"
+                                   id="website"
+                                   placeholder="Link" required>
+                        </div>
+                        <div class="invalid-feedback">Please fill the field</div>
+                    </div>
+                    <div class="com-12 col-md-4">
+                        <div class="form-group">
+                            <label for="websiteURL">Actual website link</label>
+                            <input name="websiteURL" type="text" class="form-control"
+                                   id="websiteURL" placeholder="Actual link" required>
+                        </div>
+                        <div class="invalid-feedback">Please fill the field</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input name="phone" type="text" class="form-control"
+                                   id="phone"
+                                   placeholder="Phone" required>
+                        </div>
+                        <div class="invalid-feedback">Please fill the field</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input name="address" type="text" class="form-control"
+                                   id="address"
+                                   placeholder="Address" required>
+                        </div>
+                        <div class="invalid-feedback">Please fill the field</div>
+                    </div>
+                    <div class="col-12 button-wrapper">
+                        <button value="sendInfo" type="submit" class="button--info-form w-100">Send information</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="signUpGym">Gym</label>
-            <select name="gym" id="signUpGym" class="form-control form-control--custom" required>
-                <option selected>Choose...</option>
-                <%
-                    ArrayList<String> gyms = (ArrayList<String>) request.getAttribute("gyms");
-                    for (String gym : gyms) {
-                %>
-                <option value=""><%=gym%>
-                </option>
-                <%
-                    }
-                %>
-            </select>
-        </div>--%>
-    </form>
+        <%}%>
+    </div>
+    <%if (gym != null){%>
+    <div class="equipment-btn">
+        <a href="" role="button" class="equipment-btn__btn">EQUIPMENT</a>
+    </div>
+    <%}%>
 </section>
 
 <%@ include file="../components/footer.html" %>
