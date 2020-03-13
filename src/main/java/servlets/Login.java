@@ -29,16 +29,13 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String selectUser =
-                "SELECT * FROM SYSTEM.USERS WHERE USER_EMAIL = '" + req.getParameter("email") + "'";
+                "SELECT * FROM USERS WHERE USER_EMAIL = '" + req.getParameter("email") + "'";
 
-        String selectGymId =
-                "SELECT GYM_ID FROM SYSTEM.USERS_GYMS WHERE USER_ID = ?";
+        String selectGymId = "SELECT GYM_ID FROM USERS_GYMS WHERE USER_ID = ?";
 
-        String selectGym =
-                "SELECT * FROM SYSTEM.GYMS WHERE GYM_ID = ?";
+        String selectGym = "SELECT * FROM GYMS WHERE GYM_ID = ?";
 
-        String selectCities =
-                "SELECT * FROM SYSTEM.CITIES";
+        String selectCities = "SELECT * FROM CITIES";
 
         User user = null;
         Gym gym = null;

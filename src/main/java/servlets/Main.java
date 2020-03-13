@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(
-        urlPatterns = "/",
+        urlPatterns = { "/index.jsp" },
         initParams =
                 {
-                        @WebInitParam(name = "allowedTypes", value = "png, css, js")
+                        @WebInitParam(name = "allowedTypes", value = "png, css, js, ico, jpg")
                 }
 )
 

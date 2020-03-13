@@ -34,7 +34,7 @@ public class SignUp extends HttpServlet {
         );
 
         String insertStatement =
-                "INSERT INTO SYSTEM.USERS " +
+                "INSERT INTO USERS " +
                 "(USER_ID, USER_NAME, USER_EMAIL, USER_PASSWORD, USER_MODE) " +
                 "VALUES " +
                 "(USERS_SEQ.nextval, ?, ?, ?, ?)";

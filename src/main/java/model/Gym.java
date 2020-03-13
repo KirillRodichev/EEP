@@ -1,10 +1,8 @@
 package model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Gym {
     private int id;
     private String name;

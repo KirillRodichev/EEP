@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/database/generate-tables-query.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/database/startDB.sql" dialect="Oracle" />
     <file url="file://$PROJECT_DIR$/src/main/java/TestConnection.java" dialect="GenericSQL" />
     <file url="PROJECT" dialect="Oracle" />
   </component>
