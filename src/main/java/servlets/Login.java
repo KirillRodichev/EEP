@@ -1,11 +1,10 @@
 package servlets;
 
 import constants.Columns;
-import constants.DB;
 import constants.DispatchAttrs;
+import constants.ErrorMsg;
 import model.Gym;
 import model.User;
-import oracleConnection.OracleConnection;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,11 +18,29 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static oracleConnection.OracleConnection.getOracleConnection;
+import static utils.Utils.*;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
-    private static final int CITY_NAME_COLUMN_INDEX = 2;
+    private User loadUser(Connection con, String sql) throws SQLException, RuntimeException {
+        User user = null;
+        Statement statementUser = con.createStatement();
+        ResultSet rsUser = statementUser.executeQuery(sql);
+        while (rsUser.next()) {
+            user = new User(
+                    rsUser.getInt(Columns.USER_ID),
+                    rsUser.getString(Columns.USER_NAME),
+                    rsUser.getString(Columns.USER_EMAIL),
+                    rsUser.getString(Columns.USER_PASSWORD),
+                    rsUser.getString(Columns.USER_MODE)
+            );
+        }
+        if (user == null) {
+            throw new RuntimeException(ErrorMsg.USER_NOT_FOUND);
+        }
+        return user;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,74 +48,38 @@ public class Login extends HttpServlet {
         String selectUser =
                 "SELECT * FROM USERS WHERE USER_EMAIL = '" + req.getParameter("email") + "'";
 
-        String selectGymId = "SELECT GYM_ID FROM USERS_GYMS WHERE USER_ID = ?";
+        String selectGymID = "SELECT GYM_ID FROM USERS_GYMS WHERE USER_ID = ?";
 
         String selectGym = "SELECT * FROM GYMS WHERE GYM_ID = ?";
 
-        String selectCities = "SELECT * FROM CITIES";
+        String selectCities = "SELECT CITY_NAME FROM CITIES";
+
+        String selectGyms = "SELECT GYM_NAME FROM GYMS";
 
         User user = null;
         Gym gym = null;
         ArrayList<String> cities = new ArrayList<>();
+        ArrayList<String> gyms = new ArrayList<>();
+        RequestDispatcher rd;
         try (Connection connection = getOracleConnection()) {
-            Statement statementUser = connection.createStatement();
-            ResultSet rsUser = statementUser.executeQuery(selectUser);
-            while (rsUser.next()) {
-                user = new User(
-                        rsUser.getInt(Columns.USER_ID),
-                        rsUser.getString(Columns.USER_NAME),
-                        rsUser.getString(Columns.USER_EMAIL),
-                        rsUser.getString(Columns.USER_PASSWORD),
-                        rsUser.getString(Columns.USER_MODE)
-                );
-            }
 
-            Statement statementCity = connection.createStatement();
-            ResultSet rsCities = statementCity.executeQuery(selectCities);
-            while (rsCities.next()) {
-                cities.add(rsCities.getString(CITY_NAME_COLUMN_INDEX));
-            }
+            user = loadUser(connection, selectUser);
 
-            int gymId = DB.EMPTY_FIELD;
-            if (user != null) {
-                ResultSet rsGymId = OracleConnection.getSingleIntResultSet(selectGymId, connection, user.getId());
-                while (rsGymId.next()) {
-                    gymId = rsGymId.getInt(Columns.GYM_ID);
-                }
-            }
+            loadList(connection, selectCities, cities);
+            loadList(connection, selectGyms, gyms);
 
-            if (gymId != DB.EMPTY_FIELD) {
-                PreparedStatement psGym = connection.prepareStatement(selectGym);
-                psGym.setInt(Columns.GYM_ID, gymId);
-                ResultSet rsGym = psGym.executeQuery();
-                while (rsGym.next()) {
-                    gym = new Gym(
-                            /*
-                            what if field is NULL
-                             */
-                            rsGym.getInt(Columns.GYM_ID),
-                            rsGym.getString(Columns.GYM_NAME),
-                            rsGym.getString(Columns.GYM_WEBSITE),
-                            rsGym.getString(Columns.GYM_WEBSITE_URL),
-                            rsGym.getString(Columns.GYM_LOGO_PATH),
-                            rsGym.getString(Columns.GYM_PHONE),
-                            rsGym.getString(Columns.GYM_ADDRESS)
-                    );
-                }
-            }
+            int gymID = getGymID(connection, selectGymID, user);
+
+            gym = loadGym(connection, selectGym, gymID);
+
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            req.setAttribute(ErrorMsg.ERROR_MESSAGE, ErrorMsg.USER_ALREADY_EXISTS);
+            rd = req.getRequestDispatcher("pages/error.jsp");
+            rd.forward(req, resp);
         }
 
-        RequestDispatcher rd;
-        req.setAttribute(DispatchAttrs.CITIES, cities);
-        if (user != null) {
-            req.setAttribute(DispatchAttrs.USER, user);
-            req.setAttribute(DispatchAttrs.GYMS, Objects.requireNonNullElse(gym, null));
-            rd = req.getRequestDispatcher("pages/cabinet.jsp");
-        } else {
-            rd = req.getRequestDispatcher("pages/nosuccess.jsp");
-        }
-        rd.forward(req, resp);
+        forwardToCabinet(req, resp,user, cities, gyms, gym);
     }
 }

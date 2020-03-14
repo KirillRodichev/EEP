@@ -38,8 +38,14 @@
 
 <%
     User user = (User) request.getAttribute(DispatchAttrs.USER);
-    Gym gym = (Gym) request.getAttribute(DispatchAttrs.GYMS);
     ArrayList<String> cities = (ArrayList<String>) request.getAttribute(DispatchAttrs.CITIES);
+    ArrayList<String> gyms = (ArrayList<String>) request.getAttribute(DispatchAttrs.GYMS);
+    Gym gym;
+    try {
+        gym = (Gym) request.getAttribute(DispatchAttrs.GYM);
+    } catch (Exception e) {
+        gym = null;
+    }
 %>
 
 <section class="container info">
@@ -66,7 +72,7 @@
     </div>
     <div class="info-gym info-wrapper">
         <%if (gym != null) {%>
-        <h3 class="info-gym__h3">Edit information about your gym</h3>
+        <h3 class="info-gym__h3">Your gym info</h3>
         <div class="d-flex justify-content-center">
             <form class="needs-validation" novalidate>
                 <div class="row">
@@ -82,8 +88,8 @@
                         <div class="form-group">
                             <label for="r_name">Current name: <%=gym.getName()%>
                             </label>
-                            <input name="r_name" type="text" class="form-control form-control--shadowed" id="r_name"
-                                   placeholder="Name">
+                            <input name="r_name" type="text" class="form-control  form-control--custom primary-border"
+                                   id="r_name" placeholder="Name">
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
@@ -102,7 +108,8 @@
                         <div class="form-group">
                             <label for="r_websiteURL">Current actual link: <%=gym.getWebsiteURL()%>
                             </label>
-                            <input name="r_websiteURL" type="text" class="form-control" id="r_websiteURL"
+                            <input name="r_websiteURL" type="text"
+                                   class="form-control  form-control--custom primary-border" id="r_websiteURL"
                                    placeholder="Actual link">
                         </div>
                     </div>
@@ -110,56 +117,79 @@
                         <div class="form-group">
                             <label for="r_website">Current displayed link: <%=gym.getWebsite()%>
                             </label>
-                            <input name="r_website" type="text" class="form-control" id="r_website" placeholder="Link">
+                            <input name="r_website" type="text"
+                                   class="form-control  form-control--custom primary-border" id="r_website"
+                                   placeholder="Link">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="r_phone">Current phone: <%=gym.getPhone()%>
                             </label>
-                            <input name="r_phone" type="text" class="form-control" id="r_phone" placeholder="Phone">
+                            <input name="r_phone" type="text" class="form-control  form-control--custom primary-border"
+                                   id="r_phone" placeholder="Phone">
                         </div>
                     </div>
                     <div class="col-12 col-md-12">
                         <div class="form-group">
                             <label for="r_address">Current address: <%=gym.getAddress()%>
                             </label>
-                            <input name="r_address" type="text" class="form-control" id="r_address"
+                            <input name="r_address" type="text"
+                                   class="form-control  form-control--custom primary-border" id="r_address"
                                    placeholder="Address">
                         </div>
                     </div>
                     <div class="col-12 button-wrapper">
-                        <button value="sendNewInfo" type="submit" class="button--info-form w-100">Send new information
+                        <button value="sendNewInfo" type="submit" class="button--primary w-100">Send new information
                         </button>
                     </div>
                 </div>
             </form>
         </div>
+        <div class="equipment-btn">
+            <form action="equipment" method="post">
+                <input name="id" class="d-none" type="text" value="<%=gym.getId()%>">
+                <button type="submit" class="equipment-btn__btn">EQUIPMENT</button>
+            </form>
+        </div>
         <%} else {%>
         <h3 class="info-gym__h3">Fill the information about your gym</h3>
         <div class="d-flex justify-content-center">
-
             <form class="needs-validation" novalidate>
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input name="name" type="text" class="form-control form-control--shadowed" id="name"
+                            <%if (user.getMode().equals(UserModes.ADMIN)) {%>
+                            <label for="name">Write your gym name</label>
+                            <input name="name" type="text" class="form-control form-control--custom primary-border"
+                                   id="name"
                                    placeholder="Name" required>
+                            <%} else {%>
+                            <lable for="name">Select your gym</lable>
+                            <select name="name" id="name" class="custom-select" title="Select..." required>
+                                <%for (String g : gyms) {%>
+                                <option value=""><%=g%>
+                                </option>
+                                <%}%>
+                            </select>
+                            <%}%>
                         </div>
-                        <div class="invalid-feedback">You need to provide your gym name</div>
+                        <div class="invalid-feedback">This field is required</div>
                     </div>
+                    <%if (user.getMode().equals(UserModes.ADMIN)) {%>
                     <div class="col-12 col-md-6 d-flex align-items-end">
                         <div class="custom-file mb-16">
-                            <input type="file" class="custom-file-input" id="customFile">
-                            <label class="custom-file-label" for="customFile">Choose file</label>
+                            <input type="file" class="form-control form-control--custom primary-border" id="customFile"
+                                   required>
+                            <label class="custom-file-label" for="customFile">Choose image file</label>
                         </div>
+                        <div class="invalid-feedback">Please fill the field</div>
                     </div>
+                    <%}%>
                     <div class="com-12 col-md-4">
                         <div class="form-group">
                             <label for="selectCity">Select City</label>
-                            <select name="city" id="selectCity" class="custom-select" required>
-                                <option value="">Select...</option>
+                            <select name="city" id="selectCity" class="custom-select" title="Select..." required>
                                 <%for (String city : cities) {%>
                                 <option value=""><%=city%>
                                 </option>
@@ -167,58 +197,57 @@
                             </select>
                             <div class="invalid-feedback">Select city</div>
                         </div>
+                        <div class="invalid-feedback">Please select the city</div>
                     </div>
+                    <%if (user.getMode().equals(UserModes.ADMIN)) {%>
                     <div class="com-12 col-md-4">
                         <div class="form-group">
                             <label for="website">Displayed website link</label>
-                            <input name="website" type="text" class="form-control"
-                                   id="website"
-                                   placeholder="Link" required>
+                            <input name="website" type="text" class="form-control form-control--custom primary-border"
+                                   id="website" placeholder="Link" required>
                         </div>
                         <div class="invalid-feedback">Please fill the field</div>
                     </div>
                     <div class="com-12 col-md-4">
                         <div class="form-group">
                             <label for="websiteURL">Actual website link</label>
-                            <input name="websiteURL" type="text" class="form-control"
-                                   id="websiteURL" placeholder="Actual link" required>
+                            <input name="websiteURL" type="text"
+                                   class="form-control form-control--custom primary-border" id="websiteURL"
+                                   placeholder="Actual link" required>
                         </div>
                         <div class="invalid-feedback">Please fill the field</div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input name="phone" type="text" class="form-control"
-                                   id="phone"
-                                   placeholder="Phone" required>
+                            <input name="phone" type="text" class="form-control form-control--custom primary-border"
+                                   id="phone" placeholder="Phone" required>
                         </div>
                         <div class="invalid-feedback">Please fill the field</div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <input name="address" type="text" class="form-control"
-                                   id="address"
-                                   placeholder="Address" required>
+                            <input name="address" type="text" class="form-control form-control--custom primary-border"
+                                   id="address" placeholder="Address" required>
                         </div>
                         <div class="invalid-feedback">Please fill the field</div>
                     </div>
+                    <%}%>
                     <div class="col-12 button-wrapper">
                         <button value="sendInfo" type="submit" class="button--info-form w-100">Send information</button>
                     </div>
                 </div>
             </form>
         </div>
+        <div class="equipment-btn">
+            <form action="setEquipment" method="post">
+                <input name="id" class="d-none" type="text" value="">
+                <button type="submit" class="equipment-btn__btn">SET EQUIPMENT</button>
+            </form>
+        </div>
         <%}%>
     </div>
-    <%if (gym != null){%>
-    <div class="equipment-btn">
-        <form action="equipment" method="post">
-            <input name="id" class="d-none" type="text" value="<%=gym.getId()%>">
-            <button type="submit" class="equipment-btn__btn">EQUIPMENT</button>
-        </form>
-    </div>
-    <%}%>
 </section>
 
 <%@ include file="../components/footer.html" %>
