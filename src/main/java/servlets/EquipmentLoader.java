@@ -3,6 +3,8 @@ package servlets;
 import constants.Columns;
 import constants.DispatchAttrs;
 import constants.Parameters;
+import controllers.BodyGroupController;
+import controllers.EquipmentController;
 import model.Equipment;
 
 import javax.servlet.RequestDispatcher;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static oracleConnection.OracleConnection.getOracleConnection;
@@ -23,75 +26,38 @@ import static oracleConnection.OracleConnection.getSingleIntResultSet;
 @WebServlet("/equipment")
 public class EquipmentLoader extends HttpServlet {
 
-    private void loadEquipmentIDs(String sql, Connection con, int val, ArrayList<Integer> IDs) throws SQLException {
-        ResultSet rsEquipmentIds = getSingleIntResultSet(sql, con, val);
-        while (rsEquipmentIds.next()) {
-            IDs.add(rsEquipmentIds.getInt(Columns.GYM_ID));
-        }
-    }
-
-    private void loadEquipment(String sql, Connection con, ArrayList<Integer> IDs, ArrayList<Equipment> equipment)
+    private void loadEquipment(
+            EquipmentController equipmentController, ArrayList<Integer> IDs, ArrayList<Equipment> equipment)
             throws SQLException {
         for (Integer id : IDs) {
-            ResultSet rsEquipment = getSingleIntResultSet(sql, con, id);
-            while (rsEquipment.next()) {
-                equipment.add(new Equipment(
-                        rsEquipment.getInt(Columns.EQUIPMENT_ID),
-                        rsEquipment.getString(Columns.EQUIPMENT_NAME),
-                        rsEquipment.getString(Columns.EQUIPMENT_DESCRIPTION),
-                        rsEquipment.getString(Columns.EQUIPMENT_IMG_PATH)
-                ));
-            }
+            equipment.add(equipmentController.getById(id));
         }
     }
 
     private void loadBodyGroupsIDs(
-            String sql,
-            Connection con,
-            ArrayList<Equipment> equipment,
-            ArrayList<Integer> IDs,
-            ArrayList<ArrayList<Integer>> IDsList
+            BodyGroupController controller, ArrayList<Equipment> equipment, ArrayList<ArrayList<Integer>> IDsList
             ) throws SQLException {
         for (Equipment eq : equipment) {
-            ResultSet rsEq = getSingleIntResultSet(sql, con, eq.getId());
-            while (rsEq.next()) {
-                IDs.add(rsEq.getInt(Columns.EQUIPMENT_ID));
-            }
-            IDsList.add((ArrayList<Integer>) IDs.clone());
-            IDs.clear();
+            List<Integer> IDs = controller.getIdsListByEquipmentId(eq.getId());
+            IDsList.add((ArrayList<Integer>) IDs);
         }
     }
 
     private void loadBodyGroups(
-            String sql,
-            Connection con,
-            ArrayList<ArrayList<Integer>> IDsList,
-            ArrayList<String> bodyGroups,
+            BodyGroupController controller, ArrayList<ArrayList<Integer>> IDsList,
             ArrayList<ArrayList<String>> bodyGroupsList
     ) throws SQLException {
         for (ArrayList<Integer> idList : IDsList) {
+            List<String> bodyGroups = new ArrayList<>();
             for (Integer id : idList) {
-                ResultSet rsBodyGroup = getSingleIntResultSet(sql, con, id);
-                while (rsBodyGroup.next()) {
-                    bodyGroups.add(rsBodyGroup.getString(Columns.EQUIPMENT_ID));
-                }
+                bodyGroups.add(controller.getById(id));
             }
-            bodyGroupsList.add((ArrayList<String>) bodyGroups.clone());
-            bodyGroups.clear();
-        }
-    }
-
-    private void loadAllBodyGroups(String sql, Connection con, ArrayList<String> allBodyGroups) throws SQLException {
-        Statement statementBgs = con.createStatement();
-        ResultSet rsBgs = statementBgs.executeQuery(sql);
-        while (rsBgs.next()) {
-            allBodyGroups.add(rsBgs.getString(Columns.EQUIPMENT_ID));
+            bodyGroupsList.add(new ArrayList<>(bodyGroups));
         }
     }
 
     private void loadMap(
-            ArrayList<Equipment> equipment,
-            ArrayList<ArrayList<String>> bodyGroupsList,
+            ArrayList<Equipment> equipment, ArrayList<ArrayList<String>> bodyGroupsList,
             Map<Integer, ArrayList<String>> map
     ) {
         for (int i = 0; i < equipment.size(); i++) {
@@ -106,43 +72,29 @@ public class EquipmentLoader extends HttpServlet {
         Map<Integer, ArrayList<String>> equipmentBodyGroups = new HashMap<>();
 
         int gymID = Integer.parseInt(req.getParameter(Parameters.GYM_ID));
-        ArrayList<Integer> equipmentIDs = new ArrayList<>();
-        ArrayList<Integer> bodyGroupsIDs = new ArrayList<>();
+        ArrayList<Integer> equipmentIDs;
         ArrayList<ArrayList<Integer>> bodyGroupsIDsList = new ArrayList<>();
-        ArrayList<String> bodyGroups = new ArrayList<>();
         ArrayList<ArrayList<String>> bodyGroupsList = new ArrayList<>();
-        ArrayList<String> allBodyGroups = new ArrayList<>();
+        ArrayList<String> allBodyGroups ;
 
-        String selectEquipmentIds =
-                "SELECT EQUIPMENT_ID FROM GYMS_EQUIPMENT WHERE GYM_ID = ?";
+        EquipmentController equipmentController = new EquipmentController();
+        BodyGroupController bodyGroupController = new BodyGroupController();
 
-        String selectEquipment =
-                "SELECT * FROM EQUIPMENT WHERE EQUIPMENT_ID = ?";
+        try {
 
-        String selectBodyGroupsIDs =
-                "SELECT B_GROUP_ID FROM B_GROUPS_EQUIPMENT WHERE EQUIPMENT_ID = ?";
+            equipmentIDs = (ArrayList<Integer>) equipmentController.getIdListByGymId(gymID);
 
-        String selectBodyGroup =
-                "SELECT B_GROUP_NAME FROM BODY_GROUPS WHERE B_GROUP_ID = ?";
+            loadEquipment(equipmentController, equipmentIDs, equipment);
 
-        String selectBodyGroups =
-                "SELECT B_GROUP_NAME FROM BODY_GROUPS";
+            loadBodyGroupsIDs(bodyGroupController, equipment, bodyGroupsIDsList);
 
-        try (Connection connection = getOracleConnection()) {
-
-            loadEquipmentIDs(selectEquipmentIds, connection, gymID, equipmentIDs);
-
-            loadEquipment(selectEquipment, connection, equipmentIDs, equipment);
-
-            loadBodyGroupsIDs(selectBodyGroupsIDs, connection, equipment, bodyGroupsIDs, bodyGroupsIDsList);
-
-            loadBodyGroups(selectBodyGroup, connection, bodyGroupsIDsList, bodyGroups, bodyGroupsList);
+            loadBodyGroups(bodyGroupController, bodyGroupsIDsList, bodyGroupsList);
 
             loadMap(equipment, bodyGroupsList, equipmentBodyGroups);
 
-            loadAllBodyGroups(selectBodyGroups, connection, allBodyGroups);
+            allBodyGroups = (ArrayList<String>) bodyGroupController.getAll();
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 

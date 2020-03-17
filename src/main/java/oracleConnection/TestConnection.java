@@ -1,3 +1,5 @@
+package oracleConnection;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +16,7 @@ public class TestConnection {
                         "full outer join SYSTEM.GYMS ON SYSTEM.CITIES.CITY_NAME = SYSTEM.GYMS.GYM_NAME " +
                         "WHERE SYSTEM.GYMS.USER_ID IS NULL AND SYSTEM.CITIES.USER_ID IS NULL";
 
-        Statement statement = null;
+        Statement statement;
 
         try {
             Connection connection = getOracleConnection();

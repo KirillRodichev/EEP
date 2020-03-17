@@ -1,8 +1,10 @@
 package servlets;
 
-import constants.Columns;
-import constants.DispatchAttrs;
 import constants.ErrorMsg;
+import constants.Parameters;
+import controllers.CityController;
+import controllers.GymController;
+import controllers.UserController;
 import model.Gym;
 import model.User;
 
@@ -13,73 +15,52 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Objects;
 
-import static oracleConnection.OracleConnection.getOracleConnection;
-import static utils.Utils.*;
+import static utils.Utils.forwardToCabinet;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
-    private User loadUser(Connection con, String sql) throws SQLException, RuntimeException {
-        User user = null;
-        Statement statementUser = con.createStatement();
-        ResultSet rsUser = statementUser.executeQuery(sql);
-        while (rsUser.next()) {
-            user = new User(
-                    rsUser.getInt(Columns.USER_ID),
-                    rsUser.getString(Columns.USER_NAME),
-                    rsUser.getString(Columns.USER_EMAIL),
-                    rsUser.getString(Columns.USER_PASSWORD),
-                    rsUser.getString(Columns.USER_MODE)
-            );
-        }
-        if (user == null) {
-            throw new RuntimeException(ErrorMsg.USER_NOT_FOUND);
-        }
-        return user;
-    }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String selectUser =
-                "SELECT * FROM USERS WHERE USER_EMAIL = '" + req.getParameter("email") + "'";
-
-        String selectGymID = "SELECT GYM_ID FROM USERS_GYMS WHERE USER_ID = ?";
-
-        String selectGym = "SELECT * FROM GYMS WHERE GYM_ID = ?";
-
-        String selectCities = "SELECT CITY_NAME FROM CITIES";
-
-        String selectGyms = "SELECT GYM_NAME FROM GYMS";
-
-        User user = null;
         Gym gym = null;
-        ArrayList<String> cities = new ArrayList<>();
-        ArrayList<String> gyms = new ArrayList<>();
+        User user = null;
         RequestDispatcher rd;
-        try (Connection connection = getOracleConnection()) {
+        ArrayList<String> gymsNames = new ArrayList<>();
+        ArrayList<String> citiesNames = new ArrayList<>();
 
-            user = loadUser(connection, selectUser);
+        UserController userController = new UserController();
+        CityController cityController = new CityController();
+        GymController gymController = new GymController();
 
-            loadList(connection, selectCities, cities);
-            loadList(connection, selectGyms, gyms);
+        try {
 
-            int gymID = getGymID(connection, selectGymID, user);
+            user = userController.getByEmail(req.getParameter(Parameters.USER_EMAIL));
+            if (user == null) {
+                throw new RuntimeException(ErrorMsg.USER_ALREADY_EXISTS);
+            }
 
-            gym = loadGym(connection, selectGym, gymID);
+            citiesNames = (ArrayList<String>) cityController.getAll();
+            ArrayList<Gym> gyms = (ArrayList<Gym>) gymController.getAll();
+            for (Gym g : gyms) {
+                gymsNames.add(g.getName());
+            }
 
-        } catch (SQLException | ClassNotFoundException e) {
+            int gymID = gymController.getIdByUserId(user.getId());
+
+            gym = gymController.getById(gymID);
+
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
-            req.setAttribute(ErrorMsg.ERROR_MESSAGE, ErrorMsg.USER_ALREADY_EXISTS);
+            req.setAttribute(ErrorMsg.ERROR_MESSAGE, e.getMessage());
             rd = req.getRequestDispatcher("pages/error.jsp");
             rd.forward(req, resp);
         }
 
-        forwardToCabinet(req, resp,user, cities, gyms, gym);
+        forwardToCabinet(req, resp, user, citiesNames, gymsNames, gym);
     }
 }

@@ -1,6 +1,10 @@
 package servlets;
 
 import constants.*;
+import controllers.CityController;
+import controllers.GymController;
+import controllers.UserController;
+import model.Gym;
 import model.User;
 
 import javax.servlet.RequestDispatcher;
@@ -13,44 +17,23 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
-import static oracleConnection.OracleConnection.getOracleConnection;
 import static utils.Utils.*;
 
 @WebServlet("/signUp")
 public class SignUp extends HttpServlet {
 
-    private void insertUserData(Connection con, HttpServletRequest req, String sql) throws SQLException {
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(Columns.FIRST, req.getParameter(Parameters.USER_NAME));
-        ps.setString(Columns.SECOND, req.getParameter(Parameters.USER_EMAIL));
-        ps.setString(Columns.THIRD, req.getParameter(Parameters.USER_PASSWORD));
-        ps.setString(Columns.FOURTH, req.getParameter(Parameters.USER_MODE));
-        ps.execute();
-    }
-
-    private int getUserID(Connection con, String sql, String email) throws SQLException {
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(Columns.USER_ID, email);
-        ResultSet rs = ps.executeQuery();
-        int userID = DB.EMPTY_FIELD;
-        while (rs.next()) {
-            userID = rs.getInt(Columns.USER_ID);
-        }
-        return userID;
-    }
-
-    private User loadUser(HttpServletRequest req, Connection con, String sqlSelect, String sqlInsert)
+    private User loadUser(HttpServletRequest req, UserController userController)
             throws SQLException, RuntimeException {
-        User user = null;
-        if (getUserID(con, sqlSelect, req.getParameter(Parameters.USER_EMAIL)) == DB.EMPTY_FIELD) {
-            insertUserData(con, req, sqlInsert);
+        User user;
+        if (userController.getByEmail(req.getParameter(Parameters.USER_EMAIL)) == null) {
             user = new User(
-                    getUserID(con, sqlSelect, req.getParameter(Parameters.USER_EMAIL)),
+                    DB.EMPTY_FIELD,
                     req.getParameter(Parameters.USER_NAME),
                     req.getParameter(Parameters.USER_EMAIL),
                     req.getParameter(Parameters.USER_PASSWORD),
                     req.getParameter(Parameters.USER_MODE)
             );
+            userController.create(user);
         } else {
             throw new RuntimeException(ErrorMsg.USER_ALREADY_EXISTS);
         }
@@ -59,37 +42,33 @@ public class SignUp extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String insertUserData =
-                "INSERT INTO USERS " +
-                        "(USER_ID, USER_NAME, USER_EMAIL, USER_PASSWORD, USER_MODE) " +
-                        "VALUES " +
-                        "(USERS_SEQ.nextval, ?, ?, ?, ?)";
-
-        String selectUserId = "SELECT USER_ID FROM USERS WHERE USER_EMAIL = ?";
-
-        String selectGyms = "SELECT GYM_NAME FROM GYMS";
-
-        String selectCities = "SELECT CITY_NAME FROM CITIES";
 
         User user = null;
-        ArrayList<String> gyms = new ArrayList<>();
-        ArrayList<String> cities = new ArrayList<>();
         RequestDispatcher rd;
-        try (Connection connection = getOracleConnection()) {
+        ArrayList<String> gymsNames = new ArrayList<>();
+        ArrayList<String> citiesNames = new ArrayList<>();
 
-            user = loadUser(req, connection, selectUserId, insertUserData);
+        UserController userController = new UserController();
+        CityController cityController = new CityController();
+        GymController gymController = new GymController();
+        try {
 
-            loadList(connection, selectGyms, gyms);
-            loadList(connection, selectCities, cities);
+            user = loadUser(req, userController);
 
-        } catch (SQLException | ClassNotFoundException e) {
+            citiesNames = (ArrayList<String>) cityController.getAll();
+            ArrayList<Gym> gyms = (ArrayList<Gym>) gymController.getAll();
+            for (Gym g : gyms) {
+                gymsNames.add(g.getName());
+            }
+
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
-            req.setAttribute(ErrorMsg.ERROR_MESSAGE, ErrorMsg.USER_ALREADY_EXISTS);
+            req.setAttribute(ErrorMsg.ERROR_MESSAGE, e.getMessage());
             rd = req.getRequestDispatcher("pages/error.jsp");
             rd.forward(req, resp);
         }
 
-        forwardToCabinet(req, resp, user, cities, gyms);
+        forwardToCabinet(req, resp, user, citiesNames, gymsNames);
     }
 }
