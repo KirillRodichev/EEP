@@ -107,10 +107,14 @@
                         <label class="custom-file-label" for="r_customFile">Choose file</label>
                     </div>
                 </div>
-
-                <button value="rewriteEquipment" type="submit" class="button--primary">
-                    Rewrite equipment
-                </button>
+                <div class="equipment-btns">
+                    <button value="rewriteEquipment" type="submit" class="button--primary">
+                        Rewrite
+                    </button>
+                    <button value="deleteEquipment" type="submit" class="button--secondary ml-3">
+                        Delete
+                    </button>
+                </div>
             </div>
         </form>
     </div>

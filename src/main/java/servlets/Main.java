@@ -24,8 +24,7 @@ public class Main extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            OracleConnectionPool.
-                    create();
+            OracleConnectionPool.create();
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

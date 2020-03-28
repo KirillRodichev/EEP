@@ -91,7 +91,7 @@
                 </ul>
         </div>
         <div class="info-gym__form-container">
-            <h3 class="info-gym__h3">Your gym info</h3>
+            <h3 class="info-gym__h3">Rewrite your gym info</h3>
             <form class="needs-validation" novalidate>
 
                 <img class="info-gym__img" src="<%=Paths.GYM_LOGO_PATH + gym.getLogoPath()%>"
