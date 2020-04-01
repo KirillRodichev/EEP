@@ -5,7 +5,7 @@
   Time: 14:09
   To change this template use File | Settings | File Templates.
 --%>
-<nav class="navbar navbar-expand-lg navbar--styled">
+<nav class="navbar sticky-top navbar-expand-lg navbar--styled navbar-transitioned">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navToggler"
                 aria-controls="navToggler" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,7 +13,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navToggler">
             <a class="navbar-brand pr-5" href="../login.jsp">
-                <img class="navbar-brand__img" src="assets/img/logo.png" alt="logotype">
+                <img class="navbar-brand__img img--transitioned" src="assets/img/logo.png" alt="logotype">
             </a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">

@@ -1,6 +1,5 @@
 package servlets;
 
-import constants.Columns;
 import constants.DispatchAttrs;
 import constants.Parameters;
 import controllers.BodyGroupController;
@@ -19,9 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static oracleConnection.OracleConnection.getOracleConnection;
-import static oracleConnection.OracleConnection.getSingleIntResultSet;
 
 @WebServlet("/equipment")
 public class EquipmentLoader extends HttpServlet {
@@ -108,5 +104,10 @@ public class EquipmentLoader extends HttpServlet {
             rd = req.getRequestDispatcher("pages/nosuccess.jsp");
         }
         rd.forward(req, resp);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doGet(req, resp);
     }
 }

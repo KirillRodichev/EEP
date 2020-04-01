@@ -18,7 +18,7 @@ public class OracleConnectionPool {
     private static int MAX_POOL_SIZE = 10;
 
     private static List<Connection> connectionPool;
-    private static List<Connection> usedConnections = new ArrayList<>();
+    private static List<Connection> usedConnections;
 
     private static Connection createConnection() throws SQLException, ClassNotFoundException {
         Class.forName(DRIVER);
@@ -27,6 +27,7 @@ public class OracleConnectionPool {
 
     public OracleConnectionPool(List<Connection> pool) {
         connectionPool = pool;
+        usedConnections = new ArrayList<>(MAX_POOL_SIZE);
     }
 
     public static OracleConnectionPool create() throws SQLException, ClassNotFoundException {
@@ -44,8 +45,6 @@ public class OracleConnectionPool {
                 connectionPool.add(createConnection());
             } else {
                 //throw new RuntimeException("Maximum pool size reached, no available connections!");
-                System.out.println("SHUTDOWN");
-                shutdown();
                 System.out.println("CREATE");
                 create();
                 System.out.println("GET CONNECTION: POOL SIZE = " + connectionPool.size() + ", USED = " + usedConnections.size());
