@@ -71,13 +71,6 @@ document.body.onload = () => {
     });
 };
 
-addButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (equipmentIdInput.value) {
-        //console.log(`equipmentIdInput.innerText = ${equipmentIdInput.innerText}`);
-    }
-});
-
 searchButton.addEventListener('click', () => {
     clear();
     const searchingText = searchField.value;

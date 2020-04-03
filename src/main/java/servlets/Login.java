@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static utils.DispatchUtils.forwardToCabinet;
+import static utils.Dispatch.forwardToCabinet;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {

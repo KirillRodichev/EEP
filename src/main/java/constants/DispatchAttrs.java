@@ -6,7 +6,10 @@ public class DispatchAttrs {
     public static final String GYMS = "gyms";
     public static final String GYM = "gym";
     public static final String EQUIPMENT = "equipment";
-    public static final String ALL_EQUIPMENT = "allEquipment";
+    public static final String REST_EQUIPMENT = "restEquipment";
     public static final String EQUIPMENT_BODY_GROUP_MAP = "eqptBodyGrpMap";
     public static final String BODY_GROUPS = "bodyGroups";
+
+    public static final String GYM_ID = "gymID";
+    public static final String EQUIPMENT_ID = "equipmentID";
 }

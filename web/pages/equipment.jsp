@@ -49,7 +49,7 @@
     Map<Integer, List<String>> equipmentBodyGroups =
             (Map<Integer, List<String>>) request.getAttribute(DispatchAttrs.EQUIPMENT_BODY_GROUP_MAP);
     List<String> bodyGroups = (List<String>) request.getAttribute(DispatchAttrs.BODY_GROUPS);
-    List<Equipment> allEquipment = (List<Equipment>) request.getAttribute(DispatchAttrs.ALL_EQUIPMENT);
+    List<Equipment> restEquipment = (List<Equipment>) request.getAttribute(DispatchAttrs.REST_EQUIPMENT);
     int gymID = (Integer) request.getAttribute(DispatchAttrs.GYM);
 %>
 
@@ -61,13 +61,13 @@
                 <form action="addEquipment" method="post">
                     <select name="bodyGroups" id="equipment-selector" class="selectpicker" data-live-search="true"
                             title="Select...">
-                        <%for (Equipment eq : allEquipment) {%>
+                        <%for (Equipment eq : restEquipment) {%>
                         <option class="add-select-option" value="<%=eq.getId()%>"><%=eq.getName()%></option>
                         <%}%>
                     </select>
-                    <input id="addedId" name="addedId" type="text" />
-                    <input name="gymId" type="text" value="<%=gymID%>"/>
-                    <button type="button" id="add-button" class="sidebar-btn mb-3 mt-3">Add</button>
+                    <input hidden id="addedId" name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text" />
+                    <input hidden name="<%=DispatchAttrs.GYM_ID%>" type="text" value="<%=gymID%>"/>
+                    <button type="submit" id="add-button" class="sidebar-btn mb-3 mt-3">Add</button>
                 </form>
                 <hr>
                 <h4>Filters</h4>
@@ -107,8 +107,8 @@
                         <div class="form-group">
                             <h2 class="equipment__h2"><%=eq.getName()%>
                             </h2>
-                            <label for="r_name">Rewrite name with:</label>
-                            <input name="r_name" type="text" class="form-control form-control--shadowed" id="r_name"
+                            <label for="r_name<%=eq.getId()%>">Rewrite name with:</label>
+                            <input name="r_name" type="text" class="form-control form-control--shadowed" id="r_name<%=eq.getId()%>"
                                    placeholder="Name">
                         </div>
                         <div class="form-group">
@@ -116,8 +116,8 @@
                             <p class="equipment__p">
                                 <%=eq.getDescription()%>
                             </p>
-                            <label for="r_websiteURL">Rewrite description with:</label>
-                            <textarea name="r_websiteURL" type="text" class="form-control" id="r_websiteURL"
+                            <label for="r_websiteURL<%=eq.getId()%>">Rewrite description with:</label>
+                            <textarea name="r_websiteURL" type="text" class="form-control" id="r_websiteURL<%=eq.getId()%>"
                                       placeholder="Description"></textarea>
                         </div>
                         <div class="equipment-body-g">
@@ -133,8 +133,8 @@
                                     <%}%>
                                 </ul>
                                 <div class="form-group">
-                                    <label for="selectBodyGroup">Select other body groups</label>
-                                    <select name="bodyGroups" id="selectBodyGroup" class="selectpicker" multiple
+                                    <label for="selectBodyGroup<%=eq.getId()%>">Select other body groups</label>
+                                    <select name="bodyGroups" id="selectBodyGroup<%=eq.getId()%>" class="selectpicker" multiple
                                             data-live-search="true" data-size="5"
                                             title="Select..." data-selected-text-format="count > 2">
                                         <%for (String bodyGroup : bodyGroups) {%>
@@ -148,17 +148,25 @@
                         <div class="equipment-img-select">
                             <h4 class="equipment__h4">Image</h4>
                             <div class="custom-file ">
-                                <input type="file" class="custom-file-input" id="r_customFile">
-                                <label class="custom-file-label" for="r_customFile">Choose file</label>
+                                <input type="file" class="custom-file-input" id="r_customFile<%=eq.getId()%>">
+                                <label class="custom-file-label" for="r_customFile<%=eq.getId()%>">Choose file</label>
                             </div>
                         </div>
                         <div class="equipment-btns">
-                            <button value="rewriteEquipment" type="submit" class="button--primary">
-                                Rewrite
-                            </button>
-                            <button value="deleteEquipment" type="submit" class="button--secondary ml-3">
-                                Delete
-                            </button>
+                            <form action="updateEquipment" method="post">
+                                <input hidden name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text" value="<%=eq.getId()%>" />
+                                <input hidden name="<%=DispatchAttrs.GYM_ID%>" type="text" value="<%=gymID%>"/>
+                                <button value="rewriteEquipment" type="submit" class="button--primary">
+                                    Rewrite
+                                </button>
+                            </form>
+                            <form action="deleteEquipment" method="post">
+                                <input hidden name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text" value="<%=eq.getId()%>" />
+                                <input hidden name="<%=DispatchAttrs.GYM_ID%>" type="text" value="<%=gymID%>"/>
+                                <button value="deleteEquipment" type="submit" class="button--secondary ml-3">
+                                    Delete
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </form>

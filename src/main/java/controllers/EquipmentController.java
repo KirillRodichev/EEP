@@ -14,9 +14,7 @@ public class EquipmentController extends DAOController<Equipment> {
     private static final String SELECT_ALL = "SELECT * FROM EQUIPMENT";
     private static final String SELECT_BY_ID = "SELECT * FROM EQUIPMENT WHERE EQUIPMENT_ID = ?";
     private static final String SELECT_BY_GYM_ID = "SELECT EQUIPMENT_ID FROM GYMS_EQUIPMENT WHERE GYM_ID = ?";
-    private static final String DELETE_BG_RELATION = "DELETE FROM B_GROUPS_EQUIPMENT WHERE EQUIPMENT_ID = ?";
-    private static final String DELETE_G_RELATION = "DELETE FROM GYMS_EQUIPMENT WHERE GYM_ID = ?";
-    private static final String DELETE = "DELETE FROM GYMS WHERE GYM_ID = ?";
+    private static final String DELETE_G_RELATION = "DELETE FROM GYMS_EQUIPMENT WHERE GYM_ID = ? AND EQUIPMENT_ID = ?";
     private static final String CREATE = "INSERT INTO EQUIPMENT " +
             "(EQUIPMENT_ID, EQUIPMENT_NAME, EQUIPMENT_DESCRIPTION, EQUIPMENT_IMG_PATH) " +
             "VALUES (EQUIPMENT_SEQ.nextval, ?, ?, ?)";
@@ -76,9 +74,15 @@ public class EquipmentController extends DAOController<Equipment> {
 
     @Override
     public void delete(int id) throws SQLException {
-        deleteQuery(DELETE_BG_RELATION, id);
-        deleteQuery(DELETE_G_RELATION, id);
-        deleteQuery(DELETE, id);
+
+    }
+
+    public void delete(int gymID, int eqID) throws SQLException {
+        PreparedStatement ps = getPreparedStatement(DELETE_G_RELATION);
+        ps.setInt(Columns.FIRST, gymID);
+        ps.setInt(Columns.SECOND, eqID);
+        ps.executeQuery();
+        closePreparedStatement(ps);
     }
 
     @Override
@@ -96,13 +100,6 @@ public class EquipmentController extends DAOController<Equipment> {
         ps.setInt(Columns.FIRST, eqID);
         ps.setInt(Columns.SECOND, gymID);
         ps.execute();
-        closePreparedStatement(ps);
-    }
-
-    private void deleteQuery(String sql, int id) throws SQLException {
-        PreparedStatement ps = getPreparedStatement(sql);
-        ps.setInt(Columns.FIRST, id);
-        ps.executeQuery();
         closePreparedStatement(ps);
     }
 }

@@ -15,4 +15,7 @@ public class Parameters {
     public static final String GYM_LOGO_PATH = "logoPath";
     public static final String GYM_PHONE = "phone";
     public static final String GYM_ADDRESS = "address";
+
+    public static final String ADDED_GYM_ID = "addGymID";
+    public static final String ADDED_EQUIPMENT_ID = "addEquipID";
 }
