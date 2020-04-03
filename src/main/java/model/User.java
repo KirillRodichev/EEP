@@ -1,22 +1,17 @@
 package model;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class User implements Serializable {
     private int id;
     private String name;
     private String email;
     private String password;
     private String mode;
-
-    public User(int id, String name, String email, String password, String mode) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.mode = mode;
-    }
 }

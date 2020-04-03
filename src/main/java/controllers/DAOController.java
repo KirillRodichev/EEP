@@ -19,9 +19,9 @@ public abstract class DAOController<E> {
     }
 
     public abstract List<E> getAll() throws SQLException;
-    public abstract E update(E entity);
+    public abstract E update(E entity) throws SQLException;
     public abstract E getById(int id) throws SQLException;
-    public abstract void delete(int id);
+    public abstract void delete(int id) throws SQLException;
     public abstract void create(E entity) throws SQLException;
 
     public void releaseConnection() {

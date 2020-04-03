@@ -2,7 +2,11 @@ const searchButton = document.querySelector('#search-button');
 const searchField = document.querySelector('#search');
 const applyButton = document.querySelector('#apply');
 const clearButton = document.querySelector('#clear');
-let equipment = [];
+const addButton = document.querySelector('#add-button');
+const equipmentSelector = document.querySelector('#equipment-selector');
+const equipmentIdInput = document.querySelector('#addedId');
+let gymEquipment = [];
+let allEquipmentNames = [];
 
 class Equipment {
     constructor(wrapper, header, bodyGroups) {
@@ -27,10 +31,15 @@ class Equipment {
     }
 }
 
-document.body.onload = () => {
-    const equipmentWrappers = document.querySelectorAll('.equipment-wrapper');
-    const equipmentHeaders = document.querySelectorAll('.equipment__h2');
-    const allBodyGroups = document.querySelectorAll('.equipment__li');
+const loadEquipmentNames = (selectOptions) => {
+    for (let option of selectOptions) {
+        if (!allEquipmentNames.includes(option.value)) {
+            allEquipmentNames.push(option.innerText);
+        }
+    }
+};
+
+const loadEquipment = (equipmentWrappers, allBodyGroups, equipmentHeaders) => {
     for (let i = 0; i < equipmentWrappers.length; i++) {
         let bodyGroups = [];
         allBodyGroups.forEach(bodyGroup => {
@@ -38,16 +47,42 @@ document.body.onload = () => {
                 bodyGroups.push(bodyGroup.innerText.toLowerCase());
             }
         });
-        equipment.push(new Equipment(equipmentWrappers[i], equipmentHeaders[i], bodyGroups));
-        console.log(`Equipment: ${equipment}`);
+        gymEquipment.push(new Equipment(equipmentWrappers[i], equipmentHeaders[i], bodyGroups));
     }
 };
+
+document.body.onload = () => {
+    const equipmentWrappers = document.querySelectorAll('.equipment-wrapper');
+    const equipmentHeaders = document.querySelectorAll('.equipment__h2');
+    const allBodyGroups = document.querySelectorAll('.equipment__li');
+    const selectOptions = document.querySelectorAll('.add-select-option');
+    loadEquipment(equipmentWrappers, allBodyGroups, equipmentHeaders);
+    loadEquipmentNames(selectOptions);
+
+    const loadedEquipmentNames = gymEquipment.map(eq => eq.header.trim());
+    equipmentSelector.addEventListener('change', () => {
+        equipmentIdInput.value = null;
+        for (let option of selectOptions) {
+            //debugger
+            if (option.selected && !loadedEquipmentNames.includes(option.innerText.toLowerCase())) {
+                equipmentIdInput.value = option.value;
+            }
+        }
+    });
+};
+
+addButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (equipmentIdInput.value) {
+        //console.log(`equipmentIdInput.innerText = ${equipmentIdInput.innerText}`);
+    }
+});
 
 searchButton.addEventListener('click', () => {
     clear();
     const searchingText = searchField.value;
     if (searchingText.length !== 0) {
-        equipment.forEach(eq => {
+        gymEquipment.forEach(eq => {
             if (!eq.header.includes(searchingText.toLowerCase())) {
                 eq.display = 'none';
             }
@@ -65,7 +100,7 @@ applyButton.addEventListener('click', () => {
        }
    });
    if (selectedChecksValues.length !== 0) {
-       for (let eq of equipment) {
+       for (let eq of gymEquipment) {
            for (let val of selectedChecksValues) {
                if (!eq.bodyGroups.includes(val)) {
                    eq.display = 'none';
@@ -77,7 +112,7 @@ applyButton.addEventListener('click', () => {
 });
 
 const clear = () => {
-    equipment.forEach(eq => {
+    gymEquipment.forEach(eq => {
         eq.display = 'block';
     });
 };

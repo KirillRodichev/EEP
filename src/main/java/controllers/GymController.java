@@ -15,6 +15,9 @@ public class GymController extends DAOController<Gym> {
     private static final String SELECT_BY_ID = "SELECT * FROM GYMS WHERE GYM_ID = ?";
     private static final String SELECT_ALL = "SELECT * FROM GYMS";
     private static final String SELECT_BY_USER_ID = "SELECT GYM_ID FROM USERS_GYMS WHERE USER_ID = ?";
+    private static final String CREATE = "insert into GYMS " +
+            "(GYM_ID, GYM_NAME, GYM_WEBSITE, GYM_WEBSITE_URL, GYM_LOGO_PATH, GYM_PHONE, GYM_ADDRESS) " +
+            "VALUES (GYMS_SEQ.nextval, ?, ?, ?, ?, ?, ?)";
 
     @Override
     public List<Gym> getAll() throws SQLException {
@@ -51,9 +54,9 @@ public class GymController extends DAOController<Gym> {
             gym = new Gym(
                     rs.getInt(Columns.GYM_ID),
                     rs.getString(Columns.GYM_NAME),
+                    rs.getString(Columns.GYM_LOGO_PATH),
                     rs.getString(Columns.GYM_WEBSITE),
                     rs.getString(Columns.GYM_WEBSITE_URL),
-                    rs.getString(Columns.GYM_LOGO_PATH),
                     rs.getString(Columns.GYM_PHONE),
                     rs.getString(Columns.GYM_ADDRESS)
             );

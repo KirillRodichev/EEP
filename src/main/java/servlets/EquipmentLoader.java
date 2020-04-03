@@ -23,27 +23,30 @@ import java.util.Map;
 public class EquipmentLoader extends HttpServlet {
 
     private void loadEquipment(
-            EquipmentController equipmentController, ArrayList<Integer> IDs, ArrayList<Equipment> equipment)
+            EquipmentController equipmentController, List<Integer> IDs, List<Equipment> equipment)
             throws SQLException {
         for (Integer id : IDs) {
             equipment.add(equipmentController.getById(id));
         }
     }
 
+    private List<Equipment> loadAll(EquipmentController equipmentController) throws SQLException {
+        return equipmentController.getAll();
+    }
+
     private void loadBodyGroupsIDs(
-            BodyGroupController controller, ArrayList<Equipment> equipment, ArrayList<ArrayList<Integer>> IDsList
+            BodyGroupController controller, List<Equipment> equipment, List<List<Integer>> IDsList
             ) throws SQLException {
         for (Equipment eq : equipment) {
             List<Integer> IDs = controller.getIdsListByEquipmentId(eq.getId());
-            IDsList.add((ArrayList<Integer>) IDs);
+            IDsList.add(IDs);
         }
     }
 
     private void loadBodyGroups(
-            BodyGroupController controller, ArrayList<ArrayList<Integer>> IDsList,
-            ArrayList<ArrayList<String>> bodyGroupsList
+            BodyGroupController controller, List<List<Integer>> IDsList, List<List<String>> bodyGroupsList
     ) throws SQLException {
-        for (ArrayList<Integer> idList : IDsList) {
+        for (List<Integer> idList : IDsList) {
             List<String> bodyGroups = new ArrayList<>();
             for (Integer id : idList) {
                 bodyGroups.add(controller.getById(id));
@@ -53,8 +56,7 @@ public class EquipmentLoader extends HttpServlet {
     }
 
     private void loadMap(
-            ArrayList<Equipment> equipment, ArrayList<ArrayList<String>> bodyGroupsList,
-            Map<Integer, ArrayList<String>> map
+            List<Equipment> equipment, List<List<String>> bodyGroupsList, Map<Integer, List<String>> map
     ) {
         for (int i = 0; i < equipment.size(); i++) {
             map.put(equipment.get(i).getId(), bodyGroupsList.get(i));
@@ -64,21 +66,21 @@ public class EquipmentLoader extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        ArrayList<Equipment> equipment = new ArrayList<>();
-        Map<Integer, ArrayList<String>> equipmentBodyGroups = new HashMap<>();
+        List<Equipment> equipment = new ArrayList<>();
+        Map<Integer, List<String>> equipmentBodyGroups = new HashMap<>();
 
         int gymID = Integer.parseInt(req.getParameter(Parameters.GYM_ID));
-        ArrayList<Integer> equipmentIDs;
-        ArrayList<ArrayList<Integer>> bodyGroupsIDsList = new ArrayList<>();
-        ArrayList<ArrayList<String>> bodyGroupsList = new ArrayList<>();
-        ArrayList<String> allBodyGroups ;
+        List<Integer> equipmentIDs;
+        List<List<Integer>> bodyGroupsIDsList = new ArrayList<>();
+        List<List<String>> bodyGroupsList = new ArrayList<>();
+        List<String> allBodyGroups;
+        List<Equipment> allEquipment;
 
         EquipmentController equipmentController = new EquipmentController();
         BodyGroupController bodyGroupController = new BodyGroupController();
 
         try {
-
-            equipmentIDs = (ArrayList<Integer>) equipmentController.getIdListByGymId(gymID);
+            equipmentIDs = equipmentController.getIdListByGymId(gymID);
 
             loadEquipment(equipmentController, equipmentIDs, equipment);
 
@@ -88,7 +90,9 @@ public class EquipmentLoader extends HttpServlet {
 
             loadMap(equipment, bodyGroupsList, equipmentBodyGroups);
 
-            allBodyGroups = (ArrayList<String>) bodyGroupController.getAll();
+            allBodyGroups = bodyGroupController.getAll();
+
+            allEquipment = loadAll(equipmentController);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -96,9 +100,11 @@ public class EquipmentLoader extends HttpServlet {
 
         RequestDispatcher rd;
         if (!equipment.isEmpty()) {
+            req.setAttribute(DispatchAttrs.ALL_EQUIPMENT, allEquipment);
             req.setAttribute(DispatchAttrs.BODY_GROUPS, allBodyGroups);
             req.setAttribute(DispatchAttrs.EQUIPMENT, equipment);
             req.setAttribute(DispatchAttrs.EQUIPMENT_BODY_GROUP_MAP, equipmentBodyGroups);
+            req.setAttribute(DispatchAttrs.GYM, gymID);
             rd = req.getRequestDispatcher("pages/equipment.jsp");
         } else {
             rd = req.getRequestDispatcher("pages/nosuccess.jsp");

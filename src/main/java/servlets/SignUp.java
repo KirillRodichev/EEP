@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
-import static utils.Utils.*;
+import static utils.DispatchUtils.*;
 
 @WebServlet("/signUp")
 public class SignUp extends HttpServlet {

@@ -1,20 +1,16 @@
 package model;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class Equipment implements Serializable {
     private int id;
     private String name;
     private String description;
     private String imgPath;
-
-    public Equipment(int id, String name, String description, String imgPath) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.imgPath = imgPath;
-    }
 }

@@ -2,98 +2,86 @@ BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE additional_info';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE training_programs';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE users_gyms';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE users_cities';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE gyms_equipment';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE gyms_cities';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE b_groups_equipment';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE cities';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE equipment';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE gyms';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE body_groups';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 BEGIN
     EXECUTE IMMEDIATE 'DROP TABLE users';
 EXCEPTION
     WHEN OTHERS THEN
-        IF SQLCODE != -942 THEN
-            RAISE;
-        END IF;
+        IF SQLCODE != -942 THEN RAISE; END IF;
 END;
+/
 
 DROP SEQUENCE users_seq;
 DROP SEQUENCE cities_seq;

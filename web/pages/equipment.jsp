@@ -2,7 +2,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="constants.DispatchAttrs" %>
-<%@ page import="constants.Paths" %><%--
+<%@ page import="constants.Paths" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: kiril
   Date: 01.03.2020
@@ -44,22 +45,35 @@
 <%@ include file="../components/navigation.jsp" %>
 
 <%
-    ArrayList<Equipment> equipment = (ArrayList<Equipment>) request.getAttribute(DispatchAttrs.EQUIPMENT);
-    Map<Integer, ArrayList<String>> equipmentBodyGroups =
-            (Map<Integer, ArrayList<String>>) request.getAttribute(DispatchAttrs.EQUIPMENT_BODY_GROUP_MAP);
-    ArrayList<String> bodyGroups = (ArrayList<String>) request.getAttribute(DispatchAttrs.BODY_GROUPS);
+    List<Equipment> equipment = (ArrayList<Equipment>) request.getAttribute(DispatchAttrs.EQUIPMENT);
+    Map<Integer, List<String>> equipmentBodyGroups =
+            (Map<Integer, List<String>>) request.getAttribute(DispatchAttrs.EQUIPMENT_BODY_GROUP_MAP);
+    List<String> bodyGroups = (List<String>) request.getAttribute(DispatchAttrs.BODY_GROUPS);
+    List<Equipment> allEquipment = (List<Equipment>) request.getAttribute(DispatchAttrs.ALL_EQUIPMENT);
+    int gymID = (Integer) request.getAttribute(DispatchAttrs.GYM);
 %>
 
 <section class="equipment container-fluid">
     <div class="content-wrapper">
         <div class="content-sidebar">
             <div class="sidebar-top">
-                <h4>Filters</h4>
-                <form class="sidebar-search">
-                    <input class="search-input form-control" name="search" id="search" type="text"
-                           placeholder="Search by name">
+                <label for="equipment-selector">Add more equipment</label>
+                <form action="addEquipment" method="post">
+                    <select name="bodyGroups" id="equipment-selector" class="selectpicker" data-live-search="true"
+                            title="Select...">
+                        <%for (Equipment eq : allEquipment) {%>
+                        <option class="add-select-option" value="<%=eq.getId()%>"><%=eq.getName()%></option>
+                        <%}%>
+                    </select>
+                    <input id="addedId" name="addedId" type="text" />
+                    <input name="gymId" type="text" value="<%=gymID%>"/>
+                    <button type="button" id="add-button" class="sidebar-btn mb-3 mt-3">Add</button>
                 </form>
-                <button type="button" id="search-button" class="sidebar-btn mb-3">Search</button>
+                <hr>
+                <h4>Filters</h4>
+                <input class="search-input form-control" name="search" id="search" type="text"
+                       placeholder="Search by name">
+                <button type="button" id="search-button" class="sidebar-btn mt-3 mb-3">Search</button>
             </div>
             <div class="sidebar-item">
                 <h5>BodyGroups</h5>
@@ -152,8 +166,6 @@
             <%}%>
         </div>
     </div>
-
-
 </section>
 
 <%@ include file="../components/footer.html" %>

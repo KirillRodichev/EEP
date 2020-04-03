@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Utils {
+public class DispatchUtils {
 
     public static void forwardToCabinet(
             HttpServletRequest req,

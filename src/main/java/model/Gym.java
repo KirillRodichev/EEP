@@ -1,10 +1,13 @@
 package model;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class Gym implements Serializable {
     private int id;
     private String name;
@@ -13,22 +16,4 @@ public class Gym implements Serializable {
     private String website;
     private String phone;
     private String address;
-
-    public Gym(
-            int id,
-            String name,
-            String website,
-            String websiteURL,
-            String logoPath,
-            String phone,
-            String address
-    ) {
-        this.id = id;
-        this.name = name;
-        this.logoPath = logoPath;
-        this.websiteURL = websiteURL;
-        this.website = website;
-        this.phone = phone;
-        this.address = address;
-    }
 }
