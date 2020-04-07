@@ -3,7 +3,9 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="constants.DispatchAttrs" %>
 <%@ page import="constants.Paths" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="constants.Parameters" %>
+<%@ page import="java.io.File" %><%--
   Created by IntelliJ IDEA.
   User: kiril
   Date: 01.03.2020
@@ -57,17 +59,25 @@
     <div class="content-wrapper">
         <div class="content-sidebar">
             <div class="sidebar-top">
-                <label for="equipment-selector">Add more equipment</label>
+                <h5>Add more equipment</h5>
                 <form action="addEquipment" method="post">
                     <select name="bodyGroups" id="equipment-selector" class="selectpicker" data-live-search="true"
                             title="Select...">
                         <%for (Equipment eq : restEquipment) {%>
-                        <option class="add-select-option" value="<%=eq.getId()%>"><%=eq.getName()%></option>
+                        <option class="add-select-option" value="<%=eq.getId()%>"><%=eq.getName()%>
+                        </option>
                         <%}%>
                     </select>
-                    <input hidden id="addedId" name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text" />
+                    <input hidden id="addedId" name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text"/>
                     <input hidden name="<%=DispatchAttrs.GYM_ID%>" type="text" value="<%=gymID%>"/>
-                    <button type="submit" id="add-button" class="sidebar-btn mb-3 mt-3">Add</button>
+                    <button type="submit" id="add-button" class="sidebar-btn mb-3 mt-3">Add selected</button>
+                </form>
+                <form action="createEquipment" method="post">
+                    <button type="button" id="create-button" class="sidebar-btn mb-3" data-toggle="collapse"
+                            data-target="#addEquipmentCollapse" aria-expanded="false"
+                            aria-controls="addEquipmentCollapse">
+                        Add new
+                    </button>
                 </form>
                 <hr>
                 <h4>Filters</h4>
@@ -96,6 +106,65 @@
         </div>
         <div class="content-insides">
             <h1 class="equipment__h1">Equipment</h1>
+            <div class="equipment-collapse collapse" id="addEquipmentCollapse">
+                <h2>Add new equipment</h2>
+                <form class="needs-validation" action="createEquipment" enctype="multipart/form-data" method="post" novalidate>
+                    <div class="from-row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="create-name">Name</label>
+                                <input name="<%=Parameters.EQUIPMENT_NAME%>" type="text" class="form-control form-control--shadowed"
+                                       id="create-name" placeholder="Name" required>
+                                <div class="invalid-feedback">
+                                    Please write a name.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="create-description">Description</label>
+                                <textarea name="<%=Parameters.EQUIPMENT_DESCRIPTION%>" type="text" class="form-control" required
+                                          id="create-description" style="min-height: 150px"
+                                          placeholder="Description">
+                                </textarea>
+                                <div class="invalid-feedback">
+                                    Please write description.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="create-bodyGroup">Body groups</label>
+                                <select name="bodyGroups" id="create-bodyGroup" class="selectpicker" multiple
+                                        data-live-search="true" data-size="5" required
+                                        title="Select..." data-selected-text-format="count > 2">
+                                    <%for (String bodyGroup : bodyGroups) {%>
+                                    <option value="<%=bodyGroup%>">
+                                        <%=bodyGroup%>
+                                    </option>
+                                    <%}%>
+                                </select>
+                                <input id="bodyGroupsInput" name="<%=Parameters.BODY_GROUPS%>" type="text">
+                                <div class="invalid-feedback">
+                                    Please select body group.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="custom-file">
+                                <input name="<%=Parameters.EQUIPMENT_IMG_FILE%>" type="file" class="custom-file-input" id="create-img-file" required>
+                                <input name="<%=Parameters.EQUIPMENT_IMG_PATH%>" type="text" value="/tmp" hidden>
+                                <label class="custom-file-label" for="create-img-file">Choose file</label>
+                                <div class="invalid-feedback">
+                                    Please choose img file.
+                                </div>
+                            </div>
+                        </div>
+                        <input hidden name="<%=DispatchAttrs.GYM_ID%>" type="text" value="<%=gymID%>"/>
+                        <button type="submit" class="button--secondary ml-3">Create</button>
+                    </div>
+                </form>
+            </div>
             <%for (Equipment eq : equipment) {%>
             <div class="equipment-wrapper">
                 <form class="needs-validation equipment__from" novalidate>
@@ -105,10 +174,12 @@
                     </div>
                     <div class="equipment__text-wrapper">
                         <div class="form-group">
-                            <h2 class="equipment__h2"><%=eq.getName()%>
+                            <h2 class="equipment__h2">
+                                <%=eq.getName()%>
                             </h2>
-                            <label for="r_name<%=eq.getId()%>">Rewrite name with:</label>
-                            <input name="r_name" type="text" class="form-control form-control--shadowed" id="r_name<%=eq.getId()%>"
+                            <label for="name-update<%=eq.getId()%>">Rewrite name with:</label>
+                            <input name="name-update" type="text" class="form-control form-control--shadowed"
+                                   id="name-update<%=eq.getId()%>"
                                    placeholder="Name">
                         </div>
                         <div class="form-group">
@@ -116,17 +187,19 @@
                             <p class="equipment__p">
                                 <%=eq.getDescription()%>
                             </p>
-                            <label for="r_websiteURL<%=eq.getId()%>">Rewrite description with:</label>
-                            <textarea name="r_websiteURL" type="text" class="form-control" id="r_websiteURL<%=eq.getId()%>"
-                                      placeholder="Description"></textarea>
+                            <label for="websiteURL-update<%=eq.getId()%>">Rewrite description with:</label>
+                            <textarea name="websiteURL-update" type="text" class="form-control"
+                                      id="websiteURL-update<%=eq.getId()%>" placeholder="Description">
+                            </textarea>
                         </div>
                         <div class="equipment-body-g">
                             <h4 class="equipment__h4">Body Groups</h4>
                             <div class="d-flex flex-row">
                                 <ul class="list-unstyled equipment-body-g__ul">
                                     <%for (String bodyGroup : equipmentBodyGroups.get(eq.getId())) {%>
-                                    <span class="equipment-li__span"><i
-                                            class="fas fa-circle equipment-li__i"></i></span>
+                                    <span class="equipment-li__span">
+                                        <i class="fas fa-circle equipment-li__i"></i>
+                                    </span>
                                     <li data-parent="<%=eq.getName()%>" class="equipment__li">
                                         <%=bodyGroup%>
                                     </li>
@@ -134,11 +207,12 @@
                                 </ul>
                                 <div class="form-group">
                                     <label for="selectBodyGroup<%=eq.getId()%>">Select other body groups</label>
-                                    <select name="bodyGroups" id="selectBodyGroup<%=eq.getId()%>" class="selectpicker" multiple
-                                            data-live-search="true" data-size="5"
-                                            title="Select..." data-selected-text-format="count > 2">
+                                    <select name="bodyGroups" id="selectBodyGroup<%=eq.getId()%>" class="selectpicker"
+                                            multiple data-live-search="true" data-size="5" title="Select..."
+                                            data-selected-text-format="count > 2">
                                         <%for (String bodyGroup : bodyGroups) {%>
-                                        <option value=""><%=bodyGroup%>
+                                        <option value="<%=bodyGroup%>">
+                                            <%=bodyGroup%>
                                         </option>
                                         <%}%>
                                     </select>
@@ -148,20 +222,24 @@
                         <div class="equipment-img-select">
                             <h4 class="equipment__h4">Image</h4>
                             <div class="custom-file ">
-                                <input type="file" class="custom-file-input" id="r_customFile<%=eq.getId()%>">
-                                <label class="custom-file-label" for="r_customFile<%=eq.getId()%>">Choose file</label>
+                                <input type="file" class="custom-file-input" id="img-file-update<%=eq.getId()%>">
+                                <label class="custom-file-label" for="img-file-update<%=eq.getId()%>">
+                                    Choose file
+                                </label>
                             </div>
                         </div>
                         <div class="equipment-btns">
                             <form action="updateEquipment" method="post">
-                                <input hidden name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text" value="<%=eq.getId()%>" />
+                                <input hidden name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text"
+                                       value="<%=eq.getId()%>"/>
                                 <input hidden name="<%=DispatchAttrs.GYM_ID%>" type="text" value="<%=gymID%>"/>
                                 <button value="rewriteEquipment" type="submit" class="button--primary">
                                     Rewrite
                                 </button>
                             </form>
                             <form action="deleteEquipment" method="post">
-                                <input hidden name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text" value="<%=eq.getId()%>" />
+                                <input hidden name="<%=DispatchAttrs.EQUIPMENT_ID%>" type="text"
+                                       value="<%=eq.getId()%>"/>
                                 <input hidden name="<%=DispatchAttrs.GYM_ID%>" type="text" value="<%=gymID%>"/>
                                 <button value="deleteEquipment" type="submit" class="button--secondary ml-3">
                                     Delete
@@ -193,5 +271,24 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            let forms = document.getElementsByClassName('needs-validation');
+            let validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
 </body>
 </html>

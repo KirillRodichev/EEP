@@ -16,6 +16,14 @@ public class Parameters {
     public static final String GYM_PHONE = "phone";
     public static final String GYM_ADDRESS = "address";
 
+    public static final String EQUIPMENT_ID = "id";
+    public static final String EQUIPMENT_NAME = "name";
+    public static final String EQUIPMENT_DESCRIPTION = "description";
+    public static final String EQUIPMENT_IMG_PATH = "imgPath";
+    public static final String EQUIPMENT_IMG_FILE = "imgFile";
+
+    public static final String BODY_GROUPS = "bodyGroups";
+
     public static final String ADDED_GYM_ID = "addGymID";
     public static final String ADDED_EQUIPMENT_ID = "addEquipID";
 }

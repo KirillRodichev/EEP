@@ -529,6 +529,10 @@ a.link:hover {
     flex-direction: column;
 }
 
+.equipment-collapse {
+    margin: 30px;
+}
+
 .form-check--customized {
     display: block;
     position: relative;

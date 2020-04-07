@@ -95,6 +95,16 @@ public class EquipmentController extends DAOController<Equipment> {
         closePreparedStatement(ps);
     }
 
+    public void create(Equipment equipment, int gymID, String bodyGroups) throws SQLException {
+        //create(equipment);
+        System.out.println();
+        System.out.println("gymID = " + gymID);
+        System.out.println("bodyGroups = " + bodyGroups);
+        System.out.println("equipment:");
+        System.out.printf("\nid = %d\nname = %s\ndescr = %s\nimg = %s\n",
+                equipment.getId(), equipment.getName(), equipment.getDescription(), equipment.getImgPath());
+    }
+
     public void add(int eqID, int gymID) throws SQLException {
         PreparedStatement ps = getPreparedStatement(ADD_G_RELATION);
         ps.setInt(Columns.FIRST, eqID);
