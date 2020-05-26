@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="gym" type="gym" />
+
+    <xs:element name="parent_equipment" type="parent_equipment" />
+
+    <xs:element name="equipment" type="equipment"
+                substitutionGroup="parent_equipment" />
+
+    <xs:complexType name="gym">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="logo_path" type="xs:string"/>
+            <xs:element name="website_URL" type="xs:string"/>
+            <xs:element name="website" type="xs:string"/>
+            <xs:element name="phone" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element name="all_equipment">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="parent_equipment" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="parent_equipment">
+        <xs:sequence />
+    </xs:complexType>
+
+    <xs:complexType name="equipment">
+        <xs:complexContent>
+            <xs:extension base="parent_equipment">
+                <xs:sequence>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="description" type="xs:string"/>
+                    <xs:element name="img_path" type="xs:string"/>
+                    <xs:element name="body_groups">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="body_group" maxOccurs="unbounded" type="xs:string"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="id" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+</xs:schema>

@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Dispatch {
 
@@ -52,7 +49,7 @@ public class Dispatch {
 
     public static void forwardToEquipmentPage(
             HttpServletRequest req, HttpServletResponse resp, int gymID, List<Equipment> equipment,
-            Map<Integer, List<String>> equipmentBodyGroups, List<String> allBodyGroups, List<Equipment> restEquipment
+            Map<Integer, Set<String>> equipmentBodyGroups, List<String> allBodyGroups, List<Equipment> restEquipment, int size
     ) throws ServletException, IOException {
         RequestDispatcher rd;
         if (!equipment.isEmpty()) {
@@ -61,6 +58,7 @@ public class Dispatch {
             req.setAttribute(DispatchAttrs.EQUIPMENT, equipment);
             req.setAttribute(DispatchAttrs.EQUIPMENT_BODY_GROUP_MAP, equipmentBodyGroups);
             req.setAttribute(DispatchAttrs.GYM, gymID);
+            req.setAttribute(DispatchAttrs.SIZE, size);
             rd = req.getRequestDispatcher("pages/equipment.jsp");
         } else {
             rd = req.getRequestDispatcher("pages/nosuccess.jsp");

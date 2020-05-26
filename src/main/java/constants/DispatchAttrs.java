@@ -12,4 +12,7 @@ public class DispatchAttrs {
 
     public static final String GYM_ID = "gymID";
     public static final String EQUIPMENT_ID = "equipmentID";
+
+    public static final String SIZE = "size";
+    public static final String XML_FILE = "xmlFile";
 }

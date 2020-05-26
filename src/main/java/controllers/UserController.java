@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserController extends DAOController<User> {
+public class UserController extends DAOController<User, User> {
 
     private static final String SELECT_ALL = "SELECT * FROM USERS";
     private static final String SELECT_BY_ID = "SELECT * FROM USERS WHERE USER_ID = ?";
@@ -56,7 +56,12 @@ public class UserController extends DAOController<User> {
     }
 
     @Override
-    public User update(User user) {
+    public User update(User entity) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public User update(User user, int id) {
         return null;
     }
 

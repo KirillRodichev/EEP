@@ -1,6 +1,13 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="EEP:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/EEP_war_exploded</output-path>
+    <output-path>$PROJECT_DIR$/target/EEP-1.0-SNAPSHOT</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>EEP</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -9,12 +16,35 @@
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.example:ojdbc10:19.3" />
           <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.8.5" />
-          <element id="library" level="project" name="Maven: org.webjars:jquery:3.3.1-2" />
+          <element id="library" level="project" name="Maven: org.webjars:jquery:3.5.1" />
           <element id="library" level="project" name="Maven: org.webjars:bootstrap:4.3.1" />
           <element id="library" level="project" name="Maven: org.webjars:popper.js:1.14.3" />
           <element id="library" level="project" name="Maven: org.webjars:font-awesome:5.7.2" />
+          <element id="library" level="project" name="Maven: javax.ejb:javax.ejb-api:3.2" />
           <element id="library" level="project" name="Maven: javax.transaction:javax.transaction-api:1.2" />
+          <element id="library" level="project" name="Maven: com.jarslab.maven:babel-maven-plugin:1.5" />
+          <element id="library" level="project" name="Maven: org.graalvm.js:js:19.3.1" />
+          <element id="library" level="project" name="Maven: org.graalvm.regex:regex:19.3.1" />
+          <element id="library" level="project" name="Maven: org.graalvm.truffle:truffle-api:19.3.1" />
+          <element id="library" level="project" name="Maven: org.graalvm.sdk:graal-sdk:19.3.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm:7.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm-tree:7.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm-analysis:7.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm-commons:7.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm-util:7.1" />
+          <element id="library" level="project" name="Maven: com.ibm.icu:icu4j:64.2" />
+          <element id="library" level="project" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.2" />
+          <element id="library" level="project" name="Maven: jakarta.activation:jakarta.activation-api:1.2.1" />
+          <element id="library" level="project" name="Maven: org.glassfish.jaxb:jaxb-runtime:2.3.2" />
+          <element id="library" level="project" name="Maven: org.glassfish.jaxb:txw2:2.3.2" />
+          <element id="library" level="project" name="Maven: com.sun.istack:istack-commons-runtime:3.0.8" />
+          <element id="library" level="project" name="Maven: org.jvnet.staxex:stax-ex:1.8.1" />
+          <element id="library" level="project" name="Maven: com.sun.xml.fastinfoset:FastInfoset:1.2.16" />
+          <element id="library" level="project" name="Maven: org.webjars.npm:prettier:2.0.2" />
         </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/EEP-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="EEP/web/Web" />
       <element id="dir-copy" path="$PROJECT_DIR$/web" />

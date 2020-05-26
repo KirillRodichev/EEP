@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gym id="1">
+    <name>name</name>
+    <logo_path>img path</logo_path>
+    <website_URL>web URL</website_URL>
+    <website>web</website>
+    <phone>89272095064</phone>
+    <address>Molodogvardeyskaya 178</address>
+    <all_equipment>
+        <equipment id="2">
+            <name>super Power</name>
+            <description>description</description>
+            <img_path>image</img_path>
+            <body_groups>
+                <body_group>chest</body_group>
+                <body_group>back</body_group>
+            </body_groups>
+        </equipment>
+        <equipment id="2">
+            <name>extra destroyer</name>
+            <description>description</description>
+            <img_path>img</img_path>
+            <body_groups>
+                <body_group>Calves</body_group>
+                <body_group>Biceps</body_group>
+            </body_groups>
+        </equipment>
+    </all_equipment>
+</gym>

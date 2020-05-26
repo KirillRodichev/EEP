@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CityController extends DAOController<String> {
+public class CityController extends DAOController<String, String> {
 
     private static final String SELECT_ALL = "SELECT CITY_NAME FROM CITIES";
     private static final String SELECT_BY_ID = "SELECT CITY_NAME FROM CITIES";
@@ -26,7 +26,12 @@ public class CityController extends DAOController<String> {
     }
 
     @Override
-    public String update(String entity) {
+    public String update(String entity) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public String update(String entity, int id) {
         return null;
     }
 

@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public abstract class DAOController<E> {
+public abstract class DAOController<E, T> {
     private Connection connection;
 
     public DAOController() {
@@ -19,7 +19,8 @@ public abstract class DAOController<E> {
     }
 
     public abstract List<E> getAll() throws SQLException;
-    public abstract E update(E entity) throws SQLException;
+    public abstract T update(T extraEntity) throws SQLException;
+    public abstract T update(T extraEntity, int relativeID) throws SQLException;
     public abstract E getById(int id) throws SQLException;
     public abstract void delete(int id) throws SQLException;
     public abstract void create(E entity) throws SQLException;

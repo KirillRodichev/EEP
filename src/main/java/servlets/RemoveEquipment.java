@@ -11,19 +11,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
-@WebServlet("/deleteEquipment")
+@WebServlet("/removeEquipment")
 @MultipartConfig
-public class DeleteEquipment extends HttpServlet {
+public class RemoveEquipment extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int equipmentID = Integer.parseInt(req.getParameter(DispatchAttrs.EQUIPMENT_ID));
+        int gymID = Integer.parseInt(req.getParameter(DispatchAttrs.GYM_ID));
 
         EquipmentController equipmentController = new EquipmentController();
 
         try {
-            equipmentController.delete(equipmentID);
+            equipmentController.remove(gymID, equipmentID);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

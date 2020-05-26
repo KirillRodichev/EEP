@@ -37,7 +37,6 @@ public class Login extends HttpServlet {
         GymController gymController = new GymController();
 
         try {
-
             user = userController.getByEmail(req.getParameter(Parameters.USER_EMAIL));
             if (user == null) {
                 throw new RuntimeException(ErrorMsg.USER_ALREADY_EXISTS);
@@ -50,7 +49,6 @@ public class Login extends HttpServlet {
             }
 
             int gymID = gymController.getIdByUserId(user.getId());
-
             gym = gymController.getById(gymID);
 
         } catch (SQLException e) {

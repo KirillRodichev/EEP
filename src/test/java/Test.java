@@ -1,19 +1,16 @@
-import java.io.File;
-import java.io.FileOutputStream;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import model.Equipment;
+import utils.JSON;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-        final File file = new File(".");
-        final File file1 = new File("./web/assets/img/");
-        String relativePath1 = file1.getPath();
-        String absolutePath1 = file1.getAbsolutePath();
-        String canonicalPath1 = file1.getCanonicalPath();
-        System.out.println("PATHS");
-        System.out.println(relativePath1);
-        System.out.println(canonicalPath1);
-        System.out.println(absolutePath1);
-        /*FileOutputStream fout = new FileOutputStream(new File("out.txt"));
-        FileOutputStream fout1 = new FileOutputStream(new File("./web/assets/img/out.txt"));*/
+        List<Integer> l = JSON.jsonArrToList(null);
     }
 }

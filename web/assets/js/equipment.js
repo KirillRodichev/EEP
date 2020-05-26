@@ -1,125 +1,240 @@
-const searchButton = document.querySelector('#search-button');
-const searchField = document.querySelector('#search');
-const applyButton = document.querySelector('#apply');
-const clearButton = document.querySelector('#clear');
-const addButton = document.querySelector('#add-button');
 const equipmentSelector = document.querySelector('#equipment-selector');
-const equipmentIdInput = document.querySelector('#addedId');
-let gymEquipment = [];
-let allEquipmentNames = [];
+const addSelectedButton = document.querySelector('#add-button');
+const createBodyGroupsSelector = document.querySelector('#create-bodyGroups');
+const bodyGroupsInput = document.querySelector('#bodyGroupsInput');
+const checkBoxes = document.querySelectorAll('.form-check-input');
+const equipmentCollapse = document.querySelector('.equipment-collapse');
+const createForm = document.querySelector('#create-form');
+const removeForms = document.querySelectorAll('.form-remove');
+const deleteForms = document.querySelectorAll('.form-delete');
+const updateForms = document.querySelectorAll('.update-form');
+const modal = document.querySelector('.modal');
+const downloadButton = document.querySelector('#download');
+const uploadForm = document.querySelector('.upload-xml-form');
 
-class Equipment {
-    constructor(wrapper, header, bodyGroups) {
-        this._wrapper = wrapper;
-        this._header = header;
-        this._bodyGroups = bodyGroups;
-    }
-    get wrapper() {
-        return this._wrapper;
-    }
-    get header() {
-        return this._header.textContent.toLowerCase();
-    }
-    get bodyGroups() {
-        return this._bodyGroups;
-    }
-    set display(val) {
-        this._wrapper.style.display = val;
-    }
-    get display() {
-        return this._wrapper.style.display;
-    }
-}
+const gymID = document.querySelector('#gymID').value;
 
-const loadEquipmentNames = (selectOptions) => {
-    for (let option of selectOptions) {
-        if (!allEquipmentNames.includes(option.value)) {
-            allEquipmentNames.push(option.innerText);
-        }
-    }
-};
+const XML_IMG_PATH = "assets/img/XML.jpg";
 
-const loadEquipment = (equipmentWrappers, allBodyGroups, equipmentHeaders) => {
-    for (let i = 0; i < equipmentWrappers.length; i++) {
-        let bodyGroups = [];
-        allBodyGroups.forEach(bodyGroup => {
-            if (bodyGroup.getAttribute('data-parent') === equipmentHeaders[i].innerText) {
-                bodyGroups.push(bodyGroup.innerText.toLowerCase());
-            }
-        });
-        gymEquipment.push(new Equipment(equipmentWrappers[i], equipmentHeaders[i], bodyGroups));
-    }
-};
+let selectedEquipmentID;
 
 document.body.onload = () => {
-    const equipmentWrappers = document.querySelectorAll('.equipment-wrapper');
-    const equipmentHeaders = document.querySelectorAll('.equipment__h2');
-    const allBodyGroups = document.querySelectorAll('.equipment__li');
-    const selectOptions = document.querySelectorAll('.add-select-option');
-    loadEquipment(equipmentWrappers, allBodyGroups, equipmentHeaders);
-    loadEquipmentNames(selectOptions);
+    createBodyGroupsSelector.addEventListener('change', () => {
+        const selectedBodyGroups = Array
+            .from(createBodyGroupsSelector.options)
+            .filter(option => option.selected)
+            .map(option => option.value);
+        bodyGroupsInput.value = JSON.stringify(selectedBodyGroups);
+    });
 
-    const loadedEquipmentNames = gymEquipment.map(eq => eq.header.trim());
-    equipmentSelector.addEventListener('change', () => {
-        equipmentIdInput.value = null;
-        for (let option of selectOptions) {
-            //debugger
-            if (option.selected && !loadedEquipmentNames.includes(option.innerText.toLowerCase())) {
-                equipmentIdInput.value = option.value;
-            }
+    equipmentSelector.addEventListener('change', event => {
+        selectedEquipmentID = Array.from(event.target.options).find(option => option.selected.value);
+    });
+
+    createForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const fileInput = document.querySelector('.create-img-input');
+        if (createForm.checkValidity() === false && !fileValidation('img', fileInput)) {
+            event.stopPropagation();
+        } else {
+            equipmentCollapse.classList.remove('show');
+            let formData = new FormData(createForm);
+            formData.append('gymID', gymID);
+
+            const url = 'createEquipment';
+            postData(url, formData).then(() => {
+                showModal('Created successfully!', 1500);
+                applyFilters();
+            }).catch(() => {
+                console.log('Failed to create equipment!');
+            });
+        }
+        createForm.classList.add('was-validated');
+    });
+
+    removeForms.forEach(form => {
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const url = 'removeEquipment';
+
+            postData(url, formData).then(() => {
+                showModal('Removed successfully!', 1500);
+                applyFilters();
+            }).catch(() => {
+                console.log('Failed to remove equipment!');
+            });
+        })
+    });
+
+    deleteForms.forEach(form => {
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const url = 'deleteEquipment';
+
+            postData(url, formData).then(() => {
+                showModal('Deleted successfully!', 1500);
+                applyFilters();
+            }).catch(() => {
+                console.log('Failed to delete equipment!');
+            });
+        })
+    });
+
+    downloadButton.addEventListener('click', () => {
+        const url = 'XMLDownload';
+        let requestData = new FormData();
+        requestData.append('bgFilters', JSON.stringify(getCheckedBodyGroups()));
+        requestData.append('gymID', gymID);
+
+        printFormData(requestData);
+
+        postData(url, requestData).then(async response => {
+            const filePath = await response.json();
+            const downloadLink = document.createElement('a');
+            downloadLink.href = filePath;
+            downloadLink.setAttribute('download', '');
+            const image = document.createElement('img');
+            image.src = XML_IMG_PATH;
+            downloadLink.appendChild(image);
+
+            showModal("Download XML", false, downloadLink);
+        }).catch(err => {
+            console.log('Failed to download file');
+            console.log(err.message);
+        });
+    });
+
+    uploadForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const fileInput = document.querySelector('.upload-xml-input');
+        if (createForm.checkValidity() === false && !fileValidation('xml', fileInput)) {
+            event.stopPropagation();
+        } else {
+            const url = 'XMLUpload';
+            let requestData = new FormData(uploadForm);
+            requestData.append('gymID', gymID);
+
+            postData(url, requestData).then(() => {
+                applyFilters();
+                showModal('Uploaded successfully!', 1500);
+            }).catch(err => {
+                console.log(err.message);
+            });
         }
     });
-};
 
-searchButton.addEventListener('click', () => {
-    clear();
-    const searchingText = searchField.value;
-    if (searchingText.length !== 0) {
-        gymEquipment.forEach(eq => {
-            if (!eq.header.includes(searchingText.toLowerCase())) {
-                eq.display = 'none';
+    updateForms.forEach(form => {
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const fileInput = event.target.querySelector('.custom-file-input');
+            if (!fileValidation('img', fileInput)) {
+                event.stopPropagation();
+            } else {
+                const url = 'updateEquipment';
+                let requestData = new FormData(event.target);
+                requestData.append('gymID', gymID);
+
+                postData(url, requestData).then(() => {
+                    showModal('Updated successfully!', 1500);
+                    applyFilters();
+                }).catch(err => {
+                    console.log('Failed to update equipment');
+                    console.log(err.message);
+                });
             }
         });
-    }
-});
-
-applyButton.addEventListener('click', () => {
-    clear();
-   selectedChecksValues = [];
-   const checkBoxes = document.querySelectorAll('.form-check-input');
-   checkBoxes.forEach(checkBox => {
-       if (checkBox.checked) {
-           selectedChecksValues.push(checkBox.value.toLowerCase());
-       }
-   });
-   if (selectedChecksValues.length !== 0) {
-       for (let eq of gymEquipment) {
-           for (let val of selectedChecksValues) {
-               if (!eq.bodyGroups.includes(val)) {
-                   eq.display = 'none';
-                   break;
-               }
-           }
-       }
-   }
-});
-
-const clear = () => {
-    gymEquipment.forEach(eq => {
-        eq.display = 'block';
     });
 };
 
-const uncheck = () => {
-    const checkBoxes = document.querySelectorAll('.form-check-input');
+addSelectedButton.addEventListener('click', () => {
+    let requestData = new FormData();
+    requestData.append('gymID', gymID);
+    requestData.append('equipmentID', selectedEquipmentID);
+    const url = 'addEquipment';
+
+    postData(url, requestData).then(() => {
+        applyFilters();
+    }).catch(() => {
+        console.log('Failed to create pagination!');
+    });
+});
+
+const applyFilters = () => {
+    const checkedBodyGroups = getCheckedBodyGroups();
+
+    let requestData = new FormData();
+    requestData.append('async', 'true');
+    requestData.append('gymID', gymID);
+
+    if (checkedBodyGroups.length > 0) {
+        requestData.append('filters', JSON.stringify(checkedBodyGroups));
+    }
+
+    const url = 'equipment';
+    postData(url, requestData).then(async response => {
+        console.log('number');
+        const [number, ...rest] = await response.json();
+        console.log(number);
+        createPagination(number);
+        updateDomListener();
+    }).catch(() => {
+        console.log('Failed to create pagination!');
+    });
+};
+
+const showModal = (message, timeout, body = null) => {
+    const modalHeader = document.querySelector('#modalCenterTitle');
+    const modalBody = document.querySelector('.modal-body');
+    modalHeader.innerText = message;
+    if (body) {
+        if (modalBody.firstChild) {
+            modalBody.removeChild(modalBody.firstChild);
+        }
+        modalBody.appendChild(body);
+    }
+
+    $('.modal').modal('show');
+
+    if (timeout) {
+        setTimeout(() => {
+            $('.modal').modal('hide');
+        }, timeout);
+    }
+};
+
+const getCheckedBodyGroups = () => {
+    let checkedBodyGroups = [];
     checkBoxes.forEach(checkBox => {
         if (checkBox.checked) {
-            checkBox.checked = false;
+            checkedBodyGroups.push(checkBox.value.toLowerCase());
         }
     });
+    return checkedBodyGroups;
 };
 
-clearButton.addEventListener('click', () => {
-    clear();
-    uncheck();
-});
+const printFormData = data => {
+    for (let [k, v] of data) {
+        console.log(`${k} = ${v}`);
+    }
+};
+
+const fileValidation = (fileType, fileInput) => {
+    const filePath = fileInput.value;
+    let allowedExtensions;
+    if (fileType === 'img') {
+        allowedExtensions = /(\.xml)$/i;
+    } else if (fileType === 'xml') {
+        allowedExtensions = /(\.png|\.jpg|\.jpeg)$/i;
+    } else {
+        return true;
+    }
+
+    if (!allowedExtensions.exec(filePath)) {
+        fileInput.value = '';
+        return false;
+    }
+
+    return true;
+};

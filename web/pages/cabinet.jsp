@@ -52,9 +52,7 @@
 
     <div class="info-wrapper rounded-border">
         <h1 class="info__h1">
-            <%
-                if (user.getMode().equals(UserModes.ADMIN)) {
-            %>
+            <%if (user.getMode().equals(UserModes.ADMIN)) {%>
             Admin's
             <%} else {%>
             User's

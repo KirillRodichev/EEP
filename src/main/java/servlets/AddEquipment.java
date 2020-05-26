@@ -4,6 +4,7 @@ import constants.DispatchAttrs;
 import controllers.EquipmentController;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,9 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static utils.Dispatch.redirectToEquipmentPage;
-
 @WebServlet("/addEquipment")
+@MultipartConfig
 public class AddEquipment extends HttpServlet {
 
     @Override
@@ -25,11 +25,9 @@ public class AddEquipment extends HttpServlet {
         EquipmentController equipmentController = new EquipmentController();
 
         try {
-            equipmentController.add(equipmentID, gymID);
+            equipmentController.addToGym(equipmentID, gymID);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        redirectToEquipmentPage(req, resp, gymID);
     }
 }
