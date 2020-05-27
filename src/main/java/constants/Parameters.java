@@ -25,6 +25,7 @@ public class Parameters {
     public static final String EQUIPMENT_IMG_FILE = "imgFile";
 
     public static final String BODY_GROUPS = "bodyGroups";
+    public static final String CITY = "city";
 
     public static final String ADDED_GYM_ID = "addGymID";
     public static final String ADDED_EQUIPMENT_ID = "addEquipID";

@@ -1,10 +1,7 @@
 <%@ page import="model.User" %>
-<%@ page import="constants.UserModes" %>
 <%@ page import="model.Gym" %>
-<%@ page import="constants.Columns" %>
-<%@ page import="constants.Paths" %>
-<%@ page import="constants.DispatchAttrs" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="constants.*" %><%--
   Created by IntelliJ IDEA.
   User: kiril
   Date: 01.03.2020
@@ -75,79 +72,58 @@
                     <li class="labels__li li-header">Image</li>
                     <li class="labels__li li-value">Displayed</li>
                     <li class="labels__li li-header">City</li>
-                    <li class="labels__li li-value">Select</li>
+                    <li class="labels__li li-value gym-city">Select</li>
                     <li class="labels__li li-header">Name</li>
-                    <li class="labels__li li-value"><%=gym.getName()%></li>
+                    <li class="labels__li li-value gym-name"><%=gym.getName()%></li>
                     <li class="labels__li li-header">Actual link</li>
-                    <li class="labels__li li-value"><%=gym.getWebsiteURL()%></li>
+                    <li class="labels__li li-value gym-website-url"><%=gym.getWebsiteURL()%></li>
                     <li class="labels__li li-header">Displayed link</li>
-                    <li class="labels__li li-value"><%=gym.getWebsite()%></li>
+                    <li class="labels__li li-value gym-website"><%=gym.getWebsite()%></li>
                     <li class="labels__li li-header">Phone</li>
-                    <li class="labels__li li-value"><%=gym.getPhone()%></li>
+                    <li class="labels__li li-value gym-phone"><%=gym.getPhone()%></li>
                     <li class="labels__li li-header">Address</li>
-                    <li class="labels__li li-value"><%=gym.getAddress()%></li>
+                    <li class="labels__li li-value gym-address"><%=gym.getAddress()%></li>
                 </ul>
         </div>
         <div class="info-gym__form-container">
             <h3 class="info-gym__h3">Rewrite your gym info</h3>
-            <form class="needs-validation" novalidate>
-
+            <form class="needs-validation update-form" novalidate>
+                <input name="<%=Parameters.GYM_ID%>" value="<%=gym.getId()%>" type="text" hidden>
                 <img class="info-gym__img" src="<%=Paths.GYM_LOGO_PATH + gym.getLogoPath()%>"
                      alt="<%=gym.getName()%>">
                 <div class="custom-file mb-16">
-                    <input type="file" class="custom-file-input h40" id="r_customFile">
-                    <label class="custom-file-label" for="r_customFile">Choose file</label>
+                    <input name="<%=Parameters.GYM_LOGO_PATH%>" type="file" class="custom-file-input h40" id="logoFile">
+                    <label class="custom-file-label" for="logoFile">Choose file</label>
                 </div>
                 <div class="form-group">
-                    <%--<label for="r_selectCity">Select city</label>--%>
-                    <select name="r_city" id="r_selectCity" class="custom-select  h40">
+                    <select name="<%=Parameters.CITY%>" class="custom-select h40">
                         <option value="">Select city</option>
-                        <%for (String city : cities) {%>
-                        <option value=""><%=city%>
-                        </option>
+                        <%for (int i = 0; i < cities.size(); i++) {%>
+                        <option value="<%=i + 1%>"><%=cities.get(i)%></option>
                         <%}%>
                     </select>
                 </div>
                 <div class="form-group">
-                    <%--<label for="r_name">Current name: <%=gym.getName()%>
-                    </label>--%>
-                    <input name="r_name" type="text" class="form-control form-control--custom primary-border"
-                           id="r_name" placeholder="Name">
+                    <input name="<%=Parameters.GYM_NAME%>" type="text"
+                           class="form-control form-control--custom primary-border" placeholder="Name">
                 </div>
                 <div class="form-group">
-                    <%-- <label for="r_websiteURL">Current actual link: <%=gym.getWebsiteURL()%>
-                     </label>--%>
-                    <input name="r_websiteURL" type="text"
-                           class="form-control  form-control--custom primary-border" id="r_websiteURL"
-                           placeholder="Actual link">
+                    <input name="<%=Parameters.GYM_WEBSITE_URL%>" type="text"
+                           class="form-control  form-control--custom primary-border" placeholder="Actual link">
                 </div>
-
                 <div class="form-group">
-                    <%--<label for="r_website">Current displayed link: <%=gym.getWebsite()%>
-                    </label>--%>
-                    <input name="r_website" type="text"
-                           class="form-control  form-control--custom primary-border" id="r_website"
-                           placeholder="Link">
+                    <input name="<%=Parameters.GYM_WEBSITE%>" type="text"
+                           class="form-control  form-control--custom primary-border" placeholder="Link">
                 </div>
-
                 <div class="form-group">
-                    <%--<label for="r_phone">Current phone: <%=gym.getPhone()%>
-                    </label>--%>
-                    <input name="r_phone" type="text" class="form-control  form-control--custom primary-border"
-                           id="r_phone" placeholder="Phone">
+                    <input name="<%=Parameters.GYM_PHONE%>" type="text"
+                           class="form-control  form-control--custom primary-border" placeholder="Phone">
                 </div>
-
                 <div class="form-group">
-                    <%--<label for="r_address">Current address: <%=gym.getAddress()%>
-                    </label>--%>
-                    <input name="r_address" type="text"
-                           class="form-control  form-control--custom primary-border" id="r_address"
-                           placeholder="Address">
+                    <input name="<%=Parameters.GYM_ADDRESS%>" type="text"
+                           class="form-control  form-control--custom primary-border" placeholder="Address">
                 </div>
-
-                <button value="sendNewInfo" type="submit" class="button--primary w-100 mt-4">Send new information
-                </button>
-
+                <button type="submit" class="button--primary w-100 mt-4">Rewrite</button>
             </form>
         </div>
         <%} else {%>
@@ -237,21 +213,14 @@
 
         <%}%>
     </div>
-    <%if (gym != null) {%>
+
     <div class="equipment-btn">
         <form action="equipment" method="post">
-            <input name="id" class="d-none" type="text" value="<%=gym.getId()%>">
+            <input name="id" type="text" value="<%=gym.getId()%>" hidden>
             <button type="submit" class="equipment-btn__btn">EQUIPMENT</button>
         </form>
     </div>
-    <%} else {%>
-    <div class="equipment-btn">
-        <form action="setEquipment" method="post">
-            <input name="id" class="d-none" type="text" value="">
-            <button type="submit" class="equipment-btn__btn">SET EQUIPMENT</button>
-        </form>
-    </div>
-    <%}%>
+
 </section>
 
 <%@ include file="../components/footer.html" %>
@@ -259,13 +228,22 @@
 <!-- Optional JavaScript -->
 <script src="assets/js/needs-validation.js"></script>
 <script src="assets/js/shrink-nav-on-scroll.js"></script>
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+</script>
+
+<script src="assets/js/fetch.js"></script>
+<script src="assets/js/DOM.js"></script>
+<script src="assets/js/validation.js"></script>
+<script src="assets/js/modal.js"></script>
+<script src="assets/js/cabinet.js"></script>
+
 </body>
 </html>

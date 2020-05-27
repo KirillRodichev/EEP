@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gym id="1">
-    <name>name</name>
-    <logo_path>img path</logo_path>
-    <website_URL>web URL</website_URL>
-    <website>web</website>
-    <phone>89272095064</phone>
-    <address>Molodogvardeyskaya 178</address>
+<gym id="3">
+    <name>Kin Up Wellness</name>
+    <logo_path>kinup.png</logo_path>
+    <website_URL>kinup-wellness.ru</website_URL>
+    <website>kinup-wellness.ru</website>
+    <phone>(846) 20-95-064</phone>
+    <address>Rizhskaya 100</address>
     <all_equipment>
-        <equipment id="2">
-            <name>super Power</name>
-            <description>description</description>
-            <img_path>image</img_path>
+        <equipment id="1">
+            <name>The Personal Bike</name>
+            <description>This bike helps to loose weight and also to gain muscles and keep in shape</description>
+            <img_path>bike-personal.jpg</img_path>
             <body_groups>
-                <body_group>chest</body_group>
-                <body_group>back</body_group>
+                <body_group>Hamstrings</body_group>
+                <body_group>Lower Back</body_group>
+                <body_group>Calves</body_group>
             </body_groups>
         </equipment>
-        <equipment id="2">
-            <name>extra destroyer</name>
-            <description>description</description>
-            <img_path>img</img_path>
+        <equipment id="3">
+            <name>Multipower</name>
+            <description>Here you can do different things: sit-ups, pull-ups and more. When doing sit-ups try to concentrate on the back surface of your leg</description>
+            <img_path>multipower.jpg</img_path>
             <body_groups>
+                <body_group>Quadriceps</body_group>
+                <body_group>Hamstrings</body_group>
+                <body_group>Glutes</body_group>
+                <body_group>Lower Back</body_group>
                 <body_group>Calves</body_group>
-                <body_group>Biceps</body_group>
             </body_groups>
         </equipment>
     </all_equipment>

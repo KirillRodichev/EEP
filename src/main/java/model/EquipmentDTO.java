@@ -17,7 +17,11 @@ public class EquipmentDTO extends Equipment implements Serializable {
 
     public EquipmentDTO(int id, String name, String description, String imgPath, Set<String> bodyGroups) {
         super(id, name, description, imgPath);
-        this.bodyGroups = new HashSet<>(bodyGroups);
+        if (bodyGroups != null) {
+            this.bodyGroups = new HashSet<>(bodyGroups);
+        } else {
+            this.bodyGroups = new HashSet<>();
+        }
     }
 
     @XmlElementWrapper(name = "body_groups")

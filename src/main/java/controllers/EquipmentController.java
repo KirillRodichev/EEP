@@ -190,10 +190,10 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
         closePreparedStatement(ps);
     }
 
-    public void create(Equipment equipment, int gymID, Set<String> bgIDs) throws SQLException {
+    public void create(Equipment equipment, int gymID, Set<String> bodyGroups) throws SQLException {
         create(equipment);
         addToGym(equipment.getId(), gymID);
-        new BodyGroupController().addToEquip(bgIDs, equipment.getId());
+        new BodyGroupController().addToEquip(extractIDs(bodyGroups), equipment.getId());
     }
 
     public void addToGym(int eqID, int gymID) throws SQLException {
@@ -334,7 +334,11 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
     }
 
     private void updateBodyGroups(Set<String> bodyGroups, int id) throws SQLException {
-        new BodyGroupController().update(bodyGroups, id);
+        if (bodyGroups != null) {
+            if (bodyGroups.size() != 0) {
+                new BodyGroupController().update(extractIDs(bodyGroups), id);
+            }
+        }
     }
 
     private void updateField(String field, String sql, int id) throws SQLException {
@@ -347,5 +351,18 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
                 closePreparedStatement(ps);
             }
         }
+    }
+
+    private Set<Integer> extractIDs(Set<String> bodyGroups) throws SQLException {
+        Set<Integer> bgIDs = new HashSet<>();
+        BodyGroupController bgController = new BodyGroupController();
+        for (String bodyGroup : bodyGroups) {
+            try {
+                bgIDs.add(Integer.parseInt(bodyGroup));
+            } catch (NumberFormatException e) {
+                bgIDs.add(bgController.getIDByName(bodyGroup));
+            }
+        }
+        return bgIDs;
     }
 }

@@ -19,8 +19,8 @@ public class Dispatch {
             HttpServletRequest req,
             HttpServletResponse resp,
             User user,
-            ArrayList<String> cities,
-            ArrayList<String> gyms,
+            List<String> cities,
+            List<String> gyms,
             Gym gym
     ) throws ServletException, IOException {
         RequestDispatcher rd;
@@ -36,8 +36,8 @@ public class Dispatch {
             HttpServletRequest req,
             HttpServletResponse resp,
             User user,
-            ArrayList<String> cities,
-            ArrayList<String> gyms
+            List<String> cities,
+            List<String> gyms
     ) throws ServletException, IOException {
         RequestDispatcher rd;
         req.setAttribute(DispatchAttrs.CITIES, cities);

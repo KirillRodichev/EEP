@@ -39,12 +39,11 @@
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-right">
                 <h2 class="container__header">SignUp Form</h2>
-                <form class="needs-validation" action="signUp" method="post" novalidate>
+                <form class="needs-validation sign-up-form" method="post" novalidate>
                     <div class="form-group">
                         <label for="signUpUserName">Name</label>
                         <button class="button--default p-0" type="button" data-toggle="popover" title="Name tips"
-                                data-content="Some real tips will be placed here. Now it's just this."
-                        >
+                                data-content="Some real tips will be placed here. Now it's just this.">
                             <i class="far fa-question-circle form-group__i"></i>
                         </button>
                         <input name="name" type="text" class="form-control form-control--custom primary-border"
@@ -62,8 +61,7 @@
                     <div class="form-group">
                         <label for="signUpPassword">Password</label>
                         <button class="button--default p-0" type="button" data-toggle="popover" title="Password tips"
-                                data-content="Some real tips will be placed here. Now it's just this."
-                        >
+                                data-content="Some real tips will be placed here. Now it's just this.">
                             <i class="far fa-question-circle form-group__i"></i>
                         </button>
                         <input name="password" type="password" class="form-control form-control--custom primary-border"
@@ -90,7 +88,7 @@
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-left">
                 <h2 class="container__header">Login Form</h2>
-                <form class="needs-validation" action="login" method="post" novalidate>
+                <form class="needs-validation login-form" method="post" novalidate>
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
                         <input name="email" type="email" class="form-control form-control--custom primary-border"
@@ -117,10 +115,9 @@
 
 <!-- Optional JavaScript -->
 
-<script src="assets/js/needs-validation.js"></script>
+<%--<script src="assets/js/needs-validation.js"></script>--%>
 <script src="assets/js/login-auth-effect.js"></script>
 
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -128,6 +125,10 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+<script src="assets/js/fetch.js"></script>
+<script src="assets/js/login-signUp.js"></script>
 
 <!-- Enable Popover -->
 <script>

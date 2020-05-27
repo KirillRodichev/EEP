@@ -66,7 +66,7 @@ const updateDomListener = target => {
         console.log('UPDATE DOM');
         console.log(data);
 
-        updateDOM(data);
+        updateEquipmentDOM(data);
     }).catch(() => {
         console.log('Failed to update dom');
     });

@@ -70,7 +70,6 @@ public class XMLUpload extends HttpServlet {
         if (gymDTO.getId() == gymID) {
             gymController.update(gymDTO);
         } else {
-            // TODO replace with create method
             gymController.update(gymDTO, gymID);
         }
     }

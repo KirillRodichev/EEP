@@ -150,8 +150,7 @@
                                 <label for="create-description">Description</label>
                                 <textarea name="<%=Parameters.EQUIPMENT_DESCRIPTION%>" type="text" class="form-control"
                                           required id="create-description" style="min-height: 150px"
-                                          placeholder="Description">
-                                </textarea>
+                                          placeholder="Description"></textarea>
                                 <div class="invalid-feedback">
                                     Please write description.
                                 </div>
@@ -198,12 +197,12 @@
                     <div class="equipment__text-wrapper">
                         <div class="form-group">
                             <h4 class="equipment__h4">Name</h4>
-                            <input name="name-update" type="text" class="form-control form-control--shadowed input-name"
+                            <input name="<%=Parameters.EQUIPMENT_NAME%>" type="text" class="form-control form-control--shadowed input-name"
                                    id="name-update-0" value="<%=equipment.get(0).getName()%>">
                         </div>
                         <div class="form-group">
                             <h4 class="equipment__h4">Description</h4>
-                            <textarea name="description-update" type="text" class="form-control textarea-description"
+                            <textarea name="<%=Parameters.EQUIPMENT_DESCRIPTION%>" type="text" class="form-control textarea-description"
                                       id="description-update-0"><%=equipment.get(0).getDescription()%></textarea>
                         </div>
                         <div class="equipment-body-g">
@@ -221,12 +220,12 @@
                                 </ul>
                                 <div class="form-group">
                                     <label for="selectBodyGroup-0">Select other body groups</label>
-                                    <select name="bodyGroups" id="selectBodyGroup-0" class="selectpicker"
+                                    <select name="<%=Parameters.BODY_GROUPS%>" id="selectBodyGroup-0" class="selectpicker"
                                             multiple data-live-search="true" data-size="5" title="Select..."
                                             data-selected-text-format="count > 2">
-                                        <%for (String bodyGroup : bodyGroups) {%>
-                                        <option value="<%=bodyGroup%>">
-                                            <%=bodyGroup%>
+                                        <%for (int i = 0; i < bodyGroups.size(); i++) {%>
+                                        <option value="<%=i + 1%>">
+                                            <%=bodyGroups.get(i)%>
                                         </option>
                                         <%}%>
                                     </select>
@@ -278,12 +277,12 @@
                     <div class="equipment__text-wrapper">
                         <div class="form-group">
                             <h4 class="equipment__h4">Name</h4>
-                            <input name="name-update" type="text" class="form-control form-control--shadowed input-name"
+                            <input name="<%=Parameters.EQUIPMENT_NAME%>" type="text" class="form-control form-control--shadowed input-name"
                                    id="name-update-1" value="<%=equipment.get(1).getName()%>">
                         </div>
                         <div class="form-group">
                             <h4 class="equipment__h4">Description</h4>
-                            <textarea name="description-update" type="text" class="form-control textarea-description"
+                            <textarea name="<%=Parameters.EQUIPMENT_DESCRIPTION%>" type="text" class="form-control textarea-description"
                                       id="description-update-1"><%=equipment.get(1).getDescription()%></textarea>
                         </div>
                         <div class="equipment-body-g">
@@ -301,12 +300,12 @@
                                 </ul>
                                 <div class="form-group">
                                     <label for="selectBodyGroup-1">Select other body groups</label>
-                                    <select name="bodyGroups" id="selectBodyGroup-1" class="selectpicker"
+                                    <select name="<%=Parameters.BODY_GROUPS%>" id="selectBodyGroup-1" class="selectpicker"
                                             multiple data-live-search="true" data-size="5" title="Select..."
                                             data-selected-text-format="count > 2">
-                                        <%for (String bodyGroup : bodyGroups) {%>
-                                        <option value="<%=bodyGroup%>">
-                                            <%=bodyGroup%>
+                                        <%for (int i = 0; i < bodyGroups.size(); i++) {%>
+                                        <option value="<%=i + 1%>">
+                                            <%=bodyGroups.get(i)%>
                                         </option>
                                         <%}%>
                                     </select>
@@ -384,6 +383,8 @@
 <script src="assets/js/fetch.js"></script>
 <script src="assets/js/DOM.js"></script>
 <script src="assets/js/pagination.js"></script>
+<script src="assets/js/modal.js"></script>
+<script src="assets/js/validation.js"></script>
 <script src="assets/js/equipment.js"></script>
 <script>createPagination(<%=size%>, <%=gymID%>)</script>
 

@@ -13,6 +13,7 @@ public class UserController extends DAOController<User, User> {
 
     private static final String SELECT_ALL = "SELECT * FROM USERS";
     private static final String SELECT_BY_ID = "SELECT * FROM USERS WHERE USER_ID = ?";
+    private static final String SELECT_PASS_BY_ID = "SELECT USER_PASSWORD FROM USERS WHERE USER_ID = ?";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM USERS WHERE USER_EMAIL = ?";
     private static final String INSERT =
             "INSERT INTO USERS " +
@@ -25,16 +26,35 @@ public class UserController extends DAOController<User, User> {
         PreparedStatement ps = getPreparedStatement(SELECT_BY_EMAIL);
         ps.setString(Columns.FIRST, email);
         ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            user = new User(
-                    rs.getInt(Columns.USER_ID),
-                    rs.getString(Columns.USER_NAME),
-                    rs.getString(Columns.USER_EMAIL),
-                    rs.getString(Columns.USER_PASSWORD),
-                    rs.getString(Columns.USER_MODE)
-            );
+        try {
+            while (rs.next()) {
+                user = new User(
+                        rs.getInt(Columns.USER_ID),
+                        rs.getString(Columns.USER_NAME),
+                        rs.getString(Columns.USER_EMAIL),
+                        rs.getString(Columns.USER_PASSWORD),
+                        rs.getString(Columns.USER_MODE)
+                );
+            }
+            return user;
+        } catch (RuntimeException e) {
+            return null;
         }
-        return user;
+    }
+
+    public String getPassword(int id) throws SQLException {
+        String password = null;
+        PreparedStatement ps = getPreparedStatement(SELECT_PASS_BY_ID);
+        ps.setInt(Columns.FIRST, id);
+        ResultSet rs = ps.executeQuery();
+        try {
+            while (rs.next()) {
+                password = rs.getString(Columns.FIRST);
+            }
+            return password;
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package controllers;
 
 import constants.Columns;
+import constants.DB;
+import oracle.jdbc.proxy.annotation.Pre;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,9 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BodyGroupController extends DAOController<String, Set<String>> {
+public class BodyGroupController extends DAOController<String, Set<Integer>> {
 
     private static final String SELECT_BY_EQ_ID = "SELECT B_GROUP_ID FROM B_GROUPS_EQUIPMENT WHERE EQUIPMENT_ID = ?";
+    private static final String SELECT_BY_NAME = "SELECT B_GROUP_ID FROM BODY_GROUPS WHERE B_GROUP_NAME = ?";
     private static final String SELECT_BY_ID = "SELECT B_GROUP_NAME FROM BODY_GROUPS WHERE B_GROUP_ID = ?";
     private static final String SELECT_ALL = "SELECT B_GROUP_NAME FROM BODY_GROUPS";
     private static final String ADD_EQ_RELATION = "INSERT INTO B_GROUPS_EQUIPMENT (B_GROUP_ID, EQUIPMENT_ID)  VALUES (?, ?)";
@@ -31,12 +34,12 @@ public class BodyGroupController extends DAOController<String, Set<String>> {
     }
 
     @Override
-    public Set<String> update(Set<String> bodyGroups) throws SQLException {
+    public Set<Integer> update(Set<Integer> bodyGroups) throws SQLException {
         return null;
     }
 
     @Override
-    public Set<String> update(Set<String> bodyGroups, int eqID) throws SQLException {
+    public Set<Integer> update(Set<Integer> bodyGroups, int eqID) throws SQLException {
         PreparedStatement ps = getPreparedStatement(DELETE_EQ_RELATIONS);
         ps.setInt(Columns.FIRST, eqID);
         ps.execute();
@@ -57,6 +60,17 @@ public class BodyGroupController extends DAOController<String, Set<String>> {
         return bodyGroup;
     }
 
+    public int getIDByName(String name) throws SQLException {
+        PreparedStatement ps = getPreparedStatement(SELECT_BY_NAME);
+        ps.setString(Columns.FIRST, name);
+        ResultSet rs = ps.executeQuery();
+        int id = DB.EMPTY_FIELD;
+        while (rs.next()) {
+            id = rs.getInt(Columns.FIRST);
+        }
+        return id;
+    }
+
     public Set<Integer> getIdsListByEquipmentId(int id) throws SQLException {
         Set<Integer> idList = new HashSet<>();
         PreparedStatement ps = getPreparedStatement(SELECT_BY_EQ_ID);
@@ -68,10 +82,10 @@ public class BodyGroupController extends DAOController<String, Set<String>> {
         return idList;
     }
 
-    public void addToEquip(Set<String> bgIDs, int eqID) throws SQLException {
-        for (String id : bgIDs) {
+    public void addToEquip(Set<Integer> bgIDs, int eqID) throws SQLException {
+        for (Integer id : bgIDs) {
             PreparedStatement ps = getPreparedStatement(ADD_EQ_RELATION);
-            ps.setString(Columns.FIRST, id);
+            ps.setInt(Columns.FIRST, id);
             ps.setInt(Columns.SECOND, eqID);
             ps.execute();
             closePreparedStatement(ps);

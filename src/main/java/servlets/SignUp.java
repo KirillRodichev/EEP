@@ -4,6 +4,7 @@ import constants.*;
 import controllers.CityController;
 import controllers.GymController;
 import controllers.UserController;
+import exceptions.LoginSignUpException;
 import model.Gym;
 import model.User;
 
@@ -16,26 +17,28 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static utils.Dispatch.*;
+import static utils.JSON.stringify;
 
 @WebServlet("/signUp")
 public class SignUp extends HttpServlet {
 
-    private User loadUser(HttpServletRequest req, UserController userController)
-            throws SQLException, RuntimeException {
+    private User loadUser(HttpServletRequest req) throws SQLException, LoginSignUpException {
+        final String name = req.getParameter(Parameters.USER_NAME);
+        final String email = req.getParameter(Parameters.USER_EMAIL);
+        final String password = req.getParameter(Parameters.USER_PASSWORD);
+        final String mode = req.getParameter(Parameters.USER_MODE);
+
         User user;
-        if (userController.getByEmail(req.getParameter(Parameters.USER_EMAIL)) == null) {
-            user = new User(
-                    DB.EMPTY_FIELD,
-                    req.getParameter(Parameters.USER_NAME),
-                    req.getParameter(Parameters.USER_EMAIL),
-                    req.getParameter(Parameters.USER_PASSWORD),
-                    req.getParameter(Parameters.USER_MODE)
-            );
+        UserController userController = new UserController();
+
+        if (userController.getByEmail(email) == null) {
+            user = new User(DB.EMPTY_FIELD, name, email, password, mode);
             userController.create(user);
         } else {
-            throw new RuntimeException(ErrorMsg.USER_ALREADY_EXISTS);
+            throw new LoginSignUpException(ErrorMsg.USER_ALREADY_EXISTS);
         }
         return user;
     }
@@ -43,32 +46,21 @@ public class SignUp extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        User user = null;
-        RequestDispatcher rd;
-        ArrayList<String> gymsNames = new ArrayList<>();
-        ArrayList<String> citiesNames = new ArrayList<>();
-
-        UserController userController = new UserController();
         CityController cityController = new CityController();
         GymController gymController = new GymController();
+
         try {
+            User user = loadUser(req);
+            List<String> citiesNames = cityController.getAll();
+            List<String> gymsNames = gymController.getAllNames();
 
-            user = loadUser(req, userController);
-
-            citiesNames = (ArrayList<String>) cityController.getAll();
-            ArrayList<Gym> gyms = (ArrayList<Gym>) gymController.getAll();
-            for (Gym g : gyms) {
-                gymsNames.add(g.getName());
-            }
+            forwardToCabinet(req, resp, user, citiesNames, gymsNames);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (RuntimeException e) {
-            req.setAttribute(ErrorMsg.ERROR_MESSAGE, e.getMessage());
-            rd = req.getRequestDispatcher("pages/error.jsp");
-            rd.forward(req, resp);
-        }
 
-        forwardToCabinet(req, resp, user, citiesNames, gymsNames);
+        } catch (LoginSignUpException e) {
+            resp.getWriter().print(stringify(e.getMessage()));
+        }
     }
 }

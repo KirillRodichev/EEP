@@ -2,7 +2,6 @@ package xml;
 
 import model.Equipment;
 import model.EquipmentDTO;
-import model.FakeGym;
 import model.GymDTO;
 import org.xml.sax.SAXException;
 

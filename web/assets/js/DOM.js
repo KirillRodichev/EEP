@@ -1,4 +1,5 @@
-const prePath = "assets/img/equipment/";
+const eqImgPath = "assets/img/equipment/";
+const gymLogoPath = "assets/img/gyms_logos/";
 
 const eqImages = document.querySelectorAll('.equipment__img');
 const eqNameInputs = document.querySelectorAll('.input-name');
@@ -12,14 +13,22 @@ const spanClassName = 'equipment-li__span';
 const iClassName = ['fas', 'fa-circle', 'equipment-li__i'];
 const bgLiClassName = 'equipment__li';
 
-const updateDOM = data => {
+const gName = document.querySelector('.gym-name');
+const gLogoPath = document.querySelector('.info-gym__img');
+const gWebsiteURL = document.querySelector('.gym-website-url');
+const gWebsite = document.querySelector('.gym-website');
+const gPhone = document.querySelector('.gym-phone');
+const gAddress = document.querySelector('.gym-address');
+const gCity = document.querySelector('.gym-city');
+
+const updateEquipmentDOM = data => {
     console.log("UPDATE");
     const [ size, ...equipment ] = data;
     console.log(equipment);
     console.log(size);
     for (let i = 0; i < equipment.length; i++) {
         const {id, name, description, imgPath, bodyGroups} = equipment[i];
-        eqImages[i].src = prePath + imgPath;
+        eqImages[i].src = eqImgPath + imgPath;
         eqNameInputs[i].value = name;
         eqDescriptionAreas[i].innerText = description;
         eqUpdateEqIDs[i].value = id;
@@ -41,6 +50,22 @@ const updateDOM = data => {
             eqBGListWrapper[i].appendChild(li);
         });
     }
+};
+
+const updateCabinetDom = date => {
+    console.log("UPDATE");
+    const [city, ...gym] = date;
+    console.log(city);
+    console.log(gym);
+    const [name, websiteURL, website, phone, address] = gym;
+
+    gCity.innerText = city;
+    gName.innerText = name;
+    gWebsiteURL.innerText = websiteURL;
+    gWebsite.innerText = website;
+    gPhone.innerText = phone;
+    gAddress.innerText = address;
+    gLogoPath.src = gymLogoPath;
 };
 
 const clearChildNode = parent => {

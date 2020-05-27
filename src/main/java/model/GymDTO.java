@@ -27,7 +27,11 @@ public class GymDTO extends Gym implements Serializable {
             List<Equipment> equipment
     ) {
         super(id, name, logoPath, websiteURL, website, phone, address);
-        this.equipment = new ArrayList<>(equipment);
+        if (equipment != null) {
+            this.equipment = new ArrayList<>(equipment);
+        } else {
+            this.equipment = new ArrayList<>();
+        }
     }
 
     @XmlElementWrapper(name = "all_equipment")

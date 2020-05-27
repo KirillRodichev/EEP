@@ -1,5 +1,6 @@
 package xml;
 
+import model.Equipment;
 import model.EquipmentDTO;
 import model.GymDTO;
 import org.w3c.dom.Document;
@@ -22,7 +23,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static constants.XMLNodes.*;
 
@@ -53,7 +56,6 @@ public class GymSSB implements SBRemote<GymDTO> {
     public GymDTO importXML(File file) throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = documentBuilder.parse(file);
-        System.out.println("Root element: "+ document.getDocumentElement().getNodeName());
 
         GymDTO gymDTO = new GymDTO();
         List<EquipmentDTO> equipmentDTOList = new ArrayList<>();
@@ -62,6 +64,13 @@ public class GymSSB implements SBRemote<GymDTO> {
         if (document.hasChildNodes()) {
             fetchNodes(document.getChildNodes(), gymDTO, equipmentDTOList, bodyGroupsList, null);
         }
+
+        for (int i = 0; i < bodyGroupsList.size(); i++) {
+            Set<String> bodyGroups = new HashSet<>(bodyGroupsList.get(i));
+            equipmentDTOList.get(i).setBodyGroups(bodyGroups);
+        }
+
+        gymDTO.setEquipment(new ArrayList<>(equipmentDTOList));
         
         return gymDTO;
     }

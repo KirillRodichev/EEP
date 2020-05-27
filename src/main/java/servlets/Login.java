@@ -1,64 +1,70 @@
 package servlets;
 
-import constants.ErrorMsg;
 import constants.Parameters;
 import controllers.CityController;
 import controllers.GymController;
 import controllers.UserController;
+import exceptions.LoginSignUpException;
 import model.Gym;
 import model.User;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
+import static constants.ErrorMsg.USER_NOT_FOUND;
+import static constants.ErrorMsg.WRONG_PASSWORD;
 import static utils.Dispatch.forwardToCabinet;
+import static utils.JSON.stringify;
 
+@MultipartConfig
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        Gym gym = null;
-        User user = null;
-        RequestDispatcher rd;
-        ArrayList<String> gymsNames = new ArrayList<>();
-        ArrayList<String> citiesNames = new ArrayList<>();
+        final String email = req.getParameter(Parameters.USER_EMAIL);
+        final String password = req.getParameter(Parameters.USER_PASSWORD);
 
         UserController userController = new UserController();
         CityController cityController = new CityController();
         GymController gymController = new GymController();
 
         try {
-            user = userController.getByEmail(req.getParameter(Parameters.USER_EMAIL));
-            if (user == null) {
-                throw new RuntimeException(ErrorMsg.USER_ALREADY_EXISTS);
-            }
+            User user = userController.getByEmail(email);
+            validate(user, password, userController);
 
-            citiesNames = (ArrayList<String>) cityController.getAll();
-            ArrayList<Gym> gyms = (ArrayList<Gym>) gymController.getAll();
-            for (Gym g : gyms) {
-                gymsNames.add(g.getName());
-            }
+            List<String> cityNames = cityController.getAll();
+            List<String> gymNames = gymController.getAllNames();
 
-            int gymID = gymController.getIdByUserId(user.getId());
-            gym = gymController.getById(gymID);
+            final int gymID = gymController.getIdByUserId(user.getId());
+            Gym gym = gymController.getById(gymID);
+
+            forwardToCabinet(req, resp, user, cityNames, gymNames, gym);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (RuntimeException e) {
-            req.setAttribute(ErrorMsg.ERROR_MESSAGE, e.getMessage());
-            rd = req.getRequestDispatcher("pages/error.jsp");
-            rd.forward(req, resp);
-        }
 
-        forwardToCabinet(req, resp, user, citiesNames, gymsNames, gym);
+        } catch (LoginSignUpException e) {
+            resp.getWriter().print(stringify(e.getMessage()));
+        }
+    }
+
+    private void validate(User user, String password, UserController userController)
+            throws SQLException, LoginSignUpException {
+        if (user != null) {
+            String dbPassword = userController.getPassword(user.getId());
+            if (dbPassword != password) {
+                throw new LoginSignUpException(WRONG_PASSWORD);
+            }
+        } else {
+            throw new LoginSignUpException(USER_NOT_FOUND);
+        }
     }
 }

@@ -34,7 +34,7 @@ document.body.onload = () => {
     createForm.addEventListener('submit', event => {
         event.preventDefault();
         const fileInput = document.querySelector('.create-img-input');
-        if (createForm.checkValidity() === false && !fileValidation('img', fileInput)) {
+        if (event.target.checkValidity() === false && !fileValidation('img', fileInput)) {
             event.stopPropagation();
         } else {
             equipmentCollapse.classList.remove('show');
@@ -109,9 +109,8 @@ document.body.onload = () => {
     uploadForm.addEventListener('submit', event => {
         event.preventDefault();
         const fileInput = document.querySelector('.upload-xml-input');
-        if (createForm.checkValidity() === false && !fileValidation('xml', fileInput)) {
-            event.stopPropagation();
-        } else {
+
+        if (event.target.checkValidity() === true && fileValidation('xml', fileInput)) {
             const url = 'XMLUpload';
             let requestData = new FormData(uploadForm);
             requestData.append('gymID', gymID);
@@ -122,19 +121,28 @@ document.body.onload = () => {
             }).catch(err => {
                 console.log(err.message);
             });
+        } else {
+            event.stopPropagation();
         }
+        event.target.classList.add('was-validated');
     });
 
     updateForms.forEach(form => {
         form.addEventListener('submit', event => {
+
             event.preventDefault();
             const fileInput = event.target.querySelector('.custom-file-input');
-            if (!fileValidation('img', fileInput)) {
-                event.stopPropagation();
-            } else {
+
+            if (fileValidation('img', fileInput) || fileInput.value === '') {
+
+                console.log('UPDATING EQ');
+
                 const url = 'updateEquipment';
+                const equipmentID = event.target.querySelector('.update.dispatch-attr.equipment-id').value;
                 let requestData = new FormData(event.target);
-                requestData.append('gymID', gymID);
+                requestData.append('id', equipmentID);
+
+                printFormData(requestData);
 
                 postData(url, requestData).then(() => {
                     showModal('Updated successfully!', 1500);
@@ -143,7 +151,11 @@ document.body.onload = () => {
                     console.log('Failed to update equipment');
                     console.log(err.message);
                 });
+
+            } else {
+                event.stopPropagation();
             }
+            event.target.classList.add('was-validated');
         });
     });
 };
@@ -184,26 +196,6 @@ const applyFilters = () => {
     });
 };
 
-const showModal = (message, timeout, body = null) => {
-    const modalHeader = document.querySelector('#modalCenterTitle');
-    const modalBody = document.querySelector('.modal-body');
-    modalHeader.innerText = message;
-    if (body) {
-        if (modalBody.firstChild) {
-            modalBody.removeChild(modalBody.firstChild);
-        }
-        modalBody.appendChild(body);
-    }
-
-    $('.modal').modal('show');
-
-    if (timeout) {
-        setTimeout(() => {
-            $('.modal').modal('hide');
-        }, timeout);
-    }
-};
-
 const getCheckedBodyGroups = () => {
     let checkedBodyGroups = [];
     checkBoxes.forEach(checkBox => {
@@ -218,23 +210,4 @@ const printFormData = data => {
     for (let [k, v] of data) {
         console.log(`${k} = ${v}`);
     }
-};
-
-const fileValidation = (fileType, fileInput) => {
-    const filePath = fileInput.value;
-    let allowedExtensions;
-    if (fileType === 'img') {
-        allowedExtensions = /(\.xml)$/i;
-    } else if (fileType === 'xml') {
-        allowedExtensions = /(\.png|\.jpg|\.jpeg)$/i;
-    } else {
-        return true;
-    }
-
-    if (!allowedExtensions.exec(filePath)) {
-        fileInput.value = '';
-        return false;
-    }
-
-    return true;
 };

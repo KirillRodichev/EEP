@@ -6,6 +6,7 @@ import model.Equipment;
 import model.EquipmentDTO;
 import model.Gym;
 import model.GymDTO;
+import oracle.jdbc.proxy.annotation.Pre;
 import org.xml.sax.SAXException;
 import xml.GymSSB;
 
@@ -24,6 +25,7 @@ public class GymController extends DAOController<Gym, GymDTO> {
 
     private static final String SELECT_BY_ID = "SELECT * FROM GYMS WHERE GYM_ID = ?";
     private static final String SELECT_ALL = "SELECT * FROM GYMS";
+    private static final String SELECT_ALL_NAMES = "SELECT GYM_NAME FROM GYMS";
     private static final String SELECT_BY_USER_ID = "SELECT GYM_ID FROM USERS_GYMS WHERE USER_ID = ?";
     private static final String CREATE = "insert into GYMS " +
             "(GYM_ID, GYM_NAME, GYM_WEBSITE, GYM_WEBSITE_URL, GYM_LOGO_PATH, GYM_PHONE, GYM_ADDRESS) " +
@@ -40,6 +42,7 @@ public class GymController extends DAOController<Gym, GymDTO> {
     private static final String UPDATE_WEBSITE = "UPDATE GYMS SET GYM_WEBSITE = ? WHERE GYM_ID = ?";
     private static final String UPDATE_PHONE = "UPDATE GYMS SET GYM_PHONE = ? WHERE GYM_ID = ?";
     private static final String UPDATE_ADDRESS = "UPDATE GYMS SET GYM_ADDRESS = ? WHERE GYM_ID = ?";
+    private static final String UPDATE_CITY = "UPDATE GYMS_CITIES SET CITY_ID = ? WHERE GYM_ID = ?";
 
     @Override
     public List<Gym> getAll() throws SQLException {
@@ -61,28 +64,48 @@ public class GymController extends DAOController<Gym, GymDTO> {
         return gyms;
     }
 
+    public List<String> getAllNames() throws SQLException {
+        List<String> names = new ArrayList<>();
+        PreparedStatement ps = getPreparedStatement(SELECT_ALL_NAMES);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            names.add(rs.getString(Columns.FIRST));
+        }
+        closePreparedStatement(ps);
+        return names;
+    }
+
+    public void update(Gym gym) throws SQLException {
+        updateFields(gym, gym.getId());
+    }
+
     @Override
     public GymDTO update(GymDTO gym) throws SQLException {
         int id = gym.getId();
-        updateName(gym.getName(), id);
-        updateLogoPath(gym.getLogoPath(), id);
-        updateWebsiteURL(gym.getWebsiteURL(), id);
-        updateWebsite(gym.getWebsite(), id);
-        updatePhone(gym.getPhone(), id);
-        updateAddress(gym.getAddress(), id);
+        updateFields(gym, id);
         updateEquipment(gym.getEquipment(), id);
         return null;
     }
 
     @Override
     public GymDTO update(GymDTO gym, int gymID) throws SQLException {
-        updateName(gym.getName(), gymID);
-        updateLogoPath(gym.getLogoPath(), gymID);
-        updateWebsiteURL(gym.getWebsiteURL(), gymID);
-        updateWebsite(gym.getWebsite(), gymID);
-        updatePhone(gym.getPhone(), gymID);
-        updateAddress(gym.getAddress(), gymID);
-        updateEquipment(gym.getEquipment(), gymID);
+        PreparedStatement ps = getPreparedStatement(SELECT_BY_ID);
+        ps.setInt(Columns.FIRST, gymID);
+        ResultSet rs = ps.executeQuery();
+        int selectedGymID = DB.EMPTY_FIELD;
+        while (rs.next()) {
+            selectedGymID = rs.getInt(Columns.FIRST);
+        }
+        if (selectedGymID != DB.EMPTY_FIELD) {
+            updateFields(gym, gymID);
+            updateEquipment(gym.getEquipment(), gymID);
+        } else {
+            create(gym);
+            EquipmentController eController = new EquipmentController();
+            for (Equipment eq : gym.getEquipment()) {
+                eController.create(eq, gymID, ((EquipmentDTO) eq).getBodyGroups());
+            }
+        }
         return null;
     }
 
@@ -124,6 +147,10 @@ public class GymController extends DAOController<Gym, GymDTO> {
 
     @Override
     public void create(Gym gym) throws SQLException {
+
+    }
+
+    public void create(GymDTO gymDTO) throws SQLException {
 
     }
 
@@ -188,6 +215,10 @@ public class GymController extends DAOController<Gym, GymDTO> {
 
     private void updateAddress(String address, int id) throws SQLException {
         updateField(address, UPDATE_ADDRESS, id);
+    }
+
+    public void updateCity(int cityID, int gymID) throws SQLException {
+        updateField(cityID, UPDATE_CITY, gymID);
     }
 
     private void updateEquipment(List<Equipment> equipment, int gymID) throws SQLException {
@@ -264,5 +295,24 @@ public class GymController extends DAOController<Gym, GymDTO> {
                 closePreparedStatement(ps);
             }
         }
+    }
+
+    private void updateField(int fieldID, String sql, int gymID) throws SQLException {
+        if (fieldID != DB.EMPTY_FIELD) {
+            PreparedStatement ps = getPreparedStatement(sql);
+            ps.setInt(Columns.FIRST, fieldID);
+            ps.setInt(Columns.SECOND, gymID);
+            ps.execute();
+            closePreparedStatement(ps);
+        }
+    }
+
+    private void updateFields(Gym gym, int id) throws SQLException {
+        updateName(gym.getName(), id);
+        updateLogoPath(gym.getLogoPath(), id);
+        updateWebsiteURL(gym.getWebsiteURL(), id);
+        updateWebsite(gym.getWebsite(), id);
+        updatePhone(gym.getPhone(), id);
+        updateAddress(gym.getAddress(), id);
     }
 }
