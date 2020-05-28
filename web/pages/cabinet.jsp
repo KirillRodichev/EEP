@@ -45,6 +45,12 @@
     }
 %>
 
+<div style="display: none" id="spinnerContainer" class="text-center spinner-wrapper">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
 <section class="container info">
 
     <div class="info-wrapper rounded-border">
@@ -87,7 +93,7 @@
         </div>
         <div class="info-gym__form-container">
             <h3 class="info-gym__h3">Rewrite your gym info</h3>
-            <form class="needs-validation update-form" novalidate>
+            <form class="needs-validation update-form" method="post" enctype="multipart/form-data" novalidate>
                 <input name="<%=Parameters.GYM_ID%>" value="<%=gym.getId()%>" type="text" hidden>
                 <img class="info-gym__img" src="<%=Paths.GYM_LOGO_PATH + gym.getLogoPath()%>"
                      alt="<%=gym.getName()%>">

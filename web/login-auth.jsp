@@ -34,12 +34,18 @@
 
 <%@ include file="components/navigation.jsp" %>
 
+<div style="display: none" id="spinnerContainer" class="text-center spinner-wrapper">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
 <section class="login-auth" id="form">
     <div id="wrapper" class="login-auth-flex box-left">
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-right">
                 <h2 class="container__header">SignUp Form</h2>
-                <form class="needs-validation sign-up-form" method="post" novalidate>
+                <form class="needs-validation sign-up-form" method="post" enctype="multipart/form-data" action="signUp" novalidate>
                     <div class="form-group">
                         <label for="signUpUserName">Name</label>
                         <button class="button--default p-0" type="button" data-toggle="popover" title="Name tips"
@@ -88,7 +94,7 @@
         <div class="login-auth__box-wrapper">
             <div class="login-auth__box box-left">
                 <h2 class="container__header">Login Form</h2>
-                <form class="needs-validation login-form" method="post" novalidate>
+                <form class="needs-validation login-form" method="post" enctype="multipart/form-data" action="login" novalidate>
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
                         <input name="email" type="email" class="form-control form-control--custom primary-border"
@@ -115,7 +121,7 @@
 
 <!-- Optional JavaScript -->
 
-<%--<script src="assets/js/needs-validation.js"></script>--%>
+<script src="assets/js/needs-validation.js"></script>
 <script src="assets/js/login-auth-effect.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -127,8 +133,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 
-<script src="assets/js/fetch.js"></script>
-<script src="assets/js/login-signUp.js"></script>
+<%--<script src="assets/js/fetch.js"></script>
+<script src="assets/js/login-signUp.js"></script>--%>
 
 <!-- Enable Popover -->
 <script>

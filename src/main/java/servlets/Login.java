@@ -60,7 +60,11 @@ public class Login extends HttpServlet {
             throws SQLException, LoginSignUpException {
         if (user != null) {
             String dbPassword = userController.getPassword(user.getId());
-            if (dbPassword != password) {
+            if (password != null) {
+                if (!dbPassword.equals(password)) {
+                    throw new LoginSignUpException(WRONG_PASSWORD);
+                }
+            } else {
                 throw new LoginSignUpException(WRONG_PASSWORD);
             }
         } else {

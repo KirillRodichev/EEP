@@ -1,6 +1,7 @@
 package servlets;
 
 import constants.DB;
+import controllers.CityController;
 import controllers.GymController;
 import controllers.UserController;
 import lombok.SneakyThrows;
@@ -49,9 +50,12 @@ public class UpdateCabinetInfo extends HttpServlet {
         gController.updateCity(city, id);
         gController.update(gym);
 
+        if (logoPath == null) gym.setLogoPath("");
+        String sCity = new CityController().getById(city);
+
         PrintWriter out = resp.getWriter();
         List<Object> dto = new ArrayList<>();
-        dto.add(city);
+        dto.add(sCity);
         dto.add(gym);
 
         String json = stringify(dto);

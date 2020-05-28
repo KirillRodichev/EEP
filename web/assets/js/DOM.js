@@ -57,15 +57,22 @@ const updateCabinetDom = date => {
     const [city, ...gym] = date;
     console.log(city);
     console.log(gym);
-    const [name, websiteURL, website, phone, address] = gym;
+    const [{name, logoPath, websiteURL, website, phone, address}] = gym;
 
-    gCity.innerText = city;
-    gName.innerText = name;
-    gWebsiteURL.innerText = websiteURL;
-    gWebsite.innerText = website;
-    gPhone.innerText = phone;
-    gAddress.innerText = address;
-    gLogoPath.src = gymLogoPath;
+    if (city)
+        gCity.innerText = city;
+    if (name)
+        gName.innerText = name;
+    if (websiteURL)
+        gWebsiteURL.innerText = websiteURL;
+    if (website)
+        gWebsite.innerText = website;
+    if (phone)
+        gPhone.innerText = phone;
+    if (address)
+        gAddress.innerText = address;
+    if (logoPath)
+        gLogoPath.src = gymLogoPath + logoPath;
 };
 
 const clearChildNode = parent => {
