@@ -2,11 +2,11 @@ package controllers;
 
 import constants.Columns;
 import constants.DB;
+import controllers.abstracts.DAOController;
 import model.Equipment;
 import model.EquipmentDTO;
 import model.Gym;
 import model.GymDTO;
-import oracle.jdbc.proxy.annotation.Pre;
 import org.xml.sax.SAXException;
 import xml.GymSSB;
 

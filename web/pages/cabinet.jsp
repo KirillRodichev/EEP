@@ -1,7 +1,8 @@
 <%@ page import="model.User" %>
 <%@ page import="model.Gym" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="constants.*" %><%--
+<%@ page import="constants.*" %>
+<%--
   Created by IntelliJ IDEA.
   User: kiril
   Date: 01.03.2020

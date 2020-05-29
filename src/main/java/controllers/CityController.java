@@ -1,6 +1,7 @@
 package controllers;
 
 import constants.Columns;
+import controllers.abstracts.DAOController;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

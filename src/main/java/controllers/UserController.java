@@ -1,6 +1,7 @@
 package controllers;
 
 import constants.Columns;
+import controllers.abstracts.DAOController;
 import model.User;
 
 import java.sql.PreparedStatement;
@@ -59,11 +60,11 @@ public class UserController extends DAOController<User, User> {
 
     @Override
     public List<User> getAll() throws SQLException {
-        List<User> users = new ArrayList<>();
+        List<User> userEntities = new ArrayList<>();
         PreparedStatement ps = getPreparedStatement(SELECT_ALL);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            users.add(new User(
+            userEntities.add(new User(
                     rs.getInt(Columns.USER_ID),
                     rs.getString(Columns.USER_NAME),
                     rs.getString(Columns.USER_EMAIL),
@@ -72,7 +73,7 @@ public class UserController extends DAOController<User, User> {
             ));
         }
         closePreparedStatement(ps);
-        return users;
+        return userEntities;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package xml;
 
-import model.Equipment;
 import model.EquipmentDTO;
 import model.GymDTO;
 import org.w3c.dom.Document;
@@ -155,7 +154,7 @@ public class GymSSB implements SBRemote<GymDTO> {
                 }
 
                 if (elemNode.hasChildNodes()) {
-                    fetchNodes(elemNode.getChildNodes(),gymDTO, equipmentDTOList, bodyGroupsList, currentParentNode);
+                    fetchNodes(elemNode.getChildNodes(), gymDTO, equipmentDTOList, bodyGroupsList, currentParentNode);
                 }
             }
         }

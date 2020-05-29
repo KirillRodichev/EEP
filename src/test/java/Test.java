@@ -2,6 +2,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import controllers.BodyGroupController;
 import model.Equipment;
+import model.entity.CityEntity;
+import model.entity.GymEntity;
+import services.CityService;
 import utils.JSON;
 
 import java.io.IOException;
@@ -11,13 +14,24 @@ import java.util.*;
 
 public class Test {
     public static void main(String[] args) throws IOException, SQLException {
-        String string = null;
-        String string1 = null;
-        String string2 = new String();
-        string2 = null;
-        System.out.println(string == string1);
-        System.out.println(string.equals(string1));
-        System.out.println(string == string2);
-        System.out.println(string.equals(string2));
+       /* CityService cs = new CityService();
+
+        CityEntity city = cs.getCity(2);
+
+        List<CityEntity> allCities = cs.getAllCities();
+
+        System.out.println(city.getName());
+        for (CityEntity c : allCities) {
+            System.out.println(c.getName());
+        }*/
+
+       String s = getObj(new GymEntity());
+        System.out.println(s);
+
+        //https://stackoverflow.com/questions/12192592/java-sql-sqlexception-ora-01000-maximum-open-cursors-exceeded
+    }
+
+    public static <T> String getObj(T obj) {
+        return obj.getClass().getSimpleName();
     }
 }

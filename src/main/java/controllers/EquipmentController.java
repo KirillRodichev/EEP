@@ -2,6 +2,7 @@ package controllers;
 
 import constants.Columns;
 import constants.DB;
+import controllers.abstracts.DAOController;
 import model.Equipment;
 import model.EquipmentDTO;
 import model.LoadedEquipment;
@@ -204,6 +205,52 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
         closePreparedStatement(ps);
     }
 
+    public String getConditionalEqIDsQuery(Set<Integer> filteredEquipmentIDs) throws SQLException {
+        StringBuilder conditionalEqIDsQuery = new StringBuilder();
+        int counter = 0;
+        for (Integer id : filteredEquipmentIDs) {
+            if (counter == 0) {
+                conditionalEqIDsQuery.append(" EQUIPMENT_ID = ");
+            } else {
+                conditionalEqIDsQuery.append(" OR EQUIPMENT_ID = ");
+            }
+            conditionalEqIDsQuery.append(id);
+            counter++;
+        }
+        return conditionalEqIDsQuery.toString();
+    }
+
+    public Set<Integer> getFilteredEqIDs(Set<Integer> filters) throws SQLException {
+        Set<Integer> filteredEqIDs = new HashSet<>();
+        PreparedStatement ps;
+        if (filters.size() == 0) {
+            List<Equipment> equipment = new EquipmentController().getAll();
+            for (Equipment eq : equipment) {
+                filteredEqIDs.add(eq.getId());
+            }
+        } else {
+            StringBuilder sFilters = new StringBuilder();
+            int counter = 0;
+            for (Integer filter : filters) {
+                if (counter == 0) {
+                    sFilters.append(" B_GROUP_ID = ");
+                } else {
+                    sFilters.append(" OR B_GROUP_ID = ");
+                }
+                sFilters.append(filter);
+                counter++;
+            }
+            ps = getPreparedStatement(GET_CONDITIONAL_EQ_IDS);
+            ps.setString(Columns.FIRST, sFilters.toString());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                filteredEqIDs.add(rs.getInt(Columns.FIRST));
+            }
+            closePreparedStatement(ps);
+        }
+        return filteredEqIDs;
+    }
+
     private List<Equipment> getEquipment(List<Equipment> equipment, PreparedStatement ps) throws SQLException {
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -273,52 +320,6 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
         ps.setInt(Columns.SECOND, eqID);
         ps.executeQuery();
         closePreparedStatement(ps);
-    }
-
-    public String getConditionalEqIDsQuery(Set<Integer> filteredEquipmentIDs) throws SQLException {
-        StringBuilder conditionalEqIDsQuery = new StringBuilder();
-        int counter = 0;
-        for (Integer id : filteredEquipmentIDs) {
-            if (counter == 0) {
-                conditionalEqIDsQuery.append(" EQUIPMENT_ID = ");
-            } else {
-                conditionalEqIDsQuery.append(" OR EQUIPMENT_ID = ");
-            }
-            conditionalEqIDsQuery.append(id);
-            counter++;
-        }
-        return conditionalEqIDsQuery.toString();
-    }
-
-    public Set<Integer> getFilteredEqIDs(Set<Integer> filters) throws SQLException {
-        Set<Integer> filteredEqIDs = new HashSet<>();
-        PreparedStatement ps;
-        if (filters.size() == 0) {
-            List<Equipment> equipment = new EquipmentController().getAll();
-            for (Equipment eq : equipment) {
-                filteredEqIDs.add(eq.getId());
-            }
-        } else {
-            StringBuilder sFilters = new StringBuilder();
-            int counter = 0;
-            for (Integer filter : filters) {
-                if (counter == 0) {
-                    sFilters.append(" B_GROUP_ID = ");
-                } else {
-                    sFilters.append(" OR B_GROUP_ID = ");
-                }
-                sFilters.append(filter);
-                counter++;
-            }
-            ps = getPreparedStatement(GET_CONDITIONAL_EQ_IDS);
-            ps.setString(Columns.FIRST, sFilters.toString());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                filteredEqIDs.add(rs.getInt(Columns.FIRST));
-            }
-            closePreparedStatement(ps);
-        }
-        return filteredEqIDs;
     }
 
     private void updateName(String name, int id) throws SQLException {

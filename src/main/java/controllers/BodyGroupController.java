@@ -2,7 +2,7 @@ package controllers;
 
 import constants.Columns;
 import constants.DB;
-import oracle.jdbc.proxy.annotation.Pre;
+import controllers.abstracts.DAOController;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
