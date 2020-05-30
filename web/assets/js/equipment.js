@@ -142,8 +142,6 @@ document.body.onload = () => {
                 let requestData = new FormData(event.target);
                 requestData.append('id', equipmentID);
 
-                printFormData(requestData);
-
                 postData(url, requestData).then(() => {
                     showModal('Updated successfully!', 1500);
                     applyFilters();

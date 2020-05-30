@@ -2,6 +2,7 @@ package model.entity;
 
 import lombok.*;
 import model.User;
+import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
 
@@ -12,9 +13,22 @@ import javax.persistence.*;
 @Table(name = "USERS")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class UserEntity extends User {
+public class UserEntity extends User implements Accessible {
     private CityEntity userCity;
-    private GymEntity gym;
+    private GymEntity userGym;
+
+    public UserEntity(
+            int id,
+            String name,
+            String email,
+            String password,
+            String mode,
+            CityEntity userCity,
+            GymEntity userGym) {
+        super(id, name, email, password, mode);
+        this.userCity = userCity;
+        this.userGym = userGym;
+    }
 
     @Id
     @Column(name = "USER_ID")
@@ -55,7 +69,7 @@ public class UserEntity extends User {
             joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "GYM_ID")
     )
-    public GymEntity getGym() { return gym; }
+    public GymEntity getUserGym() { return userGym; }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(

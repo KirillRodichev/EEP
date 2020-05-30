@@ -1,12 +1,13 @@
 package servlets;
 
 import constants.Parameters;
-import controllers.CityController;
-import controllers.GymController;
-import controllers.UserController;
 import exceptions.LoginSignUpException;
-import model.Gym;
-import model.User;
+import model.entity.CityEntity;
+import model.entity.GymEntity;
+import model.entity.UserEntity;
+import services.CityService;
+import services.GymService;
+import services.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -15,12 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-import static constants.ErrorMsg.USER_NOT_FOUND;
-import static constants.ErrorMsg.WRONG_PASSWORD;
+import static constants.ErrorMsg.*;
 import static utils.Dispatch.forwardToCabinet;
+import static utils.Dispatch.sendErrMsg;
 import static utils.JSON.stringify;
 
 @MultipartConfig
@@ -29,37 +30,43 @@ public class Login extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final String email = req.getParameter(Parameters.USER_EMAIL);
-        final String password = req.getParameter(Parameters.USER_PASSWORD);
+        String email, password;
+        try {
+            email = req.getParameter(Parameters.USER_EMAIL);
+            password = req.getParameter(Parameters.USER_PASSWORD);
+        } catch (RuntimeException e) {
+            sendErrMsg(resp, REQ_PARAMS_ERR);
+            throw new RuntimeException(e);
+        }
 
-        UserController userController = new UserController();
-        CityController cityController = new CityController();
-        GymController gymController = new GymController();
+        UserService userService = new UserService();
+        GymService gymService = new GymService();
+        CityService cityService = new CityService();
 
         try {
-            User user = userController.getByEmail(email);
-            validate(user, password, userController);
+            UserEntity user = userService.getByEmail(email);
+            validate(user, password);
 
-            List<String> cityNames = cityController.getAll();
-            List<String> gymNames = gymController.getAllNames();
+            List<CityEntity> cities = cityService.getAll();
+            List<String> gymNames = gymService.getAllNames();
+            List<String> cityNames = new ArrayList<>();
+            for (CityEntity city : cities) {
+                cityNames.add(city.getName());
+            }
+            final int gymID = gymService.getIdByUserId(user.getId());
+            GymEntity gym = gymService.get(gymID);
 
-            final int gymID = gymController.getIdByUserId(user.getId());
-            Gym gym = gymController.getById(gymID);
-
-            forwardToCabinet(req, resp, user, cityNames, gymNames, gym);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            forwardToCabinet(req, resp, user, gym, cityNames, gymNames);
 
         } catch (LoginSignUpException e) {
             resp.getWriter().print(stringify(e.getMessage()));
         }
     }
 
-    private void validate(User user, String password, UserController userController)
-            throws SQLException, LoginSignUpException {
+    private void validate(UserEntity user, String password)
+            throws LoginSignUpException {
         if (user != null) {
-            String dbPassword = userController.getPassword(user.getId());
+            String dbPassword = new UserService().getPassword(user.getId());
             if (password != null) {
                 if (!dbPassword.equals(password)) {
                     throw new LoginSignUpException(WRONG_PASSWORD);

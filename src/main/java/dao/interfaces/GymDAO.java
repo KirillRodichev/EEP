@@ -17,5 +17,7 @@ public interface GymDAO {
 
     void update(GymEntity gym, int gymID);
 
+    void merge(GymEntity prev, GymEntity cur);
+
     File createXML(int gymID, Set<Integer> BGFilters) throws SQLException, JAXBException, SAXException, FileNotFoundException;
 }

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gym id="3">
-    <name>Kin Up Wellness</name>
+    <name>Kin Up Badness</name>
     <logo_path>kinup.png</logo_path>
-    <website_URL>kinup-wellness.ru</website_URL>
-    <website>kinup-wellness.ru</website>
+    <website_URL>kin-up.samara.ru</website_URL>
+    <website>www.kin-up.samara.ru</website>
     <phone>(846) 20-95-064</phone>
-    <address>Rizhskaya 100</address>
+    <address>Kaluzhskaya 101</address>
     <all_equipment>
         <equipment id="1">
-            <name>The Personal Bike</name>
+            <name>Personal Bike</name>
             <description>This bike helps to loose weight and also to gain muscles and keep in shape</description>
             <img_path>bike-personal.jpg</img_path>
             <body_groups>
+                <body_group>Quadriceps</body_group>
                 <body_group>Hamstrings</body_group>
-                <body_group>Lower Back</body_group>
                 <body_group>Calves</body_group>
             </body_groups>
         </equipment>

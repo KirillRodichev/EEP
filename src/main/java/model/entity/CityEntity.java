@@ -1,6 +1,7 @@
 package model.entity;
 
 import lombok.*;
+import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
 @Table(name = "CITIES")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class CityEntity {
+public class CityEntity implements Accessible {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "cities_seq_gen")
     @SequenceGenerator(name = "cities_seq_gen", sequenceName = "cities_seq", allocationSize = 1)

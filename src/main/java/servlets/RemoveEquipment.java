@@ -1,7 +1,7 @@
 package servlets;
 
 import constants.DispatchAttrs;
-import controllers.EquipmentController;
+import services.EquipmentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Map;
+
+import static constants.ErrorMsg.REMOVE_EXEC_ERR;
+import static constants.ErrorMsg.REQ_PARAMS_ERR;
+import static utils.Dispatch.sendErrMsg;
 
 @WebServlet("/removeEquipment")
 @MultipartConfig
@@ -19,14 +21,21 @@ public class RemoveEquipment extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int equipmentID = Integer.parseInt(req.getParameter(DispatchAttrs.EQUIPMENT_ID));
-        int gymID = Integer.parseInt(req.getParameter(DispatchAttrs.GYM_ID));
+        int equipmentID, gymID;
+        try {
+            equipmentID = Integer.parseInt(req.getParameter(DispatchAttrs.EQUIPMENT_ID));
+            gymID = Integer.parseInt(req.getParameter(DispatchAttrs.GYM_ID));
+        } catch (RuntimeException e) {
+            sendErrMsg(resp, REQ_PARAMS_ERR);
+            throw new RuntimeException(e);
+        }
 
-        EquipmentController equipmentController = new EquipmentController();
+        EquipmentService equipmentService = new EquipmentService();
 
         try {
-            equipmentController.remove(gymID, equipmentID);
-        } catch (SQLException e) {
+            equipmentService.remove(gymID, equipmentID);
+        } catch (RuntimeException e) {
+            sendErrMsg(resp, REMOVE_EXEC_ERR);
             throw new RuntimeException(e);
         }
     }

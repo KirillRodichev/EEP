@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Set;
 
 import static constants.Parameters.BG_FILTERS;
@@ -52,6 +52,6 @@ public class XMLDownload extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        resp.getWriter().print(stringify("gym.xml"));
+        resp.getWriter().print(stringify(FILE_NAME));
     }
 }

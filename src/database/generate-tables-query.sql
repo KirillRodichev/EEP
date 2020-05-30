@@ -111,7 +111,7 @@ CREATE SEQUENCE b_group_seq
 
 CREATE TABLE users
 (
-    user_id         NUMBER       PRIMARY KEY,
+    user_id         INTEGER      PRIMARY KEY,
     user_name       VARCHAR2(20) NOT NULL,
     user_email      VARCHAR2(30) NOT NULL,
     user_password   VARCHAR2(20) NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE users
 );
 CREATE TABLE additional_info
 (
-    user_id       NUMBER            PRIMARY KEY,
+    user_id       INTEGER            PRIMARY KEY,
     gender        VARCHAR2(6)       NOT NULL,
     weight        INT               NOT NULL,
     height        INT               NOT NULL,
@@ -129,7 +129,7 @@ CREATE TABLE additional_info
 );
 CREATE TABLE training_programs
 (
-    user_id    NUMBER       PRIMARY KEY,
+    user_id    INTEGER       PRIMARY KEY,
     split_type VARCHAR2(10) NOT NULL,
     first_day  VARCHAR2(20) NOT NULL,
     second_day VARCHAR2(20) NOT NULL,
@@ -139,13 +139,13 @@ CREATE TABLE training_programs
 );
 CREATE TABLE cities
 (
-    city_id     NUMBER          PRIMARY KEY,
+    city_id     INTEGER          PRIMARY KEY,
     city_name   VARCHAR2(20)    NOT NULL
 );
 
 CREATE TABLE gyms
 (
-    gym_id          NUMBER          PRIMARY KEY,
+    gym_id          INTEGER          PRIMARY KEY,
     gym_name        VARCHAR2(20)    NOT NULL,
     gym_website     VARCHAR2(30),
     gym_website_url VARCHAR2(20),
@@ -156,7 +156,7 @@ CREATE TABLE gyms
 
 CREATE TABLE equipment
 (
-    equipment_id            NUMBER       PRIMARY KEY,
+    equipment_id            INTEGER       PRIMARY KEY,
     equipment_name          VARCHAR2(20) NOT NULL,
     equipment_description   VARCHAR2(200),
     equipment_img_path      VARCHAR2(20)
@@ -164,13 +164,13 @@ CREATE TABLE equipment
 
 CREATE TABLE body_groups
 (
-    b_group_id      NUMBER          PRIMARY KEY,
+    b_group_id      INTEGER          PRIMARY KEY,
     b_group_name    VARCHAR2(20)    NOT  NULL
 );
 CREATE TABLE b_groups_equipment
 (
-    b_group_id      NUMBER NOT NULL,
-    equipment_id    NUMBER NOT NULL,
+    b_group_id      INTEGER NOT NULL,
+    equipment_id    INTEGER NOT NULL,
     CONSTRAINT b_group_fk
         FOREIGN KEY (b_group_id)
             REFERENCES body_groups (b_group_id),
@@ -181,8 +181,8 @@ CREATE TABLE b_groups_equipment
 
 CREATE TABLE users_cities
 (
-    user_id NUMBER NOT NULL,
-    city_id NUMBER NOT NULL,
+    user_id INTEGER NOT NULL,
+    city_id INTEGER NOT NULL,
     CONSTRAINT user_fk
         FOREIGN KEY (user_id)
             REFERENCES users (user_id),
@@ -193,8 +193,8 @@ CREATE TABLE users_cities
 
 CREATE TABLE users_gyms
 (
-    user_id NUMBER NOT NULL,
-    gym_id NUMBER NOT NULL,
+    user_id INTEGER NOT NULL,
+    gym_id INTEGER NOT NULL,
     CONSTRAINT user_fk_
         FOREIGN KEY (user_id)
             REFERENCES users (user_id),
@@ -205,8 +205,8 @@ CREATE TABLE users_gyms
 
 CREATE TABLE gyms_equipment
 (
-    equipment_id NUMBER NOT NULL,
-    gym_id NUMBER NOT NULL,
+    equipment_id INTEGER NOT NULL,
+    gym_id INTEGER NOT NULL,
     CONSTRAINT gym_fk
         FOREIGN KEY (gym_id)
             REFERENCES gyms (gym_id),
@@ -217,8 +217,8 @@ CREATE TABLE gyms_equipment
 
 CREATE TABLE gyms_cities
 (
-    city_id NUMBER NOT NULL,
-    gym_id NUMBER NOT NULL,
+    city_id INTEGER NOT NULL,
+    gym_id INTEGER NOT NULL,
     CONSTRAINT gym_fk__
         FOREIGN KEY (gym_id)
             REFERENCES gyms (gym_id),

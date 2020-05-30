@@ -8,10 +8,14 @@ import model.entity.EquipmentEntity;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.type.IntegerType;
+import services.GymService;
 import utils.HibernateSessionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static utils.DB.ableToUpdate;
 
 public class EquipmentDAOImp extends DAO<EquipmentEntity> implements EquipmentDAO {
     private static final String PAGINATION_SELECT =
@@ -27,26 +31,18 @@ public class EquipmentDAOImp extends DAO<EquipmentEntity> implements EquipmentDA
                     "WHERE rownum < ((:page_num * :page_size) + 1)) " +
                     "WHERE r__ >= (((:page_num - 1) * :page_size) + 1)";
     private static final String GET_CONDITIONAL_EQ_IDS = "SELECT EQUIPMENT_ID from B_GROUPS_EQUIPMENT WHERE :cond";
-    private static final String GET_EQ_IDS_COUNT = "SELECT COUNT(*) FROM GYMS_EQUIPMENT WHERE GYM_ID = :g_id";
     private static final String SELECT_BY_GYM_ID = "SELECT EQUIPMENT_ID FROM GYMS_EQUIPMENT WHERE GYM_ID = :g_id";
     private static final String DELETE_G_RELATION = "DELETE FROM GYMS_EQUIPMENT WHERE GYM_ID = :g_id AND EQUIPMENT_ID = :eq_id";
     private static final String ADD_G_RELATION = "INSERT INTO GYMS_EQUIPMENT (EQUIPMENT_ID, GYM_ID) VALUES (:eq_id, :g_id)";
-    private static final String CREATE_ID = "SELECT EQUIPMENT_SEQ.nextval from dual";
+    private static final String CREATE_ID = "SELECT EQUIPMENT_SEQ.nextval as num from dual";
 
     @Override
-    public void update(EquipmentEntity entity) {
-        EquipmentEntity equipment = getById(entity.getId());
-        final String name = entity.getName();
-        final String description = entity.getDescription();
-        final String imgPath = entity.getImgPath();
-        final List<BodyGroupEntity> bodyGroups = entity.getBodyGroups();
-
-        if (ableToUpdate(name)) equipment.setName(name);
-        if (ableToUpdate(description)) equipment.setDescription(description);
-        if (ableToUpdate(imgPath)) equipment.setImgPath(imgPath);
-        if (ableToUpdate(bodyGroups)) equipment.setBodyGroups(bodyGroups);
-
-        super.update(equipment);
+    public void merge(EquipmentEntity entity) {
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        session.merge(entity);
+        tx.commit();
+        session.close();
     }
 
     @Override
@@ -63,14 +59,21 @@ public class EquipmentDAOImp extends DAO<EquipmentEntity> implements EquipmentDA
 
     @Override
     public void create(EquipmentEntity entity) {
-        entity.setId(createID());
-        super.create(entity);
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        int id = (int) session
+                .createSQLQuery(CREATE_ID)
+                .addScalar("num", IntegerType.INSTANCE)
+                .uniqueResult();
+        entity.setId(id);
+        session.save(entity);
+        tx.commit();
+        session.close();
     }
 
     @Override
     public void create(EquipmentEntity equipment, int gymID) {
         create(equipment);
-        addToGym(equipment.getId(), gymID);
     }
 
     @Override
@@ -113,22 +116,20 @@ public class EquipmentDAOImp extends DAO<EquipmentEntity> implements EquipmentDA
         NativeQuery query = filters != null
                 ? session.createSQLQuery(PAGINATION_SELECT_CONDITIONAL)
                 : session.createSQLQuery(PAGINATION_SELECT);
+        query.addScalar("EQUIPMENT_ID", IntegerType.INSTANCE);
         if (filters != null) {
             List<Integer> filteredEquipmentIDs = getFilteredEqIDs(filters);
             String conditionalEqIDsQuery = getConditionalEqIDsQuery(filteredEquipmentIDs);
             equipmentIDsCount = filteredEquipmentIDs.size();
             query.setParameter("cond", conditionalEqIDsQuery);
         } else {
-            equipmentIDsCount = (int) session
-                    .createSQLQuery(GET_EQ_IDS_COUNT)
-                    .setParameter("g_id", gymID)
-                    .uniqueResult();
+            equipmentIDsCount = new GymService().get(gymID).getGymEquipment().size();
         }
         query.setParameter("g_id", gymID);
         query.setParameter("page_num", pageNumber);
         query.setParameter("page_size", pageSize);
 
-        List<Integer> equipmentIDs = (List<Integer>)query.list();
+        List<Integer> equipmentIDs = (List<Integer>) query.list();
 
         LoadedEquipment res = new LoadedEquipment();
         res.setEquipmentNumber(equipmentIDsCount);
@@ -148,6 +149,7 @@ public class EquipmentDAOImp extends DAO<EquipmentEntity> implements EquipmentDA
         Transaction tx = session.beginTransaction();
         List<Integer> idList = (List<Integer>)session
                 .createSQLQuery(SELECT_BY_GYM_ID)
+                .addScalar("EQUIPMENT_ID", IntegerType.INSTANCE)
                 .setParameter("g_id", id)
                 .list();;
         tx.commit();
@@ -175,9 +177,11 @@ public class EquipmentDAOImp extends DAO<EquipmentEntity> implements EquipmentDA
                 }
                 Session session = HibernateSessionFactory.getSessionFactory().openSession();
                 Transaction tx = session.beginTransaction();
-                NativeQuery query = session.createSQLQuery(GET_CONDITIONAL_EQ_IDS);
-                query.setParameter("cond", sFilters.toString());
-                filteredEqIDs = (List<Integer>)query.list();
+                filteredEqIDs = (List<Integer>) session
+                        .createSQLQuery(GET_CONDITIONAL_EQ_IDS)
+                        .addScalar("EQUIPMENT_ID", IntegerType.INSTANCE)
+                        .setParameter("cond", sFilters.toString())
+                        .list();
                 tx.commit();
                 session.close();
             }
@@ -195,33 +199,10 @@ public class EquipmentDAOImp extends DAO<EquipmentEntity> implements EquipmentDA
 
     @Override
     public List<EquipmentEntity> getAll() {
-        return (List<EquipmentEntity>)  HibernateSessionFactory
+        return (List<EquipmentEntity>) HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()
                 .createQuery("From EquipmentEntity")
                 .list();
-    }
-
-    private int createID() {
-        Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-        int id = (int) session.createSQLQuery(CREATE_ID).uniqueResult();
-        tx.commit();
-        session.close();
-        return id;
-    }
-
-    private boolean ableToUpdate(String field) {
-        if (field != null) {
-            return field.length() != 0;
-        }
-        return false;
-    }
-
-    private boolean ableToUpdate(List<BodyGroupEntity> field) {
-        if (field != null) {
-            return field.size() != 0;
-        }
-        return false;
     }
 }

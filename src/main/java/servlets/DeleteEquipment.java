@@ -1,7 +1,7 @@
 package servlets;
 
 import constants.DispatchAttrs;
-import controllers.EquipmentController;
+import services.EquipmentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
+
+import static constants.ErrorMsg.DELETE_EXEC_ERR;
+import static constants.ErrorMsg.REQ_PARAMS_ERR;
+import static utils.Dispatch.sendErrMsg;
 
 @WebServlet("/deleteEquipment")
 @MultipartConfig
@@ -18,13 +21,20 @@ public class DeleteEquipment extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int equipmentID = Integer.parseInt(req.getParameter(DispatchAttrs.EQUIPMENT_ID));
+        int equipmentID;
+        try {
+            equipmentID = Integer.parseInt(req.getParameter(DispatchAttrs.EQUIPMENT_ID));
+        } catch (RuntimeException e) {
+            sendErrMsg(resp, REQ_PARAMS_ERR);
+            throw new RuntimeException(e);
+        }
 
-        EquipmentController equipmentController = new EquipmentController();
+        EquipmentService eqService = new EquipmentService();
 
         try {
-            equipmentController.delete(equipmentID);
-        } catch (SQLException e) {
+            eqService.delete(eqService.get(equipmentID));
+        } catch (RuntimeException e) {
+            sendErrMsg(resp, DELETE_EXEC_ERR);
             throw new RuntimeException(e);
         }
     }

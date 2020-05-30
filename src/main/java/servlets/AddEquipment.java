@@ -1,7 +1,7 @@
 package servlets;
 
 import constants.DispatchAttrs;
-import controllers.EquipmentController;
+import services.EquipmentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
+
+import static constants.ErrorMsg.REQ_PARAMS_ERR;
+import static utils.Dispatch.sendErrMsg;
 
 @WebServlet("/addEquipment")
 @MultipartConfig
@@ -18,16 +20,17 @@ public class AddEquipment extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        int gymID = Integer.parseInt(req.getParameter(DispatchAttrs.GYM_ID));
-        int equipmentID = Integer.parseInt(req.getParameter(DispatchAttrs.EQUIPMENT_ID));
-
-        EquipmentController equipmentController = new EquipmentController();
-
+        int equipmentID, gymID;
         try {
-            equipmentController.addToGym(equipmentID, gymID);
-        } catch (SQLException e) {
+            equipmentID = Integer.parseInt(req.getParameter(DispatchAttrs.EQUIPMENT_ID));
+            gymID = Integer.parseInt(req.getParameter(DispatchAttrs.GYM_ID));
+        } catch (RuntimeException e) {
+            sendErrMsg(resp, REQ_PARAMS_ERR);
             throw new RuntimeException(e);
         }
+
+        new EquipmentService().addToGym(equipmentID, gymID);
+
+        // TODO rewrite with merge
     }
 }

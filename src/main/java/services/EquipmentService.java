@@ -49,9 +49,9 @@ public class EquipmentService {
         eqDAOImp.delete(eq);
     }
 
-    public void update(EquipmentEntity eq) {
-        eqDAOImp.update(eq);
-    }
+    public void update(EquipmentEntity eq) { eqDAOImp.update(eq); }
+
+    public void merge(EquipmentEntity eq) { eqDAOImp.merge(eq); }
 
     public void addToGym(int eqID, int gymID) { eqDAOImp.addToGym(eqID, gymID); }
 }

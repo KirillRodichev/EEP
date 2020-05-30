@@ -1,8 +1,11 @@
 package servlets;
 
-import controllers.BodyGroupController;
-import controllers.EquipmentController;
 import model.Equipment;
+import model.LoadedEquipment;
+import model.entity.EquipmentEntity;
+import model.entity.interfaces.Accessible;
+import services.BodyGroupService;
+import services.EquipmentService;
 import utils.JSON;
 
 import javax.servlet.ServletException;
@@ -13,14 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static constants.Parameters.*;
 import static utils.DTO.getDTO;
 import static utils.Dispatch.forwardToEquipmentPage;
 import static utils.JSON.stringify;
-import static utils.DB.loadData;
 
 @WebServlet("/equipment")
 @MultipartConfig
@@ -29,48 +33,59 @@ public class EquipmentLoader extends HttpServlet {
     private void doSyncPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int size;
         int gymID = Integer.parseInt(req.getParameter(PID));
-        List<Equipment> equipment = new ArrayList<>();
-        Map<Integer, Set<String>> eqBodyGroups = new HashMap<>();
+        List<EquipmentEntity> pageEquipment = new ArrayList<>();
+        Map<Integer, List<String>> eqBodyGroups = new HashMap<>();
         List<String> allBodyGroups;
-        List<Equipment> restEquipment;
+        List<EquipmentEntity> restEquipment;
 
-        EquipmentController eqController = new EquipmentController();
-        BodyGroupController bgController = new BodyGroupController();
+        BodyGroupService bgService = new BodyGroupService();
+        EquipmentService eqService = new EquipmentService();
 
-        try {
-            restEquipment = eqController.getAll();
-            size = loadData(equipment, eqBodyGroups, restEquipment, gymID, eqController, bgController);
-            allBodyGroups = bgController.getAll();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        restEquipment = eqService.getAll();
+        loadRest(eqService.getIDsByGymId(gymID), restEquipment);
+
+        allBodyGroups = getNames(bgService.getAll());
+
+        LoadedEquipment iDsForSinglePage = eqService.getIDsForSinglePage(INITIAL_PAGE_NUMBER, INITIAL_PAGE_SIZE, gymID);
+        size = iDsForSinglePage.getEquipmentNumber();
+        List<Integer> equipmentIDsForSinglePage = iDsForSinglePage.getEquipmentIDsForSinglePage();
+        for (Integer id : equipmentIDsForSinglePage) {
+            pageEquipment.add(eqService.get(id));
+            List<String> singleEqBGs = getNames(eqService.get(id).getBodyGroups());
+            eqBodyGroups.put(id, singleEqBGs);
         }
 
-        forwardToEquipmentPage(req, resp, gymID, equipment, eqBodyGroups, allBodyGroups, restEquipment, size);
+        forwardToEquipmentPage(req, resp, gymID, pageEquipment, eqBodyGroups, allBodyGroups, restEquipment, size);
     }
 
     private void doAsyncPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int size;
         int gymID = Integer.parseInt(req.getParameter(GYM_ID));
-        List<Equipment> equipment = new ArrayList<>();
-        Map<Integer, Set<String>> eqBodyGroups = new HashMap<>();
+        List<Equipment> pageEquipment = new ArrayList<>();
+        Map<Integer, List<String>> eqBodyGroups = new HashMap<>();
 
         String sFilters = req.getParameter(FILTERS);
-        Set<Integer> filters = JSON.jsonArrToSet(sFilters);
+        List<Integer> filters = JSON.jsonArrToList(sFilters);
         String sPageNumber = req.getParameter(PAGE_NUMBER);
         String sPageSize = req.getParameter(PAGE_SIZE);
         int pageNumber = sPageNumber != null ? Integer.parseInt(sPageNumber) : INITIAL_PAGE_NUMBER;
         int pageSize = sPageSize != null ? Integer.parseInt(sPageSize) : INITIAL_PAGE_SIZE;
 
-        try {
-            size = loadData(equipment, eqBodyGroups, gymID, pageNumber, pageSize, filters);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        EquipmentService eqService = new EquipmentService();
+
+        LoadedEquipment iDsForSinglePage = eqService.getIDsForSinglePage(pageNumber, pageSize, gymID, filters);
+        size = iDsForSinglePage.getEquipmentNumber();
+        List<Integer> equipmentIDsForSinglePage = iDsForSinglePage.getEquipmentIDsForSinglePage();
+        for (Integer id : equipmentIDsForSinglePage) {
+            pageEquipment.add(eqService.get(id));
+            List<String> singleEqBGs = getNames(eqService.get(id).getBodyGroups());
+            eqBodyGroups.put(id, singleEqBGs);
         }
 
         PrintWriter out = resp.getWriter();
         List<Object> dto = new ArrayList<>();
         dto.add(size);
-        dto.addAll(getDTO(equipment, eqBodyGroups));
+        dto.addAll(getDTO(pageEquipment, eqBodyGroups));
         out.print(stringify(dto));
     }
 
@@ -80,6 +95,26 @@ public class EquipmentLoader extends HttpServlet {
             doSyncPost(req, resp);
         } else {
             doAsyncPost(req, resp);
+        }
+    }
+
+    private <T> List<String> getNames(List<T> list) {
+        List<String> res = new ArrayList<>();
+        for (T elem : list) {
+            res.add(((Accessible) elem).getName());
+        }
+        return res;
+    }
+
+    private void loadRest(List<Integer> existingIDs, List<EquipmentEntity> all) {
+        List<EquipmentEntity> rest = new ArrayList<>(all);
+        for (EquipmentEntity eq : rest) {
+            for (Integer id : existingIDs) {
+                if (eq.getId() == id) {
+                    all.remove(eq);
+                    break;
+                }
+            }
         }
     }
 }

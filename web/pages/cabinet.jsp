@@ -2,6 +2,8 @@
 <%@ page import="model.Gym" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="constants.*" %>
+<%@ page import="model.entity.UserEntity" %>
+<%@ page import="model.entity.GymEntity" %>
 <%--
   Created by IntelliJ IDEA.
   User: kiril
@@ -35,15 +37,10 @@
 <%@ include file="../components/navigation.jsp" %>
 
 <%
-    User user = (User) request.getAttribute(DispatchAttrs.USER);
+    UserEntity user = (UserEntity) request.getAttribute(DispatchAttrs.USER);
     ArrayList<String> cities = (ArrayList<String>) request.getAttribute(DispatchAttrs.CITIES);
     ArrayList<String> gyms = (ArrayList<String>) request.getAttribute(DispatchAttrs.GYMS);
-    Gym gym;
-    try {
-        gym = (Gym) request.getAttribute(DispatchAttrs.GYM);
-    } catch (Exception e) {
-        gym = null;
-    }
+    GymEntity gym = (GymEntity) request.getAttribute(DispatchAttrs.GYM);
 %>
 
 <div style="display: none" id="spinnerContainer" class="text-center spinner-wrapper">

@@ -15,6 +15,8 @@ public class CityService {
         return cityDAO.getById(id);
     }
 
+    public CityEntity getByGymID(int gymID) { return cityDAO.getByGymID(gymID); }
+
     public void create(CityEntity city) {
         cityDAO.create(city);
     }

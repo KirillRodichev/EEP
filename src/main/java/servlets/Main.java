@@ -13,10 +13,7 @@ import java.sql.SQLException;
 
 @WebServlet(
         urlPatterns = { "/index.jsp" },
-        initParams =
-                {
-                        @WebInitParam(name = "allowedTypes", value = "png, css, js, ico, jpg")
-                }
+        initParams = { @WebInitParam(name = "allowedTypes", value = "png, css, js, ico, jpg") }
 )
 
 public class Main extends HttpServlet {

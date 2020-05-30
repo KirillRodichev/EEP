@@ -46,8 +46,8 @@
 
 <%
     List<Equipment> equipment = (ArrayList<Equipment>) request.getAttribute(DispatchAttrs.EQUIPMENT);
-    Map<Integer, Set<String>> equipmentBodyGroups =
-            (Map<Integer, Set<String>>) request.getAttribute(DispatchAttrs.EQUIPMENT_BODY_GROUP_MAP);
+    Map<Integer, List<String>> equipmentBodyGroups =
+            (Map<Integer, List<String>>) request.getAttribute(DispatchAttrs.EQUIPMENT_BODY_GROUP_MAP);
     List<String> bodyGroups = (List<String>) request.getAttribute(DispatchAttrs.BODY_GROUPS);
     List<Equipment> restEquipment = (List<Equipment>) request.getAttribute(DispatchAttrs.REST_EQUIPMENT);
     int gymID = (Integer) request.getAttribute(DispatchAttrs.GYM);

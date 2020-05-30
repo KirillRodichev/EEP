@@ -216,3 +216,4 @@ VALUES (11, 3);
 insert into B_GROUPS_EQUIPMENT (B_GROUP_ID, EQUIPMENT_ID)
 VALUES (12, 3);
 
+commit;

@@ -2,7 +2,6 @@ package services;
 
 import dao.BodyGroupDAOImp;
 import model.entity.BodyGroupEntity;
-import model.entity.CityEntity;
 
 import java.util.List;
 

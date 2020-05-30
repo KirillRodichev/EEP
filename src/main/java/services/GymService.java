@@ -35,5 +35,7 @@ public class GymService {
 
     public void update(GymEntity gym, int gymID) { gymDAOImp.update(gym, gymID); }
 
+    public void merge(GymEntity prev, GymEntity cur) { gymDAOImp.merge(prev, cur); }
+
     public List<GymEntity> getAll() { return gymDAOImp.getAll(); }
 }

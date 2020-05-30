@@ -11,6 +11,8 @@ public interface EquipmentDAO {
 
     void create(EquipmentEntity equipment, int gymID);
 
+    void merge(EquipmentEntity equipment);
+
     void addToGym(int eqID, int gymID);
 
     String getConditionalEqIDsQuery(List<Integer> filteredEquipmentIDs);

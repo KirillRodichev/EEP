@@ -6,6 +6,8 @@ import model.entity.BodyGroupEntity;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
+import org.hibernate.type.IntegerType;
 import utils.HibernateSessionFactory;
 
 import java.util.List;
@@ -13,7 +15,6 @@ import java.util.List;
 public class BodyGroupDAOImp extends DAO<BodyGroupEntity> implements BodyGroupDAO {
     private static final String DELETE_EQ_RELATIONS = "DELETE FROM B_GROUPS_EQUIPMENT WHERE EQUIPMENT_ID = :eq_id";
     private static final String ADD_EQ_RELATION = "INSERT INTO B_GROUPS_EQUIPMENT (B_GROUP_ID, EQUIPMENT_ID) VALUES (:bg_id, :eq_id)";
-    private static final String SELECT_BY_NAME = "SELECT B_GROUP_ID FROM BODY_GROUPS WHERE B_GROUP_NAME = :bg_name";
     private static final String SELECT_BY_EQ_ID = "SELECT B_GROUP_ID FROM B_GROUPS_EQUIPMENT WHERE EQUIPMENT_ID = :eq_id";
 
     @Override
@@ -45,8 +46,8 @@ public class BodyGroupDAOImp extends DAO<BodyGroupEntity> implements BodyGroupDA
     public int getIDByName(String name) {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        NativeQuery query = session.createSQLQuery(SELECT_BY_NAME);
-        query.setParameter("bg_name", name);
+        Query query = session.createQuery("select id from BodyGroupEntity where name = :name");
+        query.setParameter("name", name);
         int id = (int) query.uniqueResult();
         tx.commit();
         session.close();
@@ -58,8 +59,10 @@ public class BodyGroupDAOImp extends DAO<BodyGroupEntity> implements BodyGroupDA
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         NativeQuery query = session.createSQLQuery(SELECT_BY_EQ_ID);
+        query.addScalar("B_GROUP_ID", IntegerType.INSTANCE);
         query.setParameter("eq_id", eqID);
-        List<Integer> res = (List<Integer>)query.list();
+        query.addScalar("B_GROUP_ID", IntegerType.INSTANCE);
+        List<Integer> res = (List<Integer>) query.list();
         tx.commit();
         session.close();
         return res;

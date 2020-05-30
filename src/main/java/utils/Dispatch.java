@@ -2,8 +2,9 @@ package utils;
 
 import constants.DispatchAttrs;
 import model.Equipment;
-import model.Gym;
-import model.User;
+import model.entity.EquipmentEntity;
+import model.entity.GymEntity;
+import model.entity.UserEntity;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,45 +12,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static constants.ErrorMsg.ILLEGAL_IMG_REL;
 
 public class Dispatch {
-
     public static void forwardToCabinet(
             HttpServletRequest req,
             HttpServletResponse resp,
-            User user,
-            List<String> cities,
-            List<String> gyms,
-            Gym gym
-    ) throws ServletException, IOException {
-        RequestDispatcher rd;
-        req.setAttribute(DispatchAttrs.CITIES, cities);
-        req.setAttribute(DispatchAttrs.GYMS, gyms);
-        req.setAttribute(DispatchAttrs.USER, user);
-        req.setAttribute(DispatchAttrs.GYM, Objects.requireNonNullElse(gym, null));
-        rd = req.getRequestDispatcher("pages/cabinet.jsp");
-        rd.forward(req, resp);
-    }
-
-    public static void forwardToCabinet(
-            HttpServletRequest req,
-            HttpServletResponse resp,
-            User user,
+            UserEntity user,
+            GymEntity gym,
             List<String> cities,
             List<String> gyms
     ) throws ServletException, IOException {
         RequestDispatcher rd;
         req.setAttribute(DispatchAttrs.CITIES, cities);
         req.setAttribute(DispatchAttrs.USER, user);
+        req.setAttribute(DispatchAttrs.GYM, gym);
         req.setAttribute(DispatchAttrs.GYMS, gyms);
         rd = req.getRequestDispatcher("pages/cabinet.jsp");
         rd.forward(req, resp);
     }
 
     public static void forwardToEquipmentPage(
-            HttpServletRequest req, HttpServletResponse resp, int gymID, List<Equipment> equipment,
-            Map<Integer, Set<String>> equipmentBodyGroups, List<String> allBodyGroups, List<Equipment> restEquipment, int size
+            HttpServletRequest req, HttpServletResponse resp, int gymID, List<EquipmentEntity> equipment,
+            Map<Integer, List<String>> equipmentBodyGroups, List<String> allBodyGroups, List<EquipmentEntity> restEquipment, int size
     ) throws ServletException, IOException {
         RequestDispatcher rd;
         if (!equipment.isEmpty()) {
@@ -66,10 +55,9 @@ public class Dispatch {
         rd.forward(req, resp);
     }
 
-    public static void redirectToEquipmentPage(
-            HttpServletRequest req, HttpServletResponse resp, int gymID) throws IOException {
-        HttpSession session = req.getSession(false);
-        session.setAttribute(DispatchAttrs.GYM_ID, gymID);
-        resp.sendRedirect(req.getContextPath() + "/equipment");
+    public static void sendErrMsg(HttpServletResponse resp, String message) throws IOException {
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        resp.getWriter().write(message);
+        resp.flushBuffer();
     }
 }

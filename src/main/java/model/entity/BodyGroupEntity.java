@@ -1,6 +1,7 @@
 package model.entity;
 
 import lombok.*;
+import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
 @Table(name = "BODY_GROUPS")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class BodyGroupEntity {
+public class BodyGroupEntity implements Accessible {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "b_group_seq_gen")
     @SequenceGenerator(name = "b_group_seq_gen", sequenceName = "b_group_seq", allocationSize = 1)
@@ -27,5 +28,5 @@ public class BodyGroupEntity {
             joinColumns = @JoinColumn(name = "B_GROUP_ID"),
             inverseJoinColumns = @JoinColumn(name = "EQUIPMENT_ID")
     )
-    private Set<EquipmentEntity> equipment;
+    private Set<EquipmentEntity> bgEquipment;
 }

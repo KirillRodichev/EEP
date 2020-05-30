@@ -87,4 +87,18 @@ public class DB {
         }
         return bodyGroupsList;
     }
+
+    public static boolean ableToUpdate(String field) {
+        if (field != null) {
+            return field.length() != 0;
+        }
+        return false;
+    }
+
+    public static <T> boolean ableToUpdate(List<T> field) {
+        if (field != null) {
+            return field.size() != 0;
+        }
+        return false;
+    }
 }

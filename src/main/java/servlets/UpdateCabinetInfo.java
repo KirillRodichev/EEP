@@ -2,10 +2,12 @@ package servlets;
 
 import constants.DB;
 import controllers.CityController;
-import controllers.GymController;
-import controllers.UserController;
 import lombok.SneakyThrows;
 import model.Gym;
+import model.entity.CityEntity;
+import model.entity.GymEntity;
+import services.CityService;
+import services.GymService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -18,8 +20,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static constants.DispatchAttrs.GYM;
+import static constants.ErrorMsg.MERGE_EXEC_ERR;
+import static constants.ErrorMsg.REQ_PARAMS_ERR;
 import static constants.Parameters.*;
-import static utils.DTO.getDTO;
+import static utils.Dispatch.sendErrMsg;
+import static utils.FileU.getImgName;
 import static utils.JSON.stringify;
 
 @MultipartConfig
@@ -29,29 +35,46 @@ public class UpdateCabinetInfo extends HttpServlet {
     @SneakyThrows
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final int id = Integer.parseInt(req.getParameter(GYM_ID));
-        final String name = req.getParameter(GYM_NAME);
-        final String logoPath = req.getParameter(GYM_LOGO_PATH);
-        final String websiteURL = req.getParameter(GYM_WEBSITE_URL);
-        final String website = req.getParameter(GYM_WEBSITE);
-        final String phone = req.getParameter(GYM_PHONE);
-        final String address = req.getParameter(GYM_ADDRESS);
-        int city;
+        int id, cityID;
+        String name, imgName, websiteURL, website, phone, address;
         try {
-            city = Integer.parseInt(req.getParameter(CITY));
+            id = Integer.parseInt(req.getParameter(GYM_ID));
+            name = req.getParameter(GYM_NAME);
+            imgName = getImgName(req.getPart(GYM_LOGO_PATH), GYM);
+            websiteURL = req.getParameter(GYM_WEBSITE_URL);
+            website = req.getParameter(GYM_WEBSITE);
+            phone = req.getParameter(GYM_PHONE);
+            address = req.getParameter(GYM_ADDRESS);
         } catch (RuntimeException e) {
-            city = DB.EMPTY_FIELD;
+            sendErrMsg(resp, REQ_PARAMS_ERR);
+            throw new RuntimeException(e);
+        }
+        try {
+            cityID = Integer.parseInt(req.getParameter(CITY));
+        } catch (RuntimeException e) {
+            cityID = DB.EMPTY_FIELD;
         }
 
-        GymController gController = new GymController();
+        GymService gymService = new GymService();
+        CityService cityService = new CityService();
 
-        Gym gym = new Gym(id, name, logoPath, websiteURL, website, phone, address);
+        GymEntity prevGym = gymService.get(id);
+        CityEntity city = cityID == DB.EMPTY_FIELD
+                ? cityService.getByGymID(id)
+                : cityService.get(cityID);
 
-        gController.updateCity(city, id);
-        gController.update(gym);
+        Gym gym = new Gym(id, name, imgName, websiteURL, website, phone, address);
+        GymEntity curEntity = new GymEntity(id, name, imgName, websiteURL, website, phone, address, null, city, null);
 
-        if (logoPath == null) gym.setLogoPath("");
-        String sCity = new CityController().getById(city);
+        try {
+            gymService.merge(prevGym, curEntity);
+        } catch (RuntimeException e) {
+            sendErrMsg(resp, MERGE_EXEC_ERR);
+            throw new RuntimeException(e);
+        }
+
+        if (imgName == null) gym.setLogoPath("");
+        String sCity = new CityController().getById(cityID);
 
         PrintWriter out = resp.getWriter();
         List<Object> dto = new ArrayList<>();

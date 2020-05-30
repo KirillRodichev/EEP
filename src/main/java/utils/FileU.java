@@ -1,5 +1,7 @@
 package utils;
 
+import exceptions.IllegalImageRelation;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
 import java.io.*;
@@ -7,6 +9,10 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import static constants.DispatchAttrs.EQUIPMENT;
+import static constants.DispatchAttrs.GYM;
+import static constants.ErrorMsg.ILLEGAL_IMG_REL;
 
 public class FileU {
     public static void copyFile(File source, File dest) throws IOException {
@@ -23,13 +29,28 @@ public class FileU {
         return null;
     }
 
-    public static String imgUpload(Part filePart) throws IOException, ServletException {
-        final String equipmentImgFolderPath = "D:\\My Documents\\Java\\TeamProjects\\EEP\\web\\assets\\img\\equipment\\";
-        final String targetPath = "D:\\My Documents\\Java\\TeamProjects\\EEP\\target\\EEP-1.0-SNAPSHOT\\assets\\img\\equipment\\";
+    public static String imgUpload(Part filePart, String relation) throws IOException, IllegalImageRelation {
+
+        String clientFolderPath;
+        String serverFolderPath;
+
+        switch (relation) {
+            case GYM:
+                clientFolderPath = "D:\\My Documents\\Java\\TeamProjects\\EEP\\web\\assets\\img\\gyms_logos\\";
+                serverFolderPath = "D:\\My Documents\\Java\\TeamProjects\\EEP\\target\\EEP-1.0-SNAPSHOT\\assets\\img\\gyms_logos\\";
+                break;
+            case EQUIPMENT:
+                clientFolderPath = "D:\\My Documents\\Java\\TeamProjects\\EEP\\web\\assets\\img\\equipment\\";
+                serverFolderPath = "D:\\My Documents\\Java\\TeamProjects\\EEP\\target\\EEP-1.0-SNAPSHOT\\assets\\img\\equipment\\";
+                break;
+            default:
+                throw new IllegalImageRelation(ILLEGAL_IMG_REL);
+        }
+
         final String fileName = getFileName(filePart);
 
-        try (OutputStream fOut = new FileOutputStream(new File(equipmentImgFolderPath + fileName));
-             OutputStream fTargetOut = new FileOutputStream(new File(targetPath + fileName));
+        try (OutputStream fOut = new FileOutputStream(new File(clientFolderPath + fileName));
+             OutputStream fTargetOut = new FileOutputStream(new File(serverFolderPath + fileName));
              InputStream fileContent = filePart.getInputStream();
         ) {
             int read;
@@ -44,5 +65,15 @@ public class FileU {
         }
 
         return fileName;
+    }
+
+    public static String getImgName(Part filePart, String relation) throws IOException, ServletException {
+        String imgName;
+        try {
+            imgName = imgUpload(filePart, relation);
+        } catch (RuntimeException e) {
+            imgName = null;
+        }
+        return imgName;
     }
 }

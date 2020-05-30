@@ -2,8 +2,10 @@ package model.entity;
 
 import lombok.*;
 import model.Equipment;
+import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = false)
@@ -13,9 +15,22 @@ import java.util.List;
 @Table(name = "EQUIPMENT")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class EquipmentEntity extends Equipment {
-    private List<GymEntity> gyms;
+public class EquipmentEntity extends Equipment implements Accessible {
+    private List<GymEntity> eqGyms;
     private List<BodyGroupEntity> bodyGroups;
+
+    public EquipmentEntity(
+            int id,
+            String name,
+            String description,
+            String imgPath,
+            List<GymEntity> eqGyms,
+            List<BodyGroupEntity> bodyGroups
+    ) {
+        super(id, name, description, imgPath);
+        if (eqGyms != null) this.eqGyms = new ArrayList<>(eqGyms);
+        if  (bodyGroups != null) this.bodyGroups = new ArrayList<>(bodyGroups);
+    }
 
     @Id
     @Column(name = "EQUIPMENT_ID")
@@ -50,10 +65,10 @@ public class EquipmentEntity extends Equipment {
             joinColumns = @JoinColumn(name = "EQUIPMENT_ID"),
             inverseJoinColumns = @JoinColumn(name = "GYM_ID")
     )
-    public List<GymEntity> getGyms() { return gyms; }
+    public List<GymEntity> getEqGyms() { return eqGyms; }
 
-    public void setGyms(List<GymEntity> gyms) { this.gyms = gyms; }
+    public void setEqGyms(List<GymEntity> eqGyms) { this.eqGyms = eqGyms; }
 
-    @ManyToMany(mappedBy = "equipment", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "bgEquipment", fetch = FetchType.LAZY)
     public List<BodyGroupEntity> getBodyGroups() { return bodyGroups; }
 }

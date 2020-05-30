@@ -2,9 +2,11 @@ package model.entity;
 
 import lombok.*;
 import model.Gym;
+import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = false)
 @Getter
@@ -13,10 +15,28 @@ import java.util.Set;
 @Table(name = "GYMS")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class GymEntity extends Gym {
-    private Set<UserEntity> users;
+public class GymEntity extends Gym implements Accessible {
+    private List<UserEntity> gymUsers;
     private CityEntity gymCity;
-    private Set<EquipmentEntity> equipment;
+    private List<EquipmentEntity> gymEquipment;
+
+    public GymEntity(
+            int id,
+            String name,
+            String logoPath,
+            String websiteURL,
+            String website,
+            String phone,
+            String address,
+            List<UserEntity> gymUsers,
+            CityEntity gymCity,
+            List<EquipmentEntity> gymEquipment
+    ) {
+        super(id, name, logoPath, websiteURL, website, phone, address);
+        this.gymUsers = gymUsers == null ? new ArrayList<>() : gymUsers;
+        this.gymCity = gymCity;
+        this.gymEquipment = gymEquipment == null ? new ArrayList<>() : gymEquipment;
+    }
 
     @Id
     @Column(name = "GYM_ID")
@@ -63,8 +83,8 @@ public class GymEntity extends Gym {
         return super.getAddress();
     }
 
-    @OneToMany(mappedBy = "gym", fetch = FetchType.LAZY, orphanRemoval = true)
-    public Set<UserEntity> getUsers() { return users; }
+    @OneToMany(mappedBy = "userGym", fetch = FetchType.LAZY, orphanRemoval = true)
+    public List<UserEntity> getGymUsers() { return gymUsers; }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
@@ -76,6 +96,6 @@ public class GymEntity extends Gym {
 
     public void setGymCity(CityEntity city) { gymCity = city; }
 
-    @ManyToMany(mappedBy = "gyms", fetch = FetchType.LAZY)
-    public Set<EquipmentEntity> getEquipment() { return equipment; }
+    @ManyToMany(mappedBy = "eqGyms", fetch = FetchType.LAZY)
+    public List<EquipmentEntity> getGymEquipment() { return gymEquipment; }
 }
