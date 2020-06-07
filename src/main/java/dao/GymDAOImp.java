@@ -67,7 +67,7 @@ public class GymDAOImp extends DAO<GymEntity> implements GymDAO {
     }
 
     @Override
-    public File createXML(int gymID, Set<Integer> BGFilters)
+    public File createXML(int gymID, Set<String> BGFilters)
             throws SQLException, JAXBException, SAXException, FileNotFoundException
     {
         return new GymController().createXML(gymID, BGFilters);
@@ -75,19 +75,29 @@ public class GymDAOImp extends DAO<GymEntity> implements GymDAO {
 
     @Override
     public GymEntity getById(int id) {
-        return HibernateSessionFactory
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        session.beginTransaction();
+        GymEntity gym = HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()
                 .get(GymEntity.class, id);
+        session.getTransaction().commit();
+        session.close();
+        return gym;
     }
 
     @Override
     public List<GymEntity> getAll() {
-        return (List<GymEntity>) HibernateSessionFactory
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        session.beginTransaction();
+        List<GymEntity> all = (List<GymEntity>) HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()
                 .createQuery("From GymEntity")
                 .list();
+        session.getTransaction().commit();
+        session.close();
+        return all;
     }
 
     private void mergeSetup(GymEntity prev, GymEntity cur) {

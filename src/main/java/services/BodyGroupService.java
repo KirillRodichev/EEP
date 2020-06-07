@@ -38,6 +38,4 @@ public class BodyGroupService {
     }
 
     public void addToEquip(List<Integer> bgIDs, int eqID) { bgDAOImp.addToEquip(bgIDs, eqID); }
-
-
 }

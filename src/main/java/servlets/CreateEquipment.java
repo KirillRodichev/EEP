@@ -60,16 +60,25 @@ public class CreateEquipment extends HttpServlet {
         List<GymEntity> eqGyms = new ArrayList<>();
         List<BodyGroupEntity> eqBodyGroups = new ArrayList<>();
         BodyGroupService bgService = new BodyGroupService();
+        GymService gymService = new GymService();
+        EquipmentService eService = new EquipmentService();
 
-        eqGyms.add(new GymService().get(gymID));
+        eqGyms.add(gymService.get(gymID));
         if (bgIDs != null) {
             for (String bgID : bgIDs) {
                 eqBodyGroups.add(bgService.get(Integer.parseInt(bgID)));
             }
         }
+
         EquipmentEntity equipment = new EquipmentEntity(DB.EMPTY_FIELD, name, description, imgName, eqGyms, eqBodyGroups);
+
+        for (BodyGroupEntity bg : eqBodyGroups) {
+            List<EquipmentEntity> bgEq = new ArrayList<>();
+            bgEq.add(equipment);
+            bg.setBgEquipment(bgEq);
+        }
         try {
-            new EquipmentService().create(equipment, gymID);
+            eService.create(equipment);
         } catch (RuntimeException e) {
             sendErrMsg(resp, CREATE_EXEC_ERR);
         }

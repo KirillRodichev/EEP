@@ -51,7 +51,7 @@ public class EquipmentLoader extends HttpServlet {
         List<Integer> equipmentIDsForSinglePage = iDsForSinglePage.getEquipmentIDsForSinglePage();
         for (Integer id : equipmentIDsForSinglePage) {
             pageEquipment.add(eqService.get(id));
-            List<String> singleEqBGs = getNames(eqService.get(id).getBodyGroups());
+            List<String> singleEqBGs = getNames(eqService.get(id).getEqBodyGroups());
             eqBodyGroups.put(id, singleEqBGs);
         }
 
@@ -65,7 +65,7 @@ public class EquipmentLoader extends HttpServlet {
         Map<Integer, List<String>> eqBodyGroups = new HashMap<>();
 
         String sFilters = req.getParameter(FILTERS);
-        List<Integer> filters = JSON.jsonArrToList(sFilters);
+        List<String> filters = JSON.jsonArrToList(sFilters);
         String sPageNumber = req.getParameter(PAGE_NUMBER);
         String sPageSize = req.getParameter(PAGE_SIZE);
         int pageNumber = sPageNumber != null ? Integer.parseInt(sPageNumber) : INITIAL_PAGE_NUMBER;
@@ -78,7 +78,7 @@ public class EquipmentLoader extends HttpServlet {
         List<Integer> equipmentIDsForSinglePage = iDsForSinglePage.getEquipmentIDsForSinglePage();
         for (Integer id : equipmentIDsForSinglePage) {
             pageEquipment.add(eqService.get(id));
-            List<String> singleEqBGs = getNames(eqService.get(id).getBodyGroups());
+            List<String> singleEqBGs = getNames(eqService.get(id).getEqBodyGroups());
             eqBodyGroups.put(id, singleEqBGs);
         }
 

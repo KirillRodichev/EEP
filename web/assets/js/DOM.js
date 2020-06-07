@@ -1,6 +1,7 @@
 const eqImgPath = "assets/img/equipment/";
 const gymLogoPath = "assets/img/gyms_logos/";
 
+const eqWrapper = document.querySelectorAll('.equipment-wrapper');
 const eqImages = document.querySelectorAll('.equipment__img');
 const eqNameInputs = document.querySelectorAll('.input-name');
 const eqDescriptionAreas = document.querySelectorAll('.textarea-description');
@@ -26,29 +27,34 @@ const updateEquipmentDOM = data => {
     const [ size, ...equipment ] = data;
     console.log(equipment);
     console.log(size);
-    for (let i = 0; i < equipment.length; i++) {
-        const {id, name, description, imgPath, bodyGroups} = equipment[i];
-        eqImages[i].src = eqImgPath + imgPath;
-        eqNameInputs[i].value = name;
-        eqDescriptionAreas[i].innerText = description;
-        eqUpdateEqIDs[i].value = id;
-        eqDeleteEqIDs[i].value = id;
-        eqRemoveEqIDs[i].value = id;
-        clearChildNode(eqBGListWrapper[i]);
+    for (let i = 0; i < 2; i++) {
+        if (i < equipment.length) {
+            eqWrapper[i].style.visibility = 'visible';
+            const {id, name, description, imgPath, bodyGroups} = equipment[i];
+            eqImages[i].src = eqImgPath + imgPath;
+            eqNameInputs[i].value = name;
+            eqDescriptionAreas[i].innerText = description;
+            eqUpdateEqIDs[i].value = id;
+            eqDeleteEqIDs[i].value = id;
+            eqRemoveEqIDs[i].value = id;
+            clearChildNode(eqBGListWrapper[i]);
 
-        bodyGroups.forEach(bodyGroup => {
-            const span = document.createElement('span');
-            const circle = document.createElement('i');
-            const li = document.createElement('li');
-            span.classList.add(spanClassName);
-            circle.classList.add(...iClassName);
-            li.classList.add(bgLiClassName);
+            bodyGroups.forEach(bodyGroup => {
+                const span = document.createElement('span');
+                const circle = document.createElement('i');
+                const li = document.createElement('li');
+                span.classList.add(spanClassName);
+                circle.classList.add(...iClassName);
+                li.classList.add(bgLiClassName);
 
-            span.appendChild(circle);
-            li.innerText = bodyGroup;
-            eqBGListWrapper[i].appendChild(span);
-            eqBGListWrapper[i].appendChild(li);
-        });
+                span.appendChild(circle);
+                li.innerText = bodyGroup;
+                eqBGListWrapper[i].appendChild(span);
+                eqBGListWrapper[i].appendChild(li);
+            });
+        } else {
+            eqWrapper[i].style.visibility = 'hidden';
+        }
     }
 };
 

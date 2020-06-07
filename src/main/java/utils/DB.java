@@ -24,7 +24,7 @@ public class DB {
         return eqCountAndIDs.getEquipmentNumber();
     }
 
-    public static int loadData(
+    /*public static int loadData(
             List<Equipment> equipment, Map<Integer, Set<String>> map, int gymID, int pageNumber, int pageSize, Set<Integer> filters
     ) throws SQLException {
         EquipmentController eqController = new EquipmentController();
@@ -33,7 +33,7 @@ public class DB {
         loadEquipment(eqController, eqCountAndIDs.getEquipmentIDsForSinglePage(), equipment);
         loadMap(equipment, map, bgController);
         return eqCountAndIDs.getEquipmentNumber();
-    }
+    }*/
 
     private static void loadEquipment(
             EquipmentController equipmentController, List<Integer> IDs, List<Equipment> equipment)

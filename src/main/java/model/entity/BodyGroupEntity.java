@@ -4,6 +4,8 @@ import lombok.*;
 import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -12,7 +14,7 @@ import java.util.Set;
 @Table(name = "BODY_GROUPS")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class BodyGroupEntity implements Accessible {
+public class BodyGroupEntity implements Accessible, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "b_group_seq_gen")
     @SequenceGenerator(name = "b_group_seq_gen", sequenceName = "b_group_seq", allocationSize = 1)
@@ -22,11 +24,6 @@ public class BodyGroupEntity implements Accessible {
     @Column(name = "B_GROUP_NAME")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "B_GROUPS_EQUIPMENT",
-            joinColumns = @JoinColumn(name = "B_GROUP_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EQUIPMENT_ID")
-    )
-    private Set<EquipmentEntity> bgEquipment;
+    @ManyToMany(mappedBy = "eqBodyGroups", fetch = FetchType.LAZY)
+    private List<EquipmentEntity> bgEquipment;
 }

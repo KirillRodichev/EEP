@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gym id="3">
-    <name>Kin Up Badness</name>
+    <name>Kin-Up Wellness</name>
     <logo_path>kinup.png</logo_path>
-    <website_URL>kin-up.samara.ru</website_URL>
-    <website>www.kin-up.samara.ru</website>
+    <website_URL>www.kin-up.samara.ru</website_URL>
+    <website>kin-up.samara.ru</website>
     <phone>(846) 20-95-064</phone>
     <address>Kaluzhskaya 101</address>
     <all_equipment>
-        <equipment id="1">
-            <name>Personal Bike</name>
+        <equipment id="96">
+            <name>Super eq</name>
+            <description>sdfsdfsdffsdsdfsdf</description>
+            <img_path>skillrow.jpg</img_path>
+            <body_groups>
+                <body_group>Chest</body_group>
+                <body_group>Traps</body_group>
+            </body_groups>
+        </equipment>
+        <equipment id="93">
+            <name>Personal B</name>
             <description>This bike helps to loose weight and also to gain muscles and keep in shape</description>
-            <img_path>bike-personal.jpg</img_path>
+            <img_path>flex.jpg</img_path>
             <body_groups>
                 <body_group>Quadriceps</body_group>
                 <body_group>Hamstrings</body_group>
-                <body_group>Calves</body_group>
+                <body_group>Biceps</body_group>
             </body_groups>
         </equipment>
-        <equipment id="3">
+        <equipment id="94">
             <name>Multipower</name>
             <description>Here you can do different things: sit-ups, pull-ups and more. When doing sit-ups try to concentrate on the back surface of your leg</description>
             <img_path>multipower.jpg</img_path>
             <body_groups>
                 <body_group>Quadriceps</body_group>
                 <body_group>Hamstrings</body_group>
-                <body_group>Glutes</body_group>
                 <body_group>Lower Back</body_group>
                 <body_group>Calves</body_group>
+            </body_groups>
+        </equipment>
+        <equipment id="95">
+            <name>The best one</name>
+            <description>The best oneThe best oneThe best oneThe best oneThe best one</description>
+            <img_path>flex.jpg</img_path>
+            <body_groups>
+                <body_group>Chest</body_group>
+                <body_group>Upper Back</body_group>
+                <body_group>Traps</body_group>
             </body_groups>
         </equipment>
     </all_equipment>

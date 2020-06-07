@@ -35,7 +35,7 @@ public class XMLDownload extends HttpServlet {
 
         int gymID = Integer.parseInt(req.getParameter(GYM_ID));
         String sBGFilters = req.getParameter(BG_FILTERS);
-        Set<Integer> BGFilters;
+        Set<String> BGFilters;
         try {
             BGFilters = JSON.jsonArrToSet(sBGFilters);
         } catch (RuntimeException e) {

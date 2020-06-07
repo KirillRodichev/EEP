@@ -2,7 +2,6 @@ package dao;
 
 import dao.abstracts.DAO;
 import dao.interfaces.UserDAO;
-import model.entity.GymEntity;
 import model.entity.UserEntity;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -57,18 +56,28 @@ public class UserDAOImp extends DAO<UserEntity> implements UserDAO {
 
     @Override
     public UserEntity getById(int id) {
-        return HibernateSessionFactory
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        session.beginTransaction();
+        UserEntity user = HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()
                 .get(UserEntity.class, id);
+        session.getTransaction().commit();
+        session.close();
+        return user;
     }
 
     @Override
     public List<UserEntity> getAll() {
-        return (List<UserEntity>)  HibernateSessionFactory
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        session.beginTransaction();
+        List<UserEntity> all = (List<UserEntity>)  HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()
                 .createQuery("From UserEntity")
                 .list();
+        session.getTransaction().commit();
+        session.close();
+        return all;
     }
 }

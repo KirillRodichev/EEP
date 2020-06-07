@@ -5,6 +5,7 @@ import model.User;
 import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = false)
 @Getter
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "USERS")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class UserEntity extends User implements Accessible {
+public class UserEntity extends User implements Accessible, Serializable {
     private CityEntity userCity;
     private GymEntity userGym;
 

@@ -15,13 +15,11 @@ public interface EquipmentDAO {
 
     void addToGym(int eqID, int gymID);
 
-    String getConditionalEqIDsQuery(List<Integer> filteredEquipmentIDs);
+    //String getConditionalEqIDsQuery(List<Integer> filteredEquipmentIDs);
 
     LoadedEquipment getIDsForSinglePage(int pageNumber, int pageSize, int gymID);
 
-    LoadedEquipment getIDsForSinglePage(int pageNumber, int pageSize, int gymID, List<Integer> filters);
+    LoadedEquipment getIDsForSinglePage(int pageNumber, int pageSize, int gymID, List<String> filters);
 
     List<Integer> getIDsByGymId(int id);
-
-    List<Integer> getFilteredEqIDs(List<Integer> filters);
 }

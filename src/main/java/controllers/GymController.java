@@ -154,7 +154,7 @@ public class GymController extends DAOController<Gym, GymDTO> {
 
     }
 
-    public File createXML(int gymID, Set<Integer> BGFilters) throws SQLException, FileNotFoundException, JAXBException, SAXException {
+    public File createXML(int gymID, Set<String> BGFilters) throws SQLException, FileNotFoundException, JAXBException, SAXException {
         EquipmentController eqController = new EquipmentController();
 
         Set<Integer> gymMatchingEqIDs = new HashSet<>();

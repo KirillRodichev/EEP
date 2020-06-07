@@ -29,7 +29,5 @@ public class CityService {
         cityDAO.update(city);
     }
 
-    public List<CityEntity> getAll() {
-        return cityDAO.getAll();
-    }
+    public List<CityEntity> getAll() { return cityDAO.getAll(); }
 }

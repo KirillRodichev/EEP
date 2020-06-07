@@ -11,6 +11,8 @@ const updateForms = document.querySelectorAll('.update-form');
 const modal = document.querySelector('.modal');
 const downloadButton = document.querySelector('#download');
 const uploadForm = document.querySelector('.upload-xml-form');
+const applyFiltersButton = document.querySelector('#apply');
+const clearFiltersButton = document.querySelector('#clear');
 
 const gymID = document.querySelector('#gymID').value;
 
@@ -28,7 +30,10 @@ document.body.onload = () => {
     });
 
     equipmentSelector.addEventListener('change', event => {
-        selectedEquipmentID = Array.from(event.target.options).find(option => option.selected.value);
+        selectedEquipmentID = Array.from(event.target.options).find(option => option.selected).value;
+        if (selectedEquipmentID) {
+            addSelectedButton.disabled = false;
+        }
     });
 
     createForm.addEventListener('submit', event => {
@@ -156,6 +161,10 @@ document.body.onload = () => {
             event.target.classList.add('was-validated');
         });
     });
+
+    applyFiltersButton.addEventListener('click', applyFilters);
+
+    clearFiltersButton.addEventListener('click', applyFilters);
 };
 
 addSelectedButton.addEventListener('click', () => {
@@ -182,13 +191,16 @@ const applyFilters = () => {
         requestData.append('filters', JSON.stringify(checkedBodyGroups));
     }
 
+    console.log('FILTERS:');
+    printFormData(requestData);
+
     const url = 'equipment';
     postData(url, requestData).then(async response => {
         console.log('number');
         const [number, ...rest] = await response.json();
         console.log(number);
         createPagination(number);
-        updateDomListener();
+        updateDomListener({ reqData: requestData });
     }).catch(() => {
         console.log('Failed to create pagination!');
     });

@@ -5,6 +5,7 @@ import model.Gym;
 import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @Table(name = "GYMS")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class GymEntity extends Gym implements Accessible {
+public class GymEntity extends Gym implements Accessible, Serializable {
     private List<UserEntity> gymUsers;
     private CityEntity gymCity;
     private List<EquipmentEntity> gymEquipment;

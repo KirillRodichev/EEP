@@ -19,5 +19,5 @@ public interface GymDAO {
 
     void merge(GymEntity prev, GymEntity cur);
 
-    File createXML(int gymID, Set<Integer> BGFilters) throws SQLException, JAXBException, SAXException, FileNotFoundException;
+    File createXML(int gymID, Set<String> BGFilters) throws SQLException, JAXBException, SAXException, FileNotFoundException;
 }

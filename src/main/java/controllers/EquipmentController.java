@@ -27,7 +27,7 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
             "SELECT EQUIPMENT_ID FROM (SELECT a.*, rownum r__ FROM (SELECT * FROM GYMS_EQUIPMENT WHERE GYM_ID = ? " +
                     "ORDER BY EQUIPMENT_ID) a WHERE rownum < ((? * ?) + 1)) WHERE r__ >= (((? - 1) * ?) + 1)";
     private static final String GET_EQ_IDS_COUNT = "SELECT COUNT(*) FROM GYMS_EQUIPMENT WHERE GYM_ID = ?";
-    private static final String GET_CONDITIONAL_EQ_IDS = "SELECT EQUIPMENT_ID from B_GROUPS_EQUIPMENT WHERE ?;";
+    private static final String GET_CONDITIONAL_EQ_IDS = "SELECT EQUIPMENT_ID from B_GROUPS_EQUIPMENT WHERE ";
     private static final String PAGINATION_SELECT_CONDITIONAL =
             "SELECT EQUIPMENT_ID FROM (SELECT a.*, rownum r__ FROM (SELECT * FROM GYMS_EQUIPMENT WHERE GYM_ID = ? " +
                     "AND (?) ORDER BY EQUIPMENT_ID) a WHERE rownum < ((? * ?) + 1)) WHERE r__ >= (((? - 1) * ?) + 1)";
@@ -70,7 +70,7 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
         return getIDsForSinglePage(pageNumber, pageSize, gymID, null);
     }
 
-    public LoadedEquipment getIDsForSinglePage(int pageNumber, int pageSize, int gymID, Set<Integer> filters)
+    public LoadedEquipment getIDsForSinglePage(int pageNumber, int pageSize, int gymID, Set<String> filters)
             throws SQLException {
         int equipmentIDsCount = 0;
         String conditionalEqIDsQuery;
@@ -220,7 +220,7 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
         return conditionalEqIDsQuery.toString();
     }
 
-    public Set<Integer> getFilteredEqIDs(Set<Integer> filters) throws SQLException {
+    public Set<Integer> getFilteredEqIDs(Set<String> filters) throws SQLException {
         Set<Integer> filteredEqIDs = new HashSet<>();
         PreparedStatement ps;
         if (filters.size() == 0) {
@@ -231,7 +231,7 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
         } else {
             StringBuilder sFilters = new StringBuilder();
             int counter = 0;
-            for (Integer filter : filters) {
+            for (String filter : filters) {
                 if (counter == 0) {
                     sFilters.append(" B_GROUP_ID = ");
                 } else {
@@ -240,8 +240,7 @@ public class EquipmentController extends DAOController<Equipment, EquipmentDTO> 
                 sFilters.append(filter);
                 counter++;
             }
-            ps = getPreparedStatement(GET_CONDITIONAL_EQ_IDS);
-            ps.setString(Columns.FIRST, sFilters.toString());
+            ps = getPreparedStatement(GET_CONDITIONAL_EQ_IDS + sFilters.toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 filteredEqIDs.add(rs.getInt(Columns.FIRST));

@@ -57,6 +57,12 @@ public class UpdateEquipment extends HttpServlet {
         EquipmentEntity equipment = new EquipmentEntity();
         fillFields(equipment, entity, name, description, imgName, bodyGroups);
 
+        for (BodyGroupEntity bg : bodyGroups) {
+            List<EquipmentEntity> bgEq = new ArrayList<>();
+            bgEq.add(equipment);
+            bg.setBgEquipment(bgEq);
+        }
+
         try {
             equipmentService.merge(equipment);
         } catch (RuntimeException e) {
@@ -93,9 +99,9 @@ public class UpdateEquipment extends HttpServlet {
         else
             equipment.setImgPath(entity.getImgPath());
         if (ableToUpdate(bodyGroups))
-            equipment.setBodyGroups(bodyGroups);
+            equipment.setEqBodyGroups(bodyGroups);
         else
-            equipment.setBodyGroups(entity.getBodyGroups());
+            equipment.setEqBodyGroups(entity.getEqBodyGroups());
         equipment.setEqGyms(entity.getEqGyms());
     }
 }

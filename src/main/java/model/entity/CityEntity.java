@@ -4,6 +4,7 @@ import lombok.*;
 import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Getter
@@ -12,7 +13,7 @@ import java.util.Set;
 @Table(name = "CITIES")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class CityEntity implements Accessible {
+public class CityEntity implements Accessible, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "cities_seq_gen")
     @SequenceGenerator(name = "cities_seq_gen", sequenceName = "cities_seq", allocationSize = 1)

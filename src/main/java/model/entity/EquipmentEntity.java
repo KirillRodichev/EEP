@@ -5,6 +5,7 @@ import model.Equipment;
 import model.entity.interfaces.Accessible;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +16,9 @@ import java.util.List;
 @Table(name = "EQUIPMENT")
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class EquipmentEntity extends Equipment implements Accessible {
+public class EquipmentEntity extends Equipment implements Accessible, Serializable {
     private List<GymEntity> eqGyms;
-    private List<BodyGroupEntity> bodyGroups;
+    private List<BodyGroupEntity> eqBodyGroups;
 
     public EquipmentEntity(
             int id,
@@ -25,11 +26,11 @@ public class EquipmentEntity extends Equipment implements Accessible {
             String description,
             String imgPath,
             List<GymEntity> eqGyms,
-            List<BodyGroupEntity> bodyGroups
+            List<BodyGroupEntity> eqBodyGroups
     ) {
         super(id, name, description, imgPath);
         if (eqGyms != null) this.eqGyms = new ArrayList<>(eqGyms);
-        if  (bodyGroups != null) this.bodyGroups = new ArrayList<>(bodyGroups);
+        if  (eqBodyGroups != null) this.eqBodyGroups = new ArrayList<>(eqBodyGroups);
     }
 
     @Id
@@ -59,7 +60,7 @@ public class EquipmentEntity extends Equipment implements Accessible {
         return super.getImgPath();
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY/*, cascade = CascadeType.ALL*/)
     @JoinTable(
             name = "GYMS_EQUIPMENT",
             joinColumns = @JoinColumn(name = "EQUIPMENT_ID"),
@@ -69,6 +70,11 @@ public class EquipmentEntity extends Equipment implements Accessible {
 
     public void setEqGyms(List<GymEntity> eqGyms) { this.eqGyms = eqGyms; }
 
-    @ManyToMany(mappedBy = "bgEquipment", fetch = FetchType.LAZY)
-    public List<BodyGroupEntity> getBodyGroups() { return bodyGroups; }
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "B_GROUPS_EQUIPMENT",
+            joinColumns = @JoinColumn(name = "EQUIPMENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "B_GROUP_ID")
+    )
+    public List<BodyGroupEntity> getEqBodyGroups() { return eqBodyGroups; }
 }

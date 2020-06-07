@@ -20,7 +20,7 @@ const createPagination = number => {
         a.dataset.pageSize = '2';
 
         a.addEventListener('click', event => {
-            updateDomListener(event.target);
+            updateDomListener({target: event.target});
         });
 
         if (i === 0) a.classList.add('active');
@@ -42,24 +42,27 @@ const removeActiveClassName = () => {
     })
 };
 
-const updateDomListener = target => {
-    let data = new FormData();
-    data.append('async', 'true');
-
-    data.append('gymID', gymID);
+const updateDomListener = params => {
+    const {target, reqData} = params;
+    const url = 'equipment';
+    let data;
 
     if (target) {
+        data = new FormData();
+        data.append('async', 'true');
+        data.append('gymID', gymID);
         data.append('pageNumber', target.dataset.pageNumber);
         data.append('pageSize', target.dataset.pageSize);
+    } else if (reqData) {
+        data = reqData;
     }
 
-    const url = 'equipment';
+    console.log('UPDATE PARAMS');
+    for (let [k, v] of data) {
+        console.log(`${k} = ${v}`);
+    }
 
-    postData(
-        url,
-        data,
-        target ? removeActiveClassName : () => {}
-        ).then(async response => {
+    postData(url, data, target ? removeActiveClassName : () => {}).then(async response => {
 
         const data = await response.json();
 

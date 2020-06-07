@@ -25,7 +25,7 @@ public class GymService {
 
     public void create(GymEntity gym) { gymDAOImp.create(gym); }
 
-    public File createXML(int gymID, Set<Integer> BGFilters)
+    public File createXML(int gymID, Set<String> BGFilters)
             throws SQLException, FileNotFoundException, SAXException, JAXBException
     { return gymDAOImp.createXML(gymID, BGFilters); }
 

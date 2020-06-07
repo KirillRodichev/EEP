@@ -70,18 +70,28 @@ public class BodyGroupDAOImp extends DAO<BodyGroupEntity> implements BodyGroupDA
 
     @Override
     public BodyGroupEntity getById(int id) {
-        return HibernateSessionFactory
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        session.beginTransaction();
+        BodyGroupEntity bg = HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()
                 .get(BodyGroupEntity.class, id);
+        session.getTransaction().commit();;
+        session.close();
+        return bg;
     }
 
     @Override
     public List<BodyGroupEntity> getAll() {
-        return (List<BodyGroupEntity>)  HibernateSessionFactory
+        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+        session.beginTransaction();
+        List<BodyGroupEntity> all = (List<BodyGroupEntity>)  HibernateSessionFactory
                 .getSessionFactory()
                 .openSession()
                 .createQuery("From BodyGroupEntity")
                 .list();
+        session.getTransaction().commit();
+        session.close();
+        return all;
     }
 }
