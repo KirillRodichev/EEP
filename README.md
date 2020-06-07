@@ -22,7 +22,7 @@ This information can be modified by gym administrator (when going through the re
 > Here you can also modify equipment info. Any changes will be updated asynchronously, thanks to js fetch.
 
 ![](https://i.ibb.co/jRKDhk6/eq-2.jpg)
-> Equipment can be as well filtered by body groups.
+> Equipment can be filtered by body groups as well.
 
 ![](https://i.ibb.co/FwZJdtn/eq-xml.jpg)
-> You can even download an XML file with gym's equipment, modify it and then upload it back. Information from the xml will rewrite existing data in database.
+> You can even download an XML file with gym's equipment, modify it and then upload it back. Information from the xml will rewrite existing data in a database.
